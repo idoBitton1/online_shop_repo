@@ -1,0 +1,15 @@
+html, body{
+
+    height: 100%;
+}
+
+.main_content_container{
+
+    background-color: #180018;
+    height: 85vh;
+    overflow: hidden;
+    overflow-y: scroll;
+    color: white;
+    padding-left: 2em;
+    padding-right: 2em;
+}
