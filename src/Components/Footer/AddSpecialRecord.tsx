@@ -13,8 +13,8 @@ import { MenuItem, Select } from "@mui/material";
 
 interface MyFormValues{
 
-    special_record_date: string,
-    amount_of_hours: number,
+    date: string,
+    hours_amount: number,
     type: string
 }
 
@@ -26,14 +26,14 @@ export const AddSpecialRecord = () => {
     ]);
 
     const initialValues: MyFormValues = {
-        special_record_date: "",
-        amount_of_hours: 0,
+        date: "",
+        hours_amount: 0,
         type: ""
     }
 
     const validationSchema: any = Yup.object().shape({
-        special_record_date: Yup.string().required("Required"),
-        amount_of_hours: Yup.number().min(1, "can't be negative or zero").required("Required"),
+        date: Yup.string().required("Required"),
+        hours_amount: Yup.number().min(1, "can't be negative or zero").required("Required"),
         type: Yup.string().required("Required")
     })
 
@@ -81,7 +81,7 @@ export const AddSpecialRecord = () => {
                     >
                       {(props) => (
                         <Form>
-                          <Field as={TextField} name="special_record_date"
+                          <Field as={TextField} name="date"
                             margin="normal"
                             type="date"  
                             label="date"                   
@@ -91,20 +91,20 @@ export const AddSpecialRecord = () => {
                             InputLabelProps={{
                             shrink: true
                             }}
-                            value={props.values.special_record_date}
+                            value={props.values.date}
                             onChange={props.handleChange}
-                            helperText={<ErrorMessage name="special_record_date" />}
+                            helperText={<ErrorMessage name="date" />}
                           />
                           <br />
-                          <Field as={TextField} name="amount_of_hours"
+                          <Field as={TextField} name="hours_amount"
                             margin="normal"   
-                            label="amount_of_hours"               
+                            label="hours_amount"               
                             variant="standard"
                             required
                             color="secondary"
-                            value={props.values.amount_of_hours}
+                            value={props.values.hours_amount}
                             onChange={props.handleChange}
-                            helperText={<ErrorMessage name="amount_of_hours" />}
+                            helperText={<ErrorMessage name="hours_amount" />}
                           />
                           <br />
                           <Field 

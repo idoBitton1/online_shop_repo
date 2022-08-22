@@ -10,6 +10,19 @@ html, body{
     overflow: hidden;
     overflow-y: scroll;
     color: white;
+}
+
+.subtitles{
+
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
     padding-left: 2em;
     padding-right: 2em;
+    background-color: #30a890;
+}
+
+.subtitles > h2{
+
+    font-size: 20px;
 }

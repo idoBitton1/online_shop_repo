@@ -14,8 +14,8 @@ import Typography from "@mui/material/Typography";
 
 interface MyFormValues{
 
-    extra_date: string,
-    add: boolean,
+    date: string,
+    bonus: boolean,
     amount: number,
     description?: string
 }
@@ -25,15 +25,15 @@ export const AddExtra = () => {
     const [open, SetOpen] = useState<boolean>(false);
     
     const initialValues: MyFormValues = {
-        extra_date: "",
-        add: true,
+        date: "",
+        bonus: true,
         amount: 0,
         description: ""
     }
 
     const validationSchema: any = Yup.object().shape({
-        extra_date: Yup.string().required("Required"),
-        add: Yup.boolean(),
+        date: Yup.string().required("Required"),
+        bonus: Yup.boolean(),
         amount: Yup.number().min(1, "can't be negative or zero").required("Required"),
         description: Yup.string().max(20, "please make a shorter description")
     })
@@ -85,7 +85,7 @@ export const AddExtra = () => {
 
                     {(props) => (
                     <Form>
-                        <Field as={TextField} name="extra_date"
+                        <Field as={TextField} name="date"
                           margin="normal"
                           type="date"  
                           label="date"                   
@@ -95,14 +95,14 @@ export const AddExtra = () => {
                           InputLabelProps={{
                             shrink: true
                           }}
-                          value={props.values.extra_date}
+                          value={props.values.date}
                           onChange={props.handleChange}
-                          helperText={<ErrorMessage name="extra_date" />}
+                          helperText={<ErrorMessage name="date" />}
                         />
                         <br />
                         <FormControlLabel
                           control={<Field 
-                            name="add"
+                            name="bonus"
                             margin="normal"
                             as={Checkbox}
                             type="checkbox"

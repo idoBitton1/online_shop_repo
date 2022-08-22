@@ -4,8 +4,6 @@ import { Footer } from './Components/Footer/Footer';
 import { MainContent } from './Components/MainContent/MainContent';
 import { Header } from './Components/Header/Header';
 
-
-
 function App() {
 
   return (

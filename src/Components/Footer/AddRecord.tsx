@@ -12,8 +12,9 @@ import Typography from '@mui/material/Typography';
 
 interface MyFormValues{
 
-  record_date: string,
+  start_date: string,
   start_time: string,
+  end_date: string,
   end_time: string,
   daily_bonus?: number,
   daily_waste?: number
@@ -25,8 +26,9 @@ export const AddRecord = () => {
     const [open, SetOpen] = useState<boolean>(false);
 
     const initialValues: MyFormValues = {
-      record_date: "",
+      start_date: "",
       start_time: "",
+      end_date: "",
       end_time: "",
       daily_bonus: 0,
       daily_waste: 0,
@@ -34,8 +36,9 @@ export const AddRecord = () => {
     }
 
     const validationSchema: any = Yup.object().shape({
-      record_date: Yup.string().required("Required"),
+      start_date: Yup.string().required("Required"),
       start_time: Yup.string().required("Required"),
+      end_date: Yup.string().required("Required"),
       end_time: Yup.string().required("Required"),
       daily_bonus: Yup.number().min(0, "can't be negative"),
       daily_waste: Yup.number().min(0, "can't be negative"),
@@ -89,7 +92,7 @@ export const AddRecord = () => {
 
                     {(props) => (
                     <Form>
-                      <Field as={TextField} name="record_date"
+                      <Field as={TextField} name="start_date"
                         margin="normal"
                         type="date"  
                         label="date"                   
@@ -99,9 +102,9 @@ export const AddRecord = () => {
                         InputLabelProps={{
                           shrink: true
                         }}
-                        value={props.values.record_date}
+                        value={props.values.start_date}
                         onChange={props.handleChange}
-                        helperText={<ErrorMessage name="record_date" />}
+                        helperText={<ErrorMessage name="start_date" />}
                       />
                       <br />
                       <Field as={TextField} name="start_time"
@@ -117,6 +120,21 @@ export const AddRecord = () => {
                         value={props.values.start_time}
                         onChange={props.handleChange}
                         helperText={<ErrorMessage name="start_time" />}
+                      />
+                      <br />
+                      <Field as={TextField} name="end_date"
+                        margin="normal"
+                        type="date"  
+                        label="date"                   
+                        variant="standard"
+                        required
+                        color="secondary"
+                        InputLabelProps={{
+                          shrink: true
+                        }}
+                        value={props.values.end_date}
+                        onChange={props.handleChange}
+                        helperText={<ErrorMessage name="end_date" />}
                       />
                       <br />
                       <Field as={TextField} name="end_time"
