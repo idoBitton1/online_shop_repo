@@ -29,6 +29,7 @@ interface MyFormValues{
 export const SignUp: React.FC<MyProps> = ({connected, toggleConnected}) => {
 
     const [open, SetOpen] = useState<boolean>(false);
+    var errmsg: string;
     
     const initialValues: MyFormValues = {
         username: "",
@@ -60,7 +61,7 @@ export const SignUp: React.FC<MyProps> = ({connected, toggleConnected}) => {
 
       if(values.password !== values.confirm_password)
       {
-        console.log("wrong")
+        errmsg = "passwords do not match"
         return
       }
 
@@ -147,11 +148,17 @@ export const SignUp: React.FC<MyProps> = ({connected, toggleConnected}) => {
                           />
                           <br />
                           <br />
+                          
                           <Button type="submit"
                             color="secondary"
                             variant="contained">
                               submit
                           </Button>
+                          <Typography
+                            fontFamily={"Rubik"}
+                            color={"red"}>
+                            {errmsg}
+                          </Typography>
                         </Form>
                     )}
                   </Formik>
