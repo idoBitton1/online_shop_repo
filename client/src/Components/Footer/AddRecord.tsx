@@ -17,7 +17,7 @@ interface MyFormValues{
   end_date: string,
   end_time: string,
   daily_bonus?: number,
-  daily_waste?: number
+  daily_waste?: number,
   daily_break: number
 }
 
@@ -48,6 +48,7 @@ export const AddRecord = () => {
 
     //Add to data base with http
     const onSubmit = (values: MyFormValues) => {
+
       console.log(values);
       toggleDialog();
     }

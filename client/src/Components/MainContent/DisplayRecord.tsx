@@ -1,29 +1,25 @@
+import { Grid } from "@mui/material";
 import React from "react"
 import "./DisplayRecord.css"
 
 //Material Ui
+import Typography from "@mui/material/Typography"
 
 interface MyProps{
 
-    date: string,
     start_time: string,
     end_time: string
 }
 
-export const DisplayRecord: React.FC<MyProps> = ({date, start_time, end_time}) => {
+export const DisplayRecord: React.FC<MyProps> = ({start_time, end_time}) => {
 
-    const getHours = (start_date: string, start_time: string, end_time: string): number => {
+    const start_datetime: Date = new Date(start_time);
+    const end_datetime: Date = new Date(end_time);
 
-        //set the dates variables
-        const start: Date = new Date(`${start_date} ${start_time}`)
-        var end: Date = new Date(`${start.getFullYear()}-${start.getMonth() + 1}-${start.getDate()} ${end_time}`);
-        
-        //if a day passed
-        if(Number(end_time.split(":")[0]) < Number(start_time.split(":")[0]))
-          end.setDate(end.getDate() + 1) // update the date
+    const getHours = (start_datetime: Date, end_datetime: Date): number => {
     
         //the diff between the dates in milliseconds
-        const diff: number = end.getTime() - start.getTime();
+        const diff: number = end_datetime.getTime() - start_datetime.getTime();
     
         var msec = diff;
         var hh = Math.floor(msec / 1000 / 60 / 60);
@@ -36,26 +32,46 @@ export const DisplayRecord: React.FC<MyProps> = ({date, start_time, end_time}) =
         return Number(res.toFixed(2));
     }
 
-    const hours: number = getHours(date, start_time, end_time);
-    const total = hours * 30; //salary_per_hour
+    const hours: number = getHours(start_datetime, end_datetime);
+    const total = hours * 30; //salary_per_hour 
 
     return(
-        <div className="record">
-            <h3>
-                {date}
-            </h3>
-            <h3>
-                {start_time}
-            </h3>
-            <h3>
-                {end_time}
-            </h3>
-            <h3>
+        <Grid container sx={{
+                backgroundColor: "#30c0a8",
+                fontFamily: "Rubik",
+                fontSize: "20px",
+                padding: "5px",
+                paddingLeft: "2em",
+                paddingRight: "2em",
+                textAlign: "center"
+            }}>
+            <Grid item xs={2}>
+                <div>
+                    {start_datetime.getDate()}
+                </div>
+            </Grid>
+            <Grid item xs={3}>
+                {
+                    `${start_datetime.getHours()}:${start_datetime.getMinutes() < 10 ? 
+                    `0${start_datetime.getMinutes()}`
+                    :
+                    `${start_datetime.getMinutes()}`}`
+                }
+            </Grid>
+            <Grid item xs={3}>
+                {
+                    `${end_datetime.getHours()}:${end_datetime.getMinutes() < 10 ? 
+                    `0${end_datetime.getMinutes()}`
+                    :
+                    `${end_datetime.getMinutes()}`}`
+                }
+            </Grid>
+            <Grid item xs={2}>
                 {hours}
-            </h3>
-            <h3>
+            </Grid>
+            <Grid item xs={2}>
                 {total}
-            </h3>
-        </div>
+            </Grid>
+        </Grid>
     )
 }
