@@ -2,21 +2,23 @@ import { Grid } from "@mui/material";
 import React from "react"
 import "./DisplayRecord.css"
 
-//Material Ui
-import Typography from "@mui/material/Typography"
-
 interface MyProps{
 
     start_time: string,
-    end_time: string
+    end_time: string,
+    daily_break?: number,
+    percentage?: number
+    salary_per_hour: number
 }
 
-export const DisplayRecord: React.FC<MyProps> = ({start_time, end_time}) => {
+//Material Ui
+
+export const DisplayRecord: React.FC<MyProps> = ({start_time, end_time, daily_break, percentage, salary_per_hour}) => {
 
     const start_datetime: Date = new Date(start_time);
     const end_datetime: Date = new Date(end_time);
 
-    const getHours = (start_datetime: Date, end_datetime: Date): number => {
+    const getHours = (): number => {
     
         //the diff between the dates in milliseconds
         const diff: number = end_datetime.getTime() - start_datetime.getTime();
@@ -32,21 +34,28 @@ export const DisplayRecord: React.FC<MyProps> = ({start_time, end_time}) => {
         return Number(res.toFixed(2));
     }
 
-    const hours: number = getHours(start_datetime, end_datetime);
-    const total = hours * 30; //salary_per_hour 
+    const hours: number = getHours();
+
+    var total;
+    if(daily_break !== undefined)
+        total = hours * salary_per_hour - ((daily_break / 60) * salary_per_hour); //salary_per_hour     
+    else if(percentage !== undefined)
+        total = ((hours * salary_per_hour) / 100) * percentage;
+    else
+        total = hours * salary_per_hour;     
 
     return(
         <Grid container sx={{
                 backgroundColor: "#30c0a8",
                 fontFamily: "Rubik",
                 fontSize: "20px",
-                padding: "5px",
+                padding: "15px",
                 paddingLeft: "2em",
                 paddingRight: "2em",
                 textAlign: "center"
             }}>
             <Grid item xs={2}>
-                <div>
+                <div className="date_display">
                     {start_datetime.getDate()}
                 </div>
             </Grid>

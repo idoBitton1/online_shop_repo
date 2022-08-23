@@ -1,6 +1,8 @@
 import React, { useState} from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
+import * as uuid from "uuid"
+import { Extra } from "../../App"
 
 //Material Ui
 import Button from '@mui/material/Button';
@@ -12,6 +14,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from "@mui/material/Typography";
 
+interface MyProps{
+
+  user_id: string,
+  job_id: number,
+  changeExtras: (extra: Extra) => void
+}
+
 interface MyFormValues{
 
     date: string,
@@ -20,7 +29,7 @@ interface MyFormValues{
     description?: string
 }
 
-export const AddExtra = () => {
+export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const [open, SetOpen] = useState<boolean>(false);
     
@@ -36,19 +45,42 @@ export const AddExtra = () => {
         bonus: Yup.boolean(),
         amount: Yup.number().min(1, "can't be negative or zero").required("Required"),
         description: Yup.string().max(20, "please make a shorter description")
-    })
+    })   
+
+    //Add to data base with http
+    const onSubmit = async(values: MyFormValues) => {
+
+      //http POST
+      try {
+        const id = uuid.v4();
+        const { date,bonus,amount,description } = values;
+        const data = { id,date,bonus,amount,
+                      description,user_id,job_id };
+
+        const response = await fetch("http://localhost:5000/extras", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        console.log(response);
+
+        const win: Window = window;
+        win.location = "/";
+      } catch (err: any) {
+        console.error(err.message)
+      }
+
+      console.log(values);
+      toggleDialog();
+    }
 
     //toggle the dialog
     const toggleDialog = () => {
 
-        SetOpen((prevState) => !prevState);    
-    }
-
-    //Add to data base with http
-    const onSubmit = (values: MyFormValues) => {
-
-        console.log(values);
-        toggleDialog();
+      SetOpen((prevState) => !prevState);    
     }
 
     return(

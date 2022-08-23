@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
+import * as uuid from "uuid"
+import { Record } from "../../App"
 
 //Material Ui
 import Button from '@mui/material/Button';
@@ -10,28 +12,32 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 
+interface MyProps{
+
+  user_id: string,
+  job_id: number,
+  changeRecords: (record: Record) => void
+}
+
 interface MyFormValues{
 
   start_date: string,
   start_time: string,
   end_date: string,
   end_time: string,
-  daily_bonus?: number,
-  daily_waste?: number,
   daily_break: number
 }
 
-export const AddRecord = () => {
+export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const [open, SetOpen] = useState<boolean>(false);
+    var errmsg: string;
 
     const initialValues: MyFormValues = {
       start_date: "",
       start_time: "",
       end_date: "",
       end_time: "",
-      daily_bonus: 0,
-      daily_waste: 0,
       daily_break: 30
     }
 
@@ -40,14 +46,44 @@ export const AddRecord = () => {
       start_time: Yup.string().required("Required"),
       end_date: Yup.string().required("Required"),
       end_time: Yup.string().required("Required"),
-      daily_bonus: Yup.number().min(0, "can't be negative"),
-      daily_waste: Yup.number().min(0, "can't be negative"),
       daily_break: Yup.number().min(0, "can't be negative")
       .required("Required")
     })
 
-    //Add to data base with http
-    const onSubmit = (values: MyFormValues) => {
+    //Add to database with http POST
+    const onSubmit = async(values: MyFormValues) => {
+
+      const start_datetime: Date = new Date(`${values.start_date} ${values.start_time}`);
+      const end_datetime: Date = new Date(`${values.end_date} ${values.end_time}`);
+
+      if(end_datetime.getTime() < start_datetime.getTime())
+      {
+        errmsg = "end date can't be before the start date";
+        return;
+      }
+
+      //http POST
+      try {
+        const id = uuid.v4();
+        const { daily_break } = values;
+        const data = { id, start_datetime, end_datetime,
+                      daily_break, user_id, job_id };
+        
+        const response = await fetch("http://localhost:5000/records", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        console.log(response);
+        
+        const win: Window = window;
+        win.location = "/";
+      } catch (err: any) {
+        console.error(err.message);
+      }
 
       console.log(values);
       toggleDialog();
@@ -56,7 +92,7 @@ export const AddRecord = () => {
     //toggle the dialog
     const toggleDialog = () => {
 
-      SetOpen((prevState) => !prevState);    
+      SetOpen((prevState) => !prevState); 
     }
 
     return(
@@ -153,26 +189,6 @@ export const AddRecord = () => {
                         helperText={<ErrorMessage name="end_time" />}
                       />
                       <br />
-                      <Field as={TextField} name="daily_bonus"
-                        margin="normal"
-                        label="daily bonus"                  
-                        variant="standard"
-                        color="secondary"
-                        value={props.values.daily_bonus}
-                        onChange={props.handleChange}
-                        helperText={<ErrorMessage name="daily_bonus" />}
-                      />
-                      <br />
-                      <Field as={TextField} name="daily_waste"
-                        margin="normal"   
-                        label="daily waste"               
-                        variant="standard"
-                        color="secondary"
-                        value={props.values.daily_waste}
-                        onChange={props.handleChange}
-                        helperText={<ErrorMessage name="daily_waste" />}
-                      />
-                      <br />
                       <Field as={TextField} name="daily_break"
                         margin="normal"   
                         label="daily break (minutes)"               
@@ -190,6 +206,11 @@ export const AddRecord = () => {
                         variant="contained">
                           submit
                       </Button>
+                      <Typography
+                        fontFamily={"Rubik"}
+                        color={"red"}>
+                          {errmsg}
+                      </Typography>
                     </Form>
                     )}
                   </Formik>

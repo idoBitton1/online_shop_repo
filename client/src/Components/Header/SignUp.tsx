@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
+import * as uuid from "uuid"
 
 //Material Ui
 import Button from '@mui/material/Button';
@@ -12,10 +13,11 @@ import TextField from "@mui/material/TextField";
 import IconButton from '@mui/material/IconButton';
 import PersonAdd from "@mui/icons-material/PersonAdd";
 
-export interface MyProps{
+interface MyProps{
 
   connected: boolean,
-  toggleConnected: () => void
+  toggleConnected: () => void,
+  changeUserId: (id: string) => void
 }
 
 interface MyFormValues{
@@ -26,7 +28,7 @@ interface MyFormValues{
     salary_per_hour: number
 }
 
-export const SignUp: React.FC<MyProps> = ({connected, toggleConnected}) => {
+export const SignUp: React.FC<MyProps> = ({connected, toggleConnected, changeUserId}) => {
 
     const [open, SetOpen] = useState<boolean>(false);
     var errmsg: string;
@@ -42,7 +44,7 @@ export const SignUp: React.FC<MyProps> = ({connected, toggleConnected}) => {
         username: Yup.string().min(3, "username is too short")
         .max(15, "username is too long")
         .required("Required"),
-        password: Yup.string().min(8, "password is too long")
+        password: Yup.string().min(8, "password is too short")
         .required("Required"),
         confirm_password: Yup.string().min(8, "password is too long")
         .required("Required"),
@@ -50,24 +52,45 @@ export const SignUp: React.FC<MyProps> = ({connected, toggleConnected}) => {
         .required("Required")
     })
 
-    //toggle the dialog
-    const toggleDialog = () => {
-
-        SetOpen((prevState) => !prevState);    
-    }
-
     //Add to data base with http
-    const onSubmit = (values: MyFormValues) => {
+    const onSubmit = async(values: MyFormValues) => {
 
       if(values.password !== values.confirm_password)
       {
-        errmsg = "passwords do not match"
-        return
+        errmsg = "passwords do not match";
+        return;
       }
 
-        console.log(values);
-        toggleConnected();
-        toggleDialog();
+      //http POST
+      try {
+        const id = uuid.v4();
+        const { username,password } = values;
+        const data = { id,username,password }
+
+        const response = await fetch("http://localhost:5000/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+        
+        console.log(response);
+        
+        changeUserId(id); //change the user_id to the currently connected user_id
+      } catch (err: any) {
+        console.error(err.message);
+      }
+
+      console.log(values);
+      toggleConnected();
+      toggleDialog();
+    }
+
+    //toggle the dialog
+    const toggleDialog = () => {
+
+      SetOpen((prevState) => !prevState);    
     }
 
     return(

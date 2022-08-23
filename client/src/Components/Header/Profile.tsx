@@ -1,9 +1,15 @@
 import React from "react"
-import { MyProps } from "./SignUp"
 
 //Material Ui
 import PersonRounded from "@mui/icons-material/PersonRounded"
 import IconButton from "@mui/material/IconButton"
+
+interface MyProps{
+
+    connected: boolean,
+    toggleConnected: () => void,
+    changeUserId: (id: string) => void
+}
 
 export const Profile: React.FC<MyProps> = ({connected, toggleConnected}) => {
 

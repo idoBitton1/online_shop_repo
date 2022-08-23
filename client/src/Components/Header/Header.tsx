@@ -8,12 +8,16 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Menu from "@mui/icons-material/Menu"
 
+interface MyProps{
 
-export const Header = () => {
+  changeUserId: (id: string) => void
+}
+
+export const Header: React.FC<MyProps> = ({changeUserId}) => {
 
     const [connected, setConnected] = useState<boolean>(false)
 
-    const toggleConnected = () => {
+    const toggleConnected = (): void => {
 
         setConnected((prevState) => !prevState);
     }
@@ -39,11 +43,13 @@ export const Header = () => {
             <Profile 
               connected={connected}
               toggleConnected={toggleConnected}
+              changeUserId={changeUserId}
             />
             :
             <SignUp
               connected={connected}
               toggleConnected={toggleConnected}
+              changeUserId={changeUserId}
             />
             }
         </header>

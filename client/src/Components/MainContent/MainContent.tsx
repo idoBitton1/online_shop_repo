@@ -1,12 +1,20 @@
 import React from "react"
 import { DisplayRecord } from "./DisplayRecord"
 import "./MainContent.css"
+import { Extra, Record, SpecialRecord } from "../../App"
 
 //Material Ui
 import Grid from "@mui/material/Grid"
-import { textAlign } from "@mui/system"
 
-export const MainContent = () => {
+interface MyProps{
+
+    records: Record[],
+    special_records: SpecialRecord[],
+    extras: Extra[],
+    salary_per_hour: number
+}
+
+export const MainContent: React.FC<MyProps> = ({records, special_records, extras}) => {
 
     return(
         <>
@@ -35,14 +43,15 @@ export const MainContent = () => {
                 </Grid>
                 <Grid item xs={2}>
                     total
-                </Grid>
-
-                
+                </Grid>  
             </Grid> 
+
             <DisplayRecord 
                 start_time="2022-08-23 22:00"
                 end_time="2022-08-23 23:00"
-            />   
+                percentage={150}
+                salary_per_hour={30}
+            /> 
         </div>
         </>
     )

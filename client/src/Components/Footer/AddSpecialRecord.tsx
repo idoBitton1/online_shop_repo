@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup"
+import * as uuid from "uuid"
+import { SpecialRecord } from "../../App"
 
 //Material Ui
 import Button from "@mui/material/Button"
@@ -11,6 +13,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import { MenuItem, Select } from "@mui/material";
 
+interface MyProps{
+
+  user_id: string,
+  job_id: number,
+  changeSpecialRecords: (special_record: SpecialRecord) => void
+}
+
 interface MyFormValues{
 
     date: string,
@@ -18,11 +27,12 @@ interface MyFormValues{
     type: string
 }
 
-export const AddSpecialRecord = () => {
+export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const [open, setOpen] = useState<boolean>(false);
+    const [special_type_id, setSpecialTypeId] = useState();
     const [optionList, setOptionsList] = useState<string[]>([
-        "option1", "option2", "option3"
+        "vacation", "sick day", "holiday"
     ]);
 
     const initialValues: MyFormValues = {
@@ -37,15 +47,60 @@ export const AddSpecialRecord = () => {
         type: Yup.string().required("Required")
     })
 
-    const toggleDialog = () => {
+    //GET the percentage of the chosen type and his id
+    const getPercentage = async(type: string) => {
 
-        setOpen((prevState) => !prevState);
+      var percentage: number = 0;
+
+      try {
+        const response = await fetch(`http://localhost:5000/special_record_types/${type}`);
+        const json_data = await response.json();
+
+        percentage = json_data.percentage;
+        setSpecialTypeId(json_data.special_type_id)
+      } catch (err: any) {
+        console.error(err.message);
+      }
+
+      return percentage;
+    }
+  
+    //Add to database with http POST
+    const onSubmit = async(values: MyFormValues) => {
+
+      try {
+        //http GET
+        const percentage = await getPercentage(values.type);
+
+        //http POST
+        const id = uuid.v4();
+        const { date, hours_amount,type } = values;
+        const data = { id,date,hours_amount,type,percentage,
+                      user_id,job_id,special_type_id};
+
+        const response = await fetch("http://localhost:5000/special_records", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        console.log(response);
+
+        const win: Window = window;
+        win.location = "/";
+      } catch (err: any) {
+        console.error(err.message);
+      }
+
+      console.log(values);
+      toggleDialog();
     }
 
-    const onSubmit = (values: MyFormValues) => {
+    const toggleDialog = () => {
 
-        console.log(values);
-        toggleDialog();
+      setOpen((prevState) => !prevState);  
     }
 
     return(
