@@ -1,7 +1,7 @@
-import express from "express";
-import cors from "cors";
-import pool from "./db";
+const express = require("express");
 const app = express();
+const cors = require("cors");
+const pool = require("./db")
 
 //middleware
 app.use(cors());
@@ -23,7 +23,7 @@ app.post("/records", async(req, res) => {
         [id,start_time,end_time,daily_break,user_id,job_id]);
         
         res.json(new_record.rows[0]);
-    } catch (err: any) {
+    } catch (err) {
         console.error(err.message);
     }
 });
@@ -35,7 +35,7 @@ app.get("/records", async(req, res) => {
         const all_records = await pool.query("SELECT start_time,end_time,daily_break FROM records");
 
         res.json(all_records.rows);
-    } catch (err: any) {
+    } catch (err) {
         console.error(err.message);
     }
 });
@@ -54,7 +54,7 @@ app.post("/special_records", async(req, res) => {
         [id,date,hours_amount,type,percentage,user_id,job_id,special_type_id]);
         
         res.json(new_special_record.rows[0]);
-    } catch (err: any) {
+    } catch (err) {
         console.error(err.message);
     }
 });
@@ -66,7 +66,7 @@ app.get("/special_records", async(req, res) => {
         const all_special_records = await pool.query("SELECT date,hours_amount,type FROM special_records");
 
         res.json(all_special_records.rows);
-    } catch (err: any) {
+    } catch (err) {
         console.error(err.message);
     }
 });
@@ -81,7 +81,7 @@ app.get("/special_record_types/:type", async(req, res) => {
         [type]);
 
         res.json(result.rows[0]);
-    } catch (err: any) {
+    } catch (err) {
         console.error(err.message);
     }
 })
@@ -100,7 +100,7 @@ app.post("/extras", async(req, res) => {
         [id,date,bonus,amount,description,user_id,job_id]);
 
         res.json(new_extra.rows[0]);
-    } catch (err: any) {
+    } catch (err) {
         console.error(err.message);
     }
 });
@@ -112,7 +112,7 @@ app.get("/extras", async(req, res) => {
         const all_extras = await pool.query("SELECT date,bonus,amount,description FROM extras");
 
         res.json(all_extras.rows);
-    } catch (err: any) {
+    } catch (err) {
         console.error(err.message);
     }
 });
@@ -130,7 +130,7 @@ app.post("/users", async(req, res) => {
         [id,username,password]);
 
         res.json(new_user.rows[0]);
-    } catch (err: any) {
+    } catch (err) {
         console.error(err.message);
     }
 });
@@ -145,7 +145,7 @@ app.get("/jobs/:id", async(req, res) => {
         [id]);
 
         res.json(salary.rows[0]);
-    } catch (err: any) {
+    } catch (err) {
         console.error(err.message);
     }
 })
