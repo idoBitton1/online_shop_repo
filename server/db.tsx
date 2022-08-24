@@ -1,6 +1,6 @@
-const Pool = require("pg").Pool;
+import Pool from "pg";
 
-const poolPg = new Pool({
+const poolPg = new Pool.Pool({
     user: "postgres",
     password: "mpmpiv100",
     host: "localhost",
@@ -8,4 +8,5 @@ const poolPg = new Pool({
     database: "shift_manager"
 });
 
-module.exports = poolPg;
+//module.exports = poolPg;
+export default poolPg;
