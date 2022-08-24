@@ -72,14 +72,15 @@ app.get("/special_records", async(req, res) => {
 });
 
 //get the percentage and id of a specific special record type, by type
-app.get("/special_record_types/:type", async(req, res) => {
+app.get("/special_record_types", async(req, res) => {
 
     try {
-        const { type } = req.params;
+        const queryParams = req.query;
+        console.log(queryParams.type)
         const result = await pool.query(
-        "SELECT percentage,special_type_id FROM special_record_types WHERE type = $1",
-        [type]);
-
+        "SELECT percentage,id FROM special_record_types WHERE type = $1",
+        [queryParams.type]);
+    
         res.json(result.rows[0]);
     } catch (err) {
         console.error(err.message);
