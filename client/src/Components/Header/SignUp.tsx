@@ -45,9 +45,9 @@ export const SignUp: React.FC<MyProps> = ({connected, toggleConnected, changeUse
         .max(15, "username is too long")
         .required("Required"),
         password: Yup.string().min(8, "password is too short")
-        .required("Required"),
-        confirm_password: Yup.string().min(8, "password is too long")
-        .required("Required"),
+        .max(20, "password is too long").required("Required"),
+        confirm_password: Yup.string().min(8, "password is too short")
+        .max(20, "password is too long").required("Required"),
         salary_per_hour: Yup.number().min(1, "can't be negative or zero")
         .required("Required")
     })

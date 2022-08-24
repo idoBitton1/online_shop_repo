@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 interface MyProps{
 
   user_id: string,
-  job_id: number,
+  job_id: string,
   changeRecords: (record: Record) => void
 }
 

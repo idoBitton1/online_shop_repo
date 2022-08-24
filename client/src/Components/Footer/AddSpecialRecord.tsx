@@ -16,7 +16,7 @@ import { MenuItem, Select } from "@mui/material";
 interface MyProps{
 
   user_id: string,
-  job_id: number,
+  job_id: string,
   changeSpecialRecords: (special_record: SpecialRecord) => void
 }
 

@@ -8,7 +8,7 @@ import { Record, SpecialRecord, Extra } from "../../App"
 export interface MyProps{
 
     user_id: string,
-    job_id: number,
+    job_id: string,
     changeRecords: (record: Record) => void,
     changeSpecialRecords: (special_record: SpecialRecord) => void,
     changeExtras: (extra: Extra) => void,
