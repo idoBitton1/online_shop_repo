@@ -53,7 +53,7 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
       var percentage: number = 0;
 
       try {
-        const response = await fetch(`http://localhost:5000/special_record_types/${type}`);
+        const response = await fetch(`http://localhost:5000/special_record_types?type=${type}`);
         const json_data = await response.json();
 
         percentage = json_data.percentage;
@@ -87,9 +87,6 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         });
 
         console.log(response);
-
-        const win: Window = window;
-        win.location = "/";
       } catch (err: any) {
         console.error(err.message);
       }

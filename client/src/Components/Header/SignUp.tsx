@@ -81,8 +81,7 @@ export const SignUp: React.FC<MyProps> = ({connected, toggleConnected, changeUse
       } catch (err: any) {
         console.error(err.message);
       }
-
-      console.log(values);
+      
       toggleConnected();
       toggleDialog();
     }

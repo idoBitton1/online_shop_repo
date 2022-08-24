@@ -66,7 +66,9 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
       try {
         const id = uuid.v4();
         const { daily_break } = values;
-        const data = { id, start_datetime, end_datetime,
+        const start_time = `${values.start_date} ${values.start_time}`;
+        const end_time = `${values.end_date} ${values.end_time}`;
+        const data = { id, start_time, end_time,
                       daily_break, user_id, job_id };
         
         const response = await fetch("http://localhost:5000/records", {
@@ -79,13 +81,12 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
         console.log(response);
         
-        const win: Window = window;
-        win.location = "/";
+        //const win: Window = window;
+        //win.location = "/";
       } catch (err: any) {
         console.error(err.message);
       }
 
-      console.log(values);
       toggleDialog();
     }
 
