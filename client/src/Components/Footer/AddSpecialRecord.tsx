@@ -30,7 +30,7 @@ interface MyFormValues{
 export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const [open, setOpen] = useState<boolean>(false);
-    const [special_record_type_id, setSpecialRecordTypeId] = useState();
+    const [special_record_type_id, setSpecialRecordTypeId] = useState<string>("");
     const [optionList, setOptionsList] = useState<string[]>([
         "vacation", "sick day", "holiday"
     ]);
@@ -54,7 +54,7 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         const response = await fetch(`http://localhost:5000/special_record_types?type=${type}`);
         const json_data = await response.json();
 
-        setSpecialRecordTypeId(json_data.special_record_type_id)
+        setSpecialRecordTypeId(json_data.id)
       } catch (err: any) {
         console.error(err.message);
       }
