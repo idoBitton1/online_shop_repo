@@ -86,7 +86,6 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         console.error(err.message);
       }
 
-      console.log(values);
       toggleDialog();
     }
 
