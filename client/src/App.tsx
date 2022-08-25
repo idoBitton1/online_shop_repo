@@ -30,15 +30,14 @@ export interface Extra{
 function App() {
 
   const [user_id, setUserId] = useState<string>("");
-  const [salary_per_hour, setSalaryPerHour] = useState<number>(30);
-  const [job_id, setJobId] = useState<string>("49b7a3c6-5732-453c-b004-9a8a7fc8ea9a");
+  const [salary_per_hour, setSalaryPerHour] = useState<number>(35); //default value 
+  const [job_id, setJobId] = useState<string>(
+    "49b7a3c6-5732-453c-b004-9a8a7fc8ea9a"
+  ); //the id of the first job
 
   const [records, setRecords] = useState<Record[]>([]);
   const [special_records, setSpecialRecords] = useState<SpecialRecord[]>([]);
   const [extras, setExtras] = useState<Extra[]>([]);
-
-  console.log("user: " + user_id);
-  console.log("salary: " + salary_per_hour);
 
   const getSalary = async() => {
 
@@ -98,9 +97,14 @@ function App() {
   /*
   useEffect(() => {
 
-    getRecords();
-    getSpecialRecords();
-    getExtras();
+    //if logged in, fetch the records of the user
+    if(user_id)
+    {
+      console.log("fetching data...");
+      getRecords();
+      getSpecialRecords();
+      getExtras();
+    }
   }, [])
   */
 

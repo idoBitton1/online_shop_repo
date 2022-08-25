@@ -30,7 +30,7 @@ interface MyFormValues{
 export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const [open, setOpen] = useState<boolean>(false);
-    const [special_type_id, setSpecialTypeId] = useState();
+    const [special_record_type_id, setSpecialRecordTypeId] = useState();
     const [optionList, setOptionsList] = useState<string[]>([
         "vacation", "sick day", "holiday"
     ]);
@@ -50,19 +50,14 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
     //GET the percentage of the chosen type and his id
     const getPercentage = async(type: string) => {
 
-      var percentage: number = 0;
-
       try {
         const response = await fetch(`http://localhost:5000/special_record_types?type=${type}`);
         const json_data = await response.json();
 
-        percentage = json_data.percentage;
-        setSpecialTypeId(json_data.special_type_id)
+        setSpecialRecordTypeId(json_data.special_record_type_id)
       } catch (err: any) {
         console.error(err.message);
       }
-
-      return percentage;
     }
   
     //Add to database with http POST
@@ -70,13 +65,13 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
       try {
         //http GET
-        const percentage = await getPercentage(values.type);
+        await getPercentage(values.type);
 
         //http POST
         const id = uuid.v4();
-        const { date, hours_amount,type } = values;
-        const data = { id,date,hours_amount,type,percentage,
-                      user_id,job_id,special_type_id};
+        const { date, hours_amount } = values;
+        const data = { id,date,hours_amount,
+                      user_id,job_id,special_record_type_id};
 
         const response = await fetch("http://localhost:5000/special_records", {
           method: "POST",
