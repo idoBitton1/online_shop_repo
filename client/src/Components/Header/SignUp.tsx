@@ -11,9 +11,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from "@mui/material/TextField";
 
-interface MyProps{
+export interface MyProps{
 
-  connected: boolean,
   toggleConnected: () => void,
   changeUserId: (id: string) => void
 }
@@ -26,7 +25,7 @@ interface MyFormValues{
     salary_per_hour: number
 }
 
-export const SignUp: React.FC<MyProps> = ({connected, toggleConnected, changeUserId}) => {
+export const SignUp: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
 
     const [open, SetOpen] = useState<boolean>(false);
     var errmsg: string;
@@ -49,14 +48,27 @@ export const SignUp: React.FC<MyProps> = ({connected, toggleConnected, changeUse
         .required("Required")
     })
 
+    const checkPassword = (password: string, confirm_password: string): boolean => {
+
+      if (password.search(/\d/) == -1) {
+          errmsg = "please add at least 1 number";
+          return false;
+      } else if (password.search(/[a-zA-Z]/) == -1) {
+          errmsg = "please add at least 1 letter";
+          return false;
+      } else if(password !== confirm_password){
+          errmsg = "passwords do not match";
+          return false;
+      }
+
+      return true;
+    }
+
     //Add to data base with http
     const onSubmit = async(values: MyFormValues) => {
 
-      if(values.password !== values.confirm_password)
-      {
-        errmsg = "passwords do not match";
+      if(!checkPassword(values.password, values.confirm_password)) 
         return;
-      }
 
       //http POST
       try {
