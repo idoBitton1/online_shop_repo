@@ -45,13 +45,13 @@ app.post("/special_records", async(req, res) => {
 
     try {
         //variables
-        const { id,date,hours_amount,type,percentage,
-                user_id,job_id,special_type_id} = req.body;
+        const { id,date,hours_amount,
+                user_id,job_id,special_record_type_id} = req.body;
         
         //the query
         const new_special_record = await pool.query(
-        "INSERT INTO special_records (id,date,hours_amount,type,percentage,user_id,job_id,special_type_id) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING * ",
-        [id,date,hours_amount,type,percentage,user_id,job_id,special_type_id]);
+        "INSERT INTO special_records (id,date,hours_amount,user_id,job_id,special_record_type_id) VALUES($1,$2,$3,$4,$5,$6) RETURNING * ",
+        [id,date,hours_amount,user_id,job_id,special_record_type_id]);
         
         res.json(new_special_record.rows[0]);
     } catch (err) {
@@ -78,7 +78,7 @@ app.get("/special_record_types", async(req, res) => {
         const queryParams = req.query;
         console.log(queryParams.type)
         const result = await pool.query(
-        "SELECT percentage,id FROM special_record_types WHERE type = $1",
+        "SELECT id FROM special_record_types WHERE type = $1",
         [queryParams.type]);
     
         res.json(result.rows[0]);
