@@ -32,9 +32,9 @@ app.post("/records", async(req, res) => {
 app.get("/records", async(req, res) => {
 
     try {
-        const all_records = await pool.query("SELECT start_time,end_time,daily_break FROM records");
+        const get_records = await pool.query("SELECT start_time,end_time,daily_break FROM records");
 
-        res.json(all_records.rows);
+        res.json(get_records.rows);
     } catch (err) {
         console.error(err.message);
     }
@@ -59,13 +59,16 @@ app.post("/special_records", async(req, res) => {
     }
 });
 
-//get all special records
+//get all special records of a user from the current job
 app.get("/special_records", async(req, res) => {
 
     try {
-        const all_special_records = await pool.query("SELECT date,hours_amount,type FROM special_records");
+        const { user_id, job_id } = req.query;
+        const get_special_records = await pool.query(
+        "SELECT date,hours_amount FROM special_records WHERE user_id = $1 AND job_id = $2 ",
+        [user_id, job_id]);
 
-        res.json(all_special_records.rows);
+        res.json(get_special_records.rows);
     } catch (err) {
         console.error(err.message);
     }
@@ -75,11 +78,10 @@ app.get("/special_records", async(req, res) => {
 app.get("/special_record_types", async(req, res) => {
 
     try {
-        const queryParams = req.query;
-        console.log(queryParams.type)
+        const { type } = req.query;
         const result = await pool.query(
-        "SELECT id FROM special_record_types WHERE type = $1",
-        [queryParams.type]);
+        "SELECT id FROM special_record_types WHERE type = $1 ",
+        [type]);
     
         res.json(result.rows[0]);
     } catch (err) {
@@ -110,9 +112,9 @@ app.post("/extras", async(req, res) => {
 app.get("/extras", async(req, res) => {
 
     try {
-        const all_extras = await pool.query("SELECT date,bonus,amount,description FROM extras");
+        const get_extras = await pool.query("SELECT date,bonus,amount,description FROM extras");
 
-        res.json(all_extras.rows);
+        res.json(get_extras.rows);
     } catch (err) {
         console.error(err.message);
     }
@@ -136,6 +138,21 @@ app.post("/users", async(req, res) => {
     }
 });
 
+//validates if a user is exists, used to check if login details are true
+app.get("/users_validation", async(req, res) => {
+
+    try {
+        const { username, password } = req.query;
+        const get_user = await pool.query(
+        "SELECT check_if_user_exists($1,$2)",
+        [username, password]);
+        
+        res.json(get_user.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
 //get salary of a specific job, by job id
 app.get("/jobs/:id", async(req, res) => {
 
@@ -149,7 +166,7 @@ app.get("/jobs/:id", async(req, res) => {
     } catch (err) {
         console.error(err.message);
     }
-})
+});
 
 //
 //
