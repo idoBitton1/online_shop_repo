@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import "./Header.css"
 import { SignUp } from "./SignUp";
+import { SignIn } from "./SignIn";
 import { Profile } from "./Profile";
 
 //Material Ui
@@ -46,11 +47,17 @@ export const Header: React.FC<MyProps> = ({changeUserId}) => {
               changeUserId={changeUserId}
             />
             :
-            <SignUp
-              connected={connected}
-              toggleConnected={toggleConnected}
-              changeUserId={changeUserId}
-            />
+            <div>
+              <SignIn
+                toggleConnected={toggleConnected}
+                changeUserId={changeUserId}
+              />
+
+              <SignUp
+                toggleConnected={toggleConnected}
+                changeUserId={changeUserId}
+              />
+            </div>
             }
         </header>
     )
