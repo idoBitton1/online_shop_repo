@@ -80,9 +80,6 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         });
 
         console.log(response);
-        
-        //const win: Window = window;
-        //win.location = "/";
       } catch (err: any) {
         console.error(err.message);
       }
