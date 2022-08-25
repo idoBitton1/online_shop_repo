@@ -5,13 +5,11 @@ import * as uuid from "uuid"
 
 //Material Ui
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
+import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from "@mui/material/TextField";
-import IconButton from '@mui/material/IconButton';
-import PersonAdd from "@mui/icons-material/PersonAdd";
 
 interface MyProps{
 
@@ -42,8 +40,7 @@ export const SignUp: React.FC<MyProps> = ({connected, toggleConnected, changeUse
 
     const validationSchema: any = Yup.object().shape({
         username: Yup.string().min(3, "username is too short")
-        .max(15, "username is too long")
-        .required("Required"),
+        .max(15, "username is too long").required("Required"),
         password: Yup.string().min(8, "password is too short")
         .max(20, "password is too long").required("Required"),
         confirm_password: Yup.string().min(8, "password is too short")
@@ -94,11 +91,13 @@ export const SignUp: React.FC<MyProps> = ({connected, toggleConnected, changeUse
 
     return(
         <>
-            <IconButton
+            <Button
+              color="secondary"
+              variant="outlined"
               sx={{color: "white"}}
               onClick={toggleDialog}>
-                <PersonAdd sx={{fontSize: 30}} />
-            </IconButton>
+                sign up
+            </Button>
 
             <Dialog open={open} onClose={toggleDialog}>
 
@@ -133,6 +132,18 @@ export const SignUp: React.FC<MyProps> = ({connected, toggleConnected, changeUse
                             onChange={props.handleChange}
                             helperText={<ErrorMessage name="username" />}
                           />
+                          <Field as={TextField} name="salary_per_hour"
+                            sx={{marginLeft: 3}}
+                            margin="normal"
+                            type="number"
+                            label="salary per hour"
+                            variant="standard"
+                            color="secondary"
+                            required
+                            value={props.values.salary_per_hour}
+                            onChange={props.handleChange}
+                            helperText={<ErrorMessage name="salary_per_hour" />}
+                          />
                           <br />
                           <Field as={TextField} name="password"
                             margin="normal"
@@ -145,8 +156,8 @@ export const SignUp: React.FC<MyProps> = ({connected, toggleConnected, changeUse
                             onChange={props.handleChange}
                             helperText={<ErrorMessage name="password" />}
                           />
-                          <br />
                           <Field as={TextField} name="confirm_password"
+                            sx={{marginLeft: 3}}
                             margin="normal"
                             label="confirm password"
                             type="password"
@@ -158,25 +169,16 @@ export const SignUp: React.FC<MyProps> = ({connected, toggleConnected, changeUse
                             helperText={<ErrorMessage name="confirm_password" />}
                           />
                           <br />
-                          <Field as={TextField} name="salary_per_hour"
-                            margin="normal"
-                            label="salary per hour"
-                            variant="standard"
-                            color="secondary"
-                            required
-                            value={props.values.salary_per_hour}
-                            onChange={props.handleChange}
-                            helperText={<ErrorMessage name="salary_per_hour" />}
-                          />
                           <br />
-                          <br />
-                          
+
                           <Button type="submit"
+                            sx={{marginLeft: "38%"}}
                             color="secondary"
                             variant="contained">
                               submit
                           </Button>
                           <Typography
+                            sx={{marginLeft: "28%"}}
                             fontFamily={"Rubik"}
                             color={"red"}>
                             {errmsg}
