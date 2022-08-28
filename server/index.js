@@ -74,7 +74,7 @@ app.get("/special_records", async(req, res) => {
     }
 });
 
-//get the percentage and id of a specific special record type, by type
+//get the id of a specific special record type, by type
 app.get("/special_record_types", async(req, res) => {
 
     try {
@@ -148,6 +148,20 @@ app.get("/users_validation", async(req, res) => {
         [username, password]);
         
         res.json(get_user.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+//get id of the first job
+app.get("/jobs", async(req, res) => {
+
+    try {
+        const first = await pool.query(
+        "SELECT id FROM jobs LIMIT 1"
+        );
+
+        res.json(first.rows[0]);
     } catch (err) {
         console.error(err.message);
     }
