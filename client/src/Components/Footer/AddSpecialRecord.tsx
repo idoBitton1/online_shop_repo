@@ -30,7 +30,6 @@ interface MyFormValues{
 export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const [open, setOpen] = useState<boolean>(false);
-    const [special_record_type_id, setSpecialRecordTypeId] = useState<string>("");
     const [optionList, setOptionsList] = useState<string[]>([
         "vacation", "sick day", "holiday"
     ]);
@@ -46,30 +45,27 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         hours_amount: Yup.number().min(1, "can't be negative or zero").required("Required"),
         type: Yup.string().required("Required")
     })
-
-    //GET the percentage of the chosen type and his id
-    const getPercentage = async(type: string) => {
-
-      try {
-        const response = await fetch(`http://localhost:5000/special_record_types?type=${type}`);
-        const json_data = await response.json();
-
-        setSpecialRecordTypeId(json_data.id)
-      } catch (err: any) {
-        console.error(err.message);
-      }
-    }
   
     //Add to database with http POST
     const onSubmit = async(values: MyFormValues) => {
 
+      //http GET
+      var special_record_type_id: string = "";
       try {
-        //http GET
-        await getPercentage(values.type);
+        const response = await fetch(`http://localhost:5000/special_record_types?type=${values.type}`);
+        const json_data = await response.json();
 
-        //http POST
+        special_record_type_id = json_data.id;
+      } catch (err: any) {
+        console.error(err.message);
+      }
+      console.log(special_record_type_id);
+
+      //http POST
+      try {
+
         const id = uuid.v4();
-        const { date, hours_amount } = values;
+        const { date, hours_amount } = values;       
         const data = { id,date,hours_amount,
                       user_id,job_id,special_record_type_id};
 
