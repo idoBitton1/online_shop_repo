@@ -8,15 +8,14 @@ export interface Record{
 
   start_time: string,
   end_time: string,
-  daily_break?: number,
-  percentage?: number
+  daily_break: number
 }
 
 export interface SpecialRecord{
 
   date: string,
   hours_amount: number,
-  type: string
+  special_record_type_id: string
 }
 
 export interface Extra{
@@ -52,8 +51,7 @@ function App() {
   //gets the first job id
   useEffect(() => {
 
-    getFirstJobId();
-    
+    getFirstJobId();   
   }, [])
 
   const getSalary = async() => {
@@ -74,10 +72,11 @@ function App() {
     getSalary();  
   }, [job_id])
 
+  //gets all the records of the corrent user
   const getRecords = async() => {
 
     try {
-      const response = await fetch("http://localhost:5000/records");
+      const response = await fetch(`http://localhost:5000/records?user_id=${user_id}&job_id=${job_id}`);
       const json_data = await response.json();
 
       setRecords(json_data);
@@ -86,10 +85,11 @@ function App() {
     }
   }
 
+  //gets all the special records of the corrent user
   const getSpecialRecords = async() => {
 
     try {
-      const response = await fetch("http://localhost:5000/special_records");
+      const response = await fetch(`http://localhost:5000/special_records?user_id=${user_id}&job_id=${job_id}`);
       const json_data = await response.json();
 
       setSpecialRecords(json_data);
@@ -98,10 +98,11 @@ function App() {
     }
   }
 
+  //gets all the extra records of the corrent user
   const getExtras = async() => {
 
     try {
-      const response = await fetch("http://localhost:5000/extras");
+      const response = await fetch(`http://localhost:5000/extras?user_id=${user_id}&job_id=${job_id}`);
       const json_data = await response.json();
 
       setExtras(json_data);
@@ -110,8 +111,7 @@ function App() {
     }
   }
 
-  //gets all the records
-  /*
+  //gets all the records of the conncted user
   useEffect(() => {
 
     //if logged in, fetch the records of the user
@@ -122,8 +122,7 @@ function App() {
       getSpecialRecords();
       getExtras();
     }
-  }, [])
-  */
+  }, [user_id])
 
   const changeUserId = (id: string): void => {
 
