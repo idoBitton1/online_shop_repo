@@ -31,13 +31,30 @@ function App() {
 
   const [user_id, setUserId] = useState<string>("");
   const [salary_per_hour, setSalaryPerHour] = useState<number>(35); //default value 
-  const [job_id, setJobId] = useState<string>(
-    "49b7a3c6-5732-453c-b004-9a8a7fc8ea9a"
-  ); //the id of the first job
+  const [job_id, setJobId] = useState<string>(""); //the id of the first job
 
   const [records, setRecords] = useState<Record[]>([]);
   const [special_records, setSpecialRecords] = useState<SpecialRecord[]>([]);
   const [extras, setExtras] = useState<Extra[]>([]);
+
+  const getFirstJobId = async() => {
+
+    try {
+      const response = await fetch("http://localhost:5000/jobs");
+      const json_data = await response.json();
+
+      setJobId(json_data.id);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  }
+
+  //gets the first job id
+  useEffect(() => {
+
+    getFirstJobId();
+    
+  }, [])
 
   const getSalary = async() => {
 
