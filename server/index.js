@@ -68,7 +68,7 @@ app.get("/special_records", async(req, res) => {
     try {
         const { user_id, job_id } = req.query;
         const get_special_records = await pool.query(
-        "SELECT date,hours_amount FROM special_records WHERE user_id = $1 AND job_id = $2 ",
+        "SELECT date,hours_amount,special_record_type_id FROM special_records WHERE user_id = $1 AND job_id = $2 ",
         [user_id, job_id]);
 
         res.json(get_special_records.rows);
@@ -87,6 +87,20 @@ app.get("/special_record_types", async(req, res) => {
         [type]);
     
         res.json(result.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+    }
+})
+
+app.get("/special_record_types_percentage", async(req, res) => {
+
+    try {
+        const { special_record_type_id } = req.query;
+        const percentage = await pool.query(
+        "SELECT percentage FROM special_record_types WHERE id=$1 ",
+        [special_record_type_id]);
+
+        res.json(percentage.rows[0]);
     } catch (err) {
         console.error(err.message);
     }
