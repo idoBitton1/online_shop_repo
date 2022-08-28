@@ -28,11 +28,14 @@ app.post("/records", async(req, res) => {
     }
 });
 
-//get all records
+//get all records of a user in the current job
 app.get("/records", async(req, res) => {
 
     try {
-        const get_records = await pool.query("SELECT start_time,end_time,daily_break FROM records");
+        const { user_id, job_id } = req.query;
+        const get_records = await pool.query(
+        "SELECT start_time,end_time,daily_break FROM records WHERE user_id=$1 AND job_id=$2 ",
+        [user_id, job_id]);
 
         res.json(get_records.rows);
     } catch (err) {
@@ -112,7 +115,10 @@ app.post("/extras", async(req, res) => {
 app.get("/extras", async(req, res) => {
 
     try {
-        const get_extras = await pool.query("SELECT date,bonus,amount,description FROM extras");
+        const { user_id, job_id } = req.query;
+        const get_extras = await pool.query(
+        "SELECT date,bonus,amount,description FROM extras WHERE user_id=$1 AND job_id=$2",
+        [user_id, job_id]);
 
         res.json(get_extras.rows);
     } catch (err) {
