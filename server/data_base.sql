@@ -58,3 +58,16 @@ CREATE TABLE extras(
     job_id UUID REFERENCES jobs (id) NOT NULL
     CONSTRAINT check_min CHECK (amount >= 1)
 );
+
+CREATE OR REPLACE FUNCTION validate_user(_username VARCHAR, _password VARCHAR, OUT result VARCHAR) AS
+$BODY$
+DECLARE
+BEGIN
+IF EXISTS(SELECT 1 FROM users WHERE username=_username AND password=_password) THEN
+SELECT id INTO result FROM users WHERE username=_username AND password=_password;
+ELSE
+result := '';
+END IF;
+RETURN;
+END
+$BODY$ language plpgsql;
