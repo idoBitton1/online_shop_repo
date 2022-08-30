@@ -1,211 +1,153 @@
 const express = require("express");
 const app = express();
-const cors = require("cors");
-const pool = require("./db")
+const PORT = 5000;
+const pool = require("./db");
+const graphql = require("graphql");
+const { 
+    buildSchema,
+    GraphQLSchema, 
+    GraphQLObjectType,
+    GraphQLString,
+    GraphQLBoolean, 
+    GraphQLInt,
+    GraphQLList,
+    GraphQLNonNull } = graphql;
+const { graphqlHTTP } = require("express-graphql");
 
-//middleware
-app.use(cors());
-app.use(express.json());
+const schema = buildSchema(`
 
-//Routes
-
-//create a new record
-app.post("/records", async(req, res) => {
-
-    try {
-        //variables
-        const { id,start_time,end_time,
-                daily_break,user_id,job_id } = req.body;
-        
-        //the query
-        const new_record = await pool.query(
-        "INSERT INTO records (id,start_time,end_time,daily_break,user_id,job_id) VALUES($1,$2,$3,$4,$5,$6) RETURNING * ",
-        [id,start_time,end_time,daily_break,user_id,job_id]);
-        
-        res.json(new_record.rows[0]);
-    } catch (err) {
-        console.error(err.message);
+    type Record{
+        id: String!,
+        start_time: String!,
+        end_time: String!,
+        daily_break: Int!,
+        user_id: String!,
+        job_id: String!
     }
+
+    type Special_record{
+        id: String!,
+        date: String!,
+        hours_amount: String!,
+        user_id: String!,
+        job_id: String!,
+        special_record_type_id: String!
+    }
+
+    type Special_record_type{
+        id: String!,
+        type: String!,
+        percentage: Int!
+    }
+
+    type Extra{
+        id: String!,
+        date: String!,
+        bonus: Boolean!,
+        amount: Int!,
+        description: String,
+        user_id: String!,
+        job_id: String!
+    }
+
+    type Job{
+        id: String!,
+        name: String!,
+        type: String!,
+        salary_per_hour: Int!
+    }
+
+    type Query {
+        getAllRecords(user_id: String!, job_id: String!): [Record],
+        getAllSpecialRecords(user_id: String!, job_id: String!): [Special_record],
+        getSpecialRecordTypeByType(type: String!): Special_record_type,
+        getAllExtras(user_id: String!, job_id: String!): [Extra],
+        validateUser(username: String!, password: String!): String
+        getJobByName(name: String!): Job
+    }
+`)
+
+var root = {
+    //get all the records of a user in the current job
+    getAllRecords: async({user_id, job_id}) => {
+        try {
+            const records = await pool.query(
+            "SELECT * FROM records WHERE user_id=$1 AND job_id=$2 ",
+            [user_id, job_id])
+            return records.rows;
+        } catch (err) {
+            console.error(err.message);
+        }
+    },
+    //get all special records of a user from the current job
+    getAllSpecialRecords: async({user_id, job_id}) => {
+        try {
+            const special_records = await pool.query(
+            "SELECT * FROM special_records WHERE user_id=$1 AND job_id=$2 ",
+            [user_id, job_id])
+            return special_records.rows;
+        } catch (err) {
+            console.error(err.message);
+        }
+    },
+    //get a special record type by type
+    getSpecialRecordTypeByType: async({type}) => {
+        try {
+            const special_record_type = await pool.query(
+            "SELECT * FROM special_record_types WHERE type = $1 ",
+            [type])
+            return special_record_type.rows[0];
+        } catch (err) {
+            console.error(err.message);
+        }
+    },
+    //get all extra records of a user from the current job
+    getAllExtras: async({user_id, job_id}) => {
+        try {
+            const extra = await pool.query(
+            "SELECT * FROM extras WHERE user_id=$1 AND job_id=$2 ",
+            [user_id, job_id])
+            return extra.rows;
+        } catch (err) {
+            console.error(err.message);
+        }
+    },
+    //validates if a user is exists, used to check if login details are true
+    validateUser: async({username, password}) => {
+        try {
+            const is_valid = await pool.query(
+            "SELECT validate_user($1,$2)",
+            [username, password])
+            return is_valid.rows[0];
+        } catch (err) {
+            console.error(err.message);
+        }
+    },
+    //get job by name
+    getJobByName: async(args) => {
+        try {
+            const is_valid = await pool.query(
+            "SELECT * FROM jobs WHERE name=$1",
+            [args.name])
+            return is_valid.rows[0];
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+}
+
+/*
+const mutation = new GraphQLObjectType({
+
 });
+*/
 
-//get all records of a user in the current job
-app.get("/records", async(req, res) => {
+app.use('/graphql', graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true
+}));
 
-    try {
-        const { user_id, job_id } = req.query;
-        const get_records = await pool.query(
-        "SELECT start_time,end_time,daily_break FROM records WHERE user_id=$1 AND job_id=$2 ",
-        [user_id, job_id]);
-
-        res.json(get_records.rows);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-//create a new special record
-app.post("/special_records", async(req, res) => {
-
-    try {
-        //variables
-        const { id,date,hours_amount,
-                user_id,job_id,special_record_type_id} = req.body;
-        
-        //the query
-        const new_special_record = await pool.query(
-        "INSERT INTO special_records (id,date,hours_amount,user_id,job_id,special_record_type_id) VALUES($1,$2,$3,$4,$5,$6) RETURNING * ",
-        [id,date,hours_amount,user_id,job_id,special_record_type_id]);
-        
-        res.json(new_special_record.rows[0]);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-//get all special records of a user from the current job
-app.get("/special_records", async(req, res) => {
-
-    try {
-        const { user_id, job_id } = req.query;
-        const get_special_records = await pool.query(
-        "SELECT date,hours_amount,special_record_type_id FROM special_records WHERE user_id = $1 AND job_id = $2 ",
-        [user_id, job_id]);
-
-        res.json(get_special_records.rows);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-//get the id of a specific special record type, by type
-app.get("/special_record_types", async(req, res) => {
-
-    try {
-        const { type } = req.query;
-        const result = await pool.query(
-        "SELECT id FROM special_record_types WHERE type = $1 ",
-        [type]);
-    
-        res.json(result.rows[0]);
-    } catch (err) {
-        console.error(err.message);
-    }
-})
-
-app.get("/special_record_types_percentage", async(req, res) => {
-
-    try {
-        const { special_record_type_id } = req.query;
-        const percentage = await pool.query(
-        "SELECT percentage FROM special_record_types WHERE id=$1 ",
-        [special_record_type_id]);
-
-        res.json(percentage.rows[0]);
-    } catch (err) {
-        console.error(err.message);
-    }
-})
-
-//create new extra
-app.post("/extras", async(req, res) => {
-
-    try {
-        //variables
-        const { id,date,bonus,amount,
-                description,user_id,job_id} = req.body;
-        
-        //the query
-        const new_extra = await pool.query(
-        "INSERT INTO extras (id,date,bonus,amount,description,user_id,job_id) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING * ",
-        [id,date,bonus,amount,description,user_id,job_id]);
-
-        res.json(new_extra.rows[0]);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-//get all extras
-app.get("/extras", async(req, res) => {
-
-    try {
-        const { user_id, job_id } = req.query;
-        const get_extras = await pool.query(
-        "SELECT date,bonus,amount,description FROM extras WHERE user_id=$1 AND job_id=$2",
-        [user_id, job_id]);
-
-        res.json(get_extras.rows);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-//create a new user
-app.post("/users", async(req, res) => {
-
-    try {
-        //variables
-        const { id, username, password } = req.body;
-
-        //the query
-        const new_user = await pool.query(
-        "INSERT INTO users (id,username,password) VALUES($1,$2,$3) RETURNING * ",
-        [id,username,password]);
-
-        res.json(new_user.rows[0]);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-//validates if a user is exists, used to check if login details are true
-app.get("/users_validation", async(req, res) => {
-
-    try {
-        const { username, password } = req.query;
-        const get_user = await pool.query(
-        "SELECT check_if_user_exists($1,$2)",
-        [username, password]);
-        
-        res.json(get_user.rows[0]);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-//get id of the first job
-app.get("/jobs", async(req, res) => {
-
-    try {
-        const first = await pool.query(
-        "SELECT id FROM jobs LIMIT 1"
-        );
-
-        res.json(first.rows[0]);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-//get salary of a specific job, by job id
-app.get("/jobs/:id", async(req, res) => {
-
-    try {
-        const { id } = req.params;
-        const salary = await pool.query(
-        "SELECT salary_per_hour FROM jobs WHERE id = $1",
-        [id]);
-
-        res.json(salary.rows[0]);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-//
-//
-//
-app.listen(5000, () => {
-
-    console.log("server has started on port 5000");
+app.listen(PORT, () => {
+    console.log("server has started on port " + PORT);
 })
