@@ -30,7 +30,7 @@ function App() {
 
   const [user_id, setUserId] = useState<string>("");
   const [salary_per_hour, setSalaryPerHour] = useState<number>(35); //default value 
-  const [job_id, setJobId] = useState<string>(""); //the id of the first job
+  const [job_id, setJobId] = useState<string>("");
 
   const [records, setRecords] = useState<Record[]>([]);
   const [special_records, setSpecialRecords] = useState<SpecialRecord[]>([]);
