@@ -28,7 +28,7 @@ const schema = buildSchema(`
     type Special_record{
         id: String!,
         date: String!,
-        hours_amount: String!,
+        hours_amount: Int!,
         user_id: String!,
         job_id: String!,
         special_record_type_id: String!
@@ -57,6 +57,12 @@ const schema = buildSchema(`
         salary_per_hour: Int!
     }
 
+    type User{
+        id: String!,
+        username: String!,
+        password: String!
+    }
+
     type Query {
         getAllRecords(user_id: String!, job_id: String!): [Record],
         getAllSpecialRecords(user_id: String!, job_id: String!): [Special_record],
@@ -65,9 +71,33 @@ const schema = buildSchema(`
         validateUser(username: String!, password: String!): String
         getJobByName(name: String!): Job
     }
+
+    type Mutation{
+        createUser(username: String!, password: String!): User,
+        createRecord(start_time: String!,
+                     end_time: String!, 
+                     daily_break: Int!, 
+                     user_id: String!, 
+                     job_id: String!): Record,
+
+        createSpecialRecord(date: String!, 
+                            hours_amount: Int!, 
+                            user_id: String!, 
+                            job_id: String!, 
+                            special_record_type_id: String!): Special_record,
+        
+        createExtra(date: String!,
+                    bonus: Boolean!,
+                    amount: Int!,
+                    description: String,
+                    user_id: String!, 
+                    job_id: String!): Extra
+    }
 `)
 
 var root = {
+    //Queries
+
     //get all the records of a user in the current job
     getAllRecords: async({user_id, job_id}) => {
         try {
@@ -133,14 +163,56 @@ var root = {
         } catch (err) {
             console.error(err.message);
         }
+    },
+
+    //Mutations
+
+    //create a new user
+    createUser: async({username, password}) => {
+        try {
+            const user = await pool.query(
+            "INSERT INTO users (id,username,password) VALUES(uuid_generate_v4(),$1,$2) RETURNING * ",
+            [username, password]);
+            return user.rows[0];
+        } catch (err) {
+            console.error(err.message);
+        }
+    },
+    //create a new record
+    createRecord: async({start_time, end_time, daily_break, user_id, job_id}) => {
+        try {
+            const record = await pool.query(
+            "INSERT INTO records (id,start_time,end_time,daily_break,user_id,job_id) VALUES(uuid_generate_v4(),$1,$2,$3,$4,$5) RETURNING * ",
+            [start_time, end_time, daily_break, user_id, job_id]);
+            return record.rows[0];
+        } catch (err) {
+            console.error(err.message);
+        }
+    },
+    // create a new special record
+    createSpecialRecord: async({date, hours_amount, user_id, job_id, special_record_type_id}) => {
+        try {
+            const special_record = await pool.query(
+            "INSERT INTO special_records (id,date,hours_amount,user_id,job_id,special_record_type_id) VALUES(uuid_generate_v4(),$1,$2,$3,$4,$5) RETURNING * ",
+            [date, hours_amount, user_id, job_id, special_record_type_id]);
+            return special_record.rows[0];
+        } catch (err) {
+            console.error(err.message);
+        }
+    },
+
+    //create a new extra record
+    createExtra: async({date, bonus, amount, description, user_id, job_id}) => {
+        try {
+            const extra = await pool.query(
+            "INSERT INTO extras (id,date,bonus,amount,description,user_id,job_id) VALUES(uuid_generate_v4(),$1,$2,$3,$4,$5,$6) RETURNING * ",
+            [date, bonus, amount, description, user_id, job_id]);
+            return extra.rows[0];
+        } catch (err) {
+            console.error(err.message);
+        }
     }
 }
-
-/*
-const mutation = new GraphQLObjectType({
-
-});
-*/
 
 app.use('/graphql', graphqlHTTP({
     schema: schema,
