@@ -65,46 +65,52 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
 
     return(
         <>
-        <div className="main_content_container">    
-
-            <Grid container sx={{textAlign: "center"}}>
-                <Grid item xs={2}>
-                    left
-                </Grid>
-                <Grid item xs={8}>
-                    {getMonthName(current_date.getMonth())}
-                </Grid>
-                <Grid item xs={2}>
-                    right
-                </Grid>
+        <Grid container sx={{
+                textAlign: "center",
+                paddingLeft: "2em",
+                paddingRight: "2em",
+                padding: "5px",
+                fontFamily: "Rubik"
+            }}>
+            <Grid item xs={2}>
+                left
             </Grid>
+            <Grid item xs={8}>
+                {getMonthName(current_date.getMonth())}
+            </Grid>
+            <Grid item xs={2}>
+                right
+            </Grid>
+        </Grid>
 
-            <Grid container sx={{
-                    backgroundColor: "#30a890",
-                    fontFamily: "Rubik",
-                    fontSize: "20px",
-                    padding: "5px",
-                    paddingLeft: "2em",
-                    paddingRight: "2em",
-                    textAlign: "center"
-                }}>
+        <Grid container sx={{
+                backgroundColor: "rgb(230, 230, 230)",
+                fontFamily: "Rubik",
+                fontSize: "20px",
+                padding: "5px",
+                paddingLeft: "2em",
+                paddingRight: "2em",
+                textAlign: "center"
+            }}>
 
-                <Grid item xs={2}>
-                    date
-                </Grid>
-                <Grid item xs={3}>
-                    from
-                </Grid>
-                <Grid item xs={3}>
-                    to
-                </Grid>
-                <Grid item xs={2}>
-                    hours
-                </Grid>
-                <Grid item xs={2}>
-                    total
-                </Grid>  
-            </Grid> 
+            <Grid item xs={2}>
+                date
+            </Grid>
+            <Grid item xs={3}>
+                from
+            </Grid>
+            <Grid item xs={3}>
+                to
+            </Grid>
+            <Grid item xs={2}>
+                hours
+            </Grid>
+            <Grid item xs={2}>
+                total
+            </Grid>  
+        </Grid> 
+
+        <div className="main_content_container">    
 
             <DisplayRecord 
                 start_time="2022-08-23 22:00"

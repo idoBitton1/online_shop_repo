@@ -46,7 +46,7 @@ export const DisplayRecord: React.FC<MyProps> = ({start_time, end_time, daily_br
 
     return(
         <Grid container sx={{
-                backgroundColor: "#30c0a8",
+                backgroundColor: "whitesmoke",
                 fontFamily: "Rubik",
                 fontSize: "20px",
                 padding: "15px",

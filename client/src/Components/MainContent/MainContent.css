@@ -5,24 +5,9 @@ html, body{
 
 .main_content_container{
 
-    background-color: #180018;
-    height: 85vh;
+    background-color: white;
+    height: 76vh;
     overflow: hidden;
     overflow-y: scroll;
-    color: white;
-}
-
-.subtitles{
-
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-    padding-left: 2em;
-    padding-right: 2em;
-    background-color: #30a890;
-}
-
-.subtitles > h2{
-
-    font-size: 20px;
+    color: black;
 }

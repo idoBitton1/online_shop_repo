@@ -30,13 +30,14 @@ export const Header: React.FC<MyProps> = ({changeUserId}) => {
     return(
         <header className="app_header">
             <IconButton
-             sx={{color: "white"}}>
+             sx={{color: "black"}}>
                 <Menu sx={{fontSize: 40}} />
             </IconButton>
                 
             <Typography
               variant="h6"
-              color={"white"}>
+              marginLeft={15}
+              color={"black"}>
                 {today}
             </Typography>
 

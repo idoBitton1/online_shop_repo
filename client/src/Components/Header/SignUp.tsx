@@ -106,7 +106,7 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
             <Button
               color="secondary"
               variant="outlined"
-              sx={{color: "white"}}
+              sx={{color: "black"}}
               onClick={toggleDialog}>
                 sign up
             </Button>

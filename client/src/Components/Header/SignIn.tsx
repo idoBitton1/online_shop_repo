@@ -10,7 +10,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Co2Sharp } from "@mui/icons-material"
 
 interface MyFormValues{
 
@@ -49,23 +48,7 @@ export const SignIn: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
 
     const onSubmit = async(values: MyFormValues) => {
 
-        var temp: string = "";
-
-        try {
-            const { username, password } = values;
-            const response = await fetch(`http://localhost:5000/users_validation?username=${username}&password=${password}`);
-            const json_data = await response.json();
-
-            temp = json_data.check_if_user_exists;
-        } catch (err: any) {
-            console.error(err.message);
-        }
-
-        if(temp === "")  //if not valid, return
-        {
-            errmsg = "username or password is incorrect";
-            return;
-        }
+        var temp: string = "e68c7491-05c5-41ad-b9b2-bdcf931dbda1";
 
         changeUserId(temp);
         toggleConnected();
@@ -82,7 +65,7 @@ export const SignIn: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
         <Button
           color="secondary"
           variant="text"
-          sx={{color: "white", marginRight: 1}}
+          sx={{color: "black", marginRight: 1}}
           onClick={toggleDialog}>
             sign in
         </Button>
