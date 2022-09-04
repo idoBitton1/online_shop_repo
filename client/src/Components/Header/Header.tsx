@@ -36,7 +36,7 @@ export const Header: React.FC<MyProps> = ({changeUserId}) => {
                 
             <Typography
               variant="h6"
-              marginLeft={15}
+              marginLeft={connected ? 0 : 15}
               color={"black"}>
                 {today}
             </Typography>

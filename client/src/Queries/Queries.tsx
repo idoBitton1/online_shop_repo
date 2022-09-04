@@ -41,3 +41,11 @@ export const QUERY_GET_ALL_EXTRAS = gql`
     }
   }
 `;
+
+export const QUERY_SPECIAL_RECORD_TYPE = gql`
+  query Query($type: String!) {
+    getSpecialRecordTypeByType(type: $type) {
+      id
+    }
+  }
+`;

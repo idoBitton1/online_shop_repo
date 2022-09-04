@@ -1,7 +1,8 @@
 import React, { useState} from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
-import * as uuid from "uuid"
+import { useMutation } from "@apollo/client"
+import { MUTATUIN_CREATE_EXTRA } from "../../Queries/Mutations"
 import { Extra } from "../../App"
 
 //Material Ui
@@ -13,6 +14,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
 
 interface MyProps{
 
@@ -32,6 +34,7 @@ interface MyFormValues{
 export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const [open, SetOpen] = useState<boolean>(false);
+    const [createExtra, {data}] = useMutation(MUTATUIN_CREATE_EXTRA);
     
     const initialValues: MyFormValues = {
         date: "",
@@ -52,25 +55,23 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
 
       //http POST
       try {
-        const id = uuid.v4();
         const { date,bonus,amount,description } = values;
-        const data = { id,date,bonus,amount,
-                      description,user_id,job_id };
 
-        const response = await fetch("http://localhost:5000/extras", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
+        createExtra({
+          variables: {
+            date: date,
+            bonus: bonus,
+            amount: amount,
+            userId: user_id,
+            jobId: job_id,
+            description: description
+          }
         });
 
-        console.log(response);
       } catch (err: any) {
         console.error(err.message)
       }
 
-      console.log(values);
       toggleDialog();
     }
 
@@ -82,14 +83,19 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
 
     return(
         <>
-            <Button
-              size="large"
-              aria-label="add_extra_button"
-              variant="text"
-              sx={{color: "black"}}
-              onClick={toggleDialog}>
-                bonus / waste!
-            </Button>
+            <Tooltip title={user_id ? "" : "sign up or sign in to preform this action"}>
+              <span>
+                <Button
+                  size="large"
+                  aria-label="add_extra_button"
+                  variant="text"
+                  disabled={user_id ? false : true}
+                  sx={{color: "black"}}
+                  onClick={toggleDialog}>
+                    bonus / waste
+                </Button>
+              </span>
+            </Tooltip>
 
             <Dialog open={open} onClose={toggleDialog}>
                 <DialogTitle>
@@ -131,6 +137,7 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
                         <Field as={TextField} name="amount"
                           sx={{marginLeft: 3}}
                           margin="normal"   
+                          type="number"
                           label="amount"               
                           variant="standard"
                           color="secondary"

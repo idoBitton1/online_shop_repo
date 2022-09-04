@@ -1,8 +1,10 @@
 import React, { useState } from "react"
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup"
-import * as uuid from "uuid"
 import { SpecialRecord } from "../../App"
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { MUTATION_CREATE_SPECIAL_RECORD } from "../../Queries/Mutations";
+import { QUERY_SPECIAL_RECORD_TYPE } from "../../Queries/Queries";
 
 //Material Ui
 import Button from "@mui/material/Button"
@@ -12,6 +14,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import { MenuItem, Select } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 
 interface MyProps{
 
@@ -30,6 +33,27 @@ interface MyFormValues{
 export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const [open, setOpen] = useState<boolean>(false);
+    const [date, setDate] = useState<String>("");
+    const [hours_amount, setHoursAmount] = useState<Number>(0);
+    const [createSpecialRecord, {data: special_record_data, loading, error}] = useMutation(MUTATION_CREATE_SPECIAL_RECORD);
+    const [getSpecialRecordType, {data}] = useLazyQuery(QUERY_SPECIAL_RECORD_TYPE,{
+      onCompleted: (data) => {
+        try {
+          createSpecialRecord({
+            variables: {
+              date: date,
+              hoursAmount: hours_amount,
+              userId: user_id,
+              jobId: job_id,
+              specialRecordTypeId: data.getSpecialRecordTypeByType.id
+            }
+          });
+  
+        } catch (err: any) {
+          console.error(err.message);
+        }
+      }}
+    );
     const [optionList, setOptionsList] = useState<string[]>([
         "vacation", "sick day", "holiday"
     ]);
@@ -45,42 +69,29 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         hours_amount: Yup.number().min(1, "can't be negative or zero").required("Required"),
         type: Yup.string().required("Required")
     })
+
+    const handleChange = (value: String) => {
+      console.log(value);
+    }
   
-    //Add to database with http POST
-    const onSubmit = async(values: MyFormValues) => {
-
-      //http GET
-      var special_record_type_id: string = "";
+    const onSubmit = (values: MyFormValues) => {
+    
+      const { date, hours_amount } = values; 
+      setDate(date);
+      setHoursAmount(hours_amount);
+      const { type } = values
       try {
-        const response = await fetch(`http://localhost:5000/special_record_types?type=${values.type}`);
-        const json_data = await response.json();
-
-        special_record_type_id = json_data.id;
-      } catch (err: any) {
-        console.error(err.message);
-      }
-      console.log(special_record_type_id);
-
-      //http POST
-      try {
-
-        const id = uuid.v4();
-        const { date, hours_amount } = values;       
-        const data = { id,date,hours_amount,
-                      user_id,job_id,special_record_type_id};
-
-        const response = await fetch("http://localhost:5000/special_records", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
+        getSpecialRecordType({
+          variables: {
+            type: type
+          }
         });
-
-        console.log(response);
       } catch (err: any) {
         console.error(err.message);
       }
+
+      //the special record itself is submiting after fetching
+      //the id of the type.
 
       toggleDialog();
     }
@@ -92,14 +103,19 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     return(
         <>
-            <Button
-              size="large"
-              aria-label="add_extra_button"
-              variant="text"
-              sx={{color: "black"}}
-              onClick={toggleDialog}>
-                special Record!
-            </Button>
+          <Tooltip title={user_id ? "" : "sign up or sign in to preform this action"}>
+            <span>
+              <Button
+                size="large"
+                aria-label="add_extra_button"
+                variant="text"
+                disabled={user_id ? false : true}
+                sx={{color: "black"}}
+                onClick={toggleDialog}>
+                  special Record
+              </Button>
+            </span>
+          </Tooltip>
 
             <Dialog open={open} onClose={toggleDialog}>
                 <DialogTitle>
@@ -145,7 +161,6 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
                             as={Select}
                             helpertext={<ErrorMessage name="type" />}>
                             {optionList.map((option) => {
-
                                 return(
                                     <MenuItem key={option} value={option}>{option}</MenuItem>
                                 )   
@@ -155,7 +170,8 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
                           <Field as={TextField} name="hours_amount"
                             sx={{marginLeft: 5}}
                             margin="normal"   
-                            label="hours_amount"               
+                            label="hours_amount"   
+                            type="number"            
                             variant="standard"
                             required
                             color="secondary"

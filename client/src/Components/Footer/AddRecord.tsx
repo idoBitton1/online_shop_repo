@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
-import * as uuid from "uuid"
 import { Record } from "../../App"
+import { useMutation } from "@apollo/client";
+import { MUTATION_CREATE_RECORD } from "../../Queries/Mutations";
 
 //Material Ui
 import Button from '@mui/material/Button';
@@ -11,6 +12,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
+import Tooltip from "@mui/material/Tooltip";
 
 interface MyProps{
 
@@ -31,6 +33,7 @@ interface MyFormValues{
 export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const [open, SetOpen] = useState<boolean>(false);
+    const [createRecord, {data}] = useMutation(MUTATION_CREATE_RECORD);
     var errmsg: string;
 
     const initialValues: MyFormValues = {
@@ -62,24 +65,21 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         return;
       }
 
-      //http POST
       try {
-        const id = uuid.v4();
         const { daily_break } = values;
         const start_time = `${values.start_date} ${values.start_time}`;
         const end_time = `${values.end_date} ${values.end_time}`;
-        const data = { id, start_time, end_time,
-                      daily_break, user_id, job_id };
-        
-        const response = await fetch("http://localhost:5000/records", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
+
+        createRecord({
+          variables: {
+            startTime: start_time,
+            endTime: end_time,
+            dailyBreak: daily_break,
+            userId: user_id,
+            jobId: job_id
+          }
         });
 
-        console.log(response);
       } catch (err: any) {
         console.error(err.message);
       }
@@ -95,14 +95,19 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     return(
         <>
-            <Button
-              size="large"
-              aria-label="add_record_button"
-              variant="text"
-              sx={{color: "black"}}
-              onClick={toggleDialog}>
-                Add Record!
-            </Button>
+          <Tooltip title={user_id ? "" : "sign up or sign in to preform this action"}>
+            <span>
+              <Button
+                size="large"
+                aria-label="add_record_button"
+                variant="text"
+                disabled={user_id ? false : true}
+                sx={{color: "black"}}
+                onClick={toggleDialog}>
+                  Add Record
+              </Button>
+            </span>
+          </Tooltip>
 
             <Dialog open={open} onClose={toggleDialog}>
                 <DialogTitle>
