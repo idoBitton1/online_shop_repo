@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { useQuery, gql } from "@apollo/client"
 import { Footer } from './Components/Footer/Footer';
 import { MainContent } from './Components/MainContent/MainContent';
 import { Header } from './Components/Header/Header';
@@ -36,23 +37,28 @@ function App() {
   const [special_records, setSpecialRecords] = useState<SpecialRecord[]>([]);
   const [extras, setExtras] = useState<Extra[]>([]);
 
-  const getFirstJobId = async() => {
-
-    try {
-      const response = await fetch("http://localhost:5000/jobs");
-      const json_data = await response.json();
-
-      setJobId(json_data.id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  }
-
   //gets the first job id
+  const QUERY_GET_JOB_BY_NAME = gql`
+    query Query($name: String!){
+      getJobByName(name: $name){
+        id
+      }
+    }
+  `
+
+  const {data, loading, error} = useQuery(QUERY_GET_JOB_BY_NAME, {
+    variables: {
+      name: "job 1"
+    }
+  });
+
   useEffect(() => {
 
-    getFirstJobId();   
-  }, [])
+    if(data)
+    {
+      setJobId(data.getJobByName.id);
+    }
+  }, [data])
 
   const getSalary = async() => {
 
@@ -67,10 +73,12 @@ function App() {
   }
 
   //keeps the salay per hour updated
+  /*
   useEffect(() => {
 
     getSalary();  
   }, [job_id])
+  */
 
   //gets all the records of the corrent user
   const getRecords = async() => {
@@ -112,6 +120,7 @@ function App() {
   }
 
   //gets all the records of the conncted user
+  /*
   useEffect(() => {
 
     //if logged in, fetch the records of the user
@@ -123,6 +132,7 @@ function App() {
       getExtras();
     }
   }, [user_id])
+  */
 
   const changeUserId = (id: string): void => {
 
@@ -145,7 +155,6 @@ function App() {
   }
 
   return (
-
     <div className="app_container">
 
       <Header
