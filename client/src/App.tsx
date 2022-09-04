@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { useQuery, gql } from "@apollo/client"
+import { useQuery, useLazyQuery, gql } from "@apollo/client"
 import { Footer } from './Components/Footer/Footer';
 import { MainContent } from './Components/MainContent/MainContent';
 import { Header } from './Components/Header/Header';
+import {QUERY_GET_JOB_BY_NAME,
+        QUERY_GET_ALL_RECORDS,
+        QUERY_GET_ALL_SPECIAL_RECORDS,
+        QUERY_GET_ALL_EXTRAS} from "./Queries/Queries"
 
 export interface Record{
 
@@ -30,23 +34,14 @@ export interface Extra{
 function App() {
 
   const [user_id, setUserId] = useState<string>("");
-  const [salary_per_hour, setSalaryPerHour] = useState<number>(35); //default value 
+  const [salary_per_hour, setSalaryPerHour] = useState<number>(30); //default value 
   const [job_id, setJobId] = useState<string>("");
 
   const [records, setRecords] = useState<Record[]>([]);
   const [special_records, setSpecialRecords] = useState<SpecialRecord[]>([]);
   const [extras, setExtras] = useState<Extra[]>([]);
 
-  //gets the first job id
-  const QUERY_GET_JOB_BY_NAME = gql`
-    query Query($name: String!){
-      getJobByName(name: $name){
-        id
-      }
-    }
-  `
-
-  const {data, loading, error} = useQuery(QUERY_GET_JOB_BY_NAME, {
+  const { data: job_data } = useQuery(QUERY_GET_JOB_BY_NAME, {
     variables: {
       name: "job 1"
     }
@@ -54,85 +49,60 @@ function App() {
 
   useEffect(() => {
 
-    if(data)
+    if(job_data) //if the data is fetched
     {
-      setJobId(data.getJobByName.id);
+      setJobId(job_data.getJobByName.id);
+      setSalaryPerHour(job_data.getJobByName.salary_per_hour);
     }
-  }, [data])
-
-  const getSalary = async() => {
-
-    try {
-      const response = await fetch(`http://localhost:5000/jobs/${job_id}`);
-      const json_data = await response.json();  
-
-      setSalaryPerHour(json_data.salary_per_hour);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  }
-
-  //keeps the salay per hour updated
-  /*
-  useEffect(() => {
-
-    getSalary();  
-  }, [job_id])
-  */
+  }, [job_data])
 
   //gets all the records of the corrent user
-  const getRecords = async() => {
-
-    try {
-      const response = await fetch(`http://localhost:5000/records?user_id=${user_id}&job_id=${job_id}`);
-      const json_data = await response.json();
-
-      setRecords(json_data);
-    } catch (err: any) {
-      console.error(err.message); 
-    }
-  }
+  const [ getRecords, {data: records_data}] = useLazyQuery(QUERY_GET_ALL_RECORDS);
 
   //gets all the special records of the corrent user
-  const getSpecialRecords = async() => {
-
-    try {
-      const response = await fetch(`http://localhost:5000/special_records?user_id=${user_id}&job_id=${job_id}`);
-      const json_data = await response.json();
-
-      setSpecialRecords(json_data);
-    } catch (err: any) {
-      console.error(err.message); 
-    }
-  }
+  const [ getSpecialRecords, {data:special_records_data} ] = useLazyQuery(QUERY_GET_ALL_SPECIAL_RECORDS);
 
   //gets all the extra records of the corrent user
-  const getExtras = async() => {
+  const [ getExtras, {data: extras_data} ] = useLazyQuery(QUERY_GET_ALL_EXTRAS);
 
-    try {
-      const response = await fetch(`http://localhost:5000/extras?user_id=${user_id}&job_id=${job_id}`);
-      const json_data = await response.json();
-
-      setExtras(json_data);
-    } catch (err: any) {
-      console.error(err.message); 
-    }
-  }
-
-  //gets all the records of the conncted user
-  /*
   useEffect(() => {
 
-    //if logged in, fetch the records of the user
     if(user_id)
     {
-      console.log("fetching data...");
-      getRecords();
-      getSpecialRecords();
-      getExtras();
+      try {
+        getRecords({
+          variables: {
+            userId: user_id,
+            jobId: job_id
+          }
+        });
+        getSpecialRecords({
+          variables: {
+            userId: user_id,
+            jobId: job_id
+          }
+        });
+        getExtras({
+          variables: {
+            userId: user_id,
+            jobId: job_id
+          }
+        });
+      } catch (err: any) {
+        console.error(err.message);
+      }
     }
-  }, [user_id])
-  */
+  }, [user_id]);
+
+  useEffect(() => {
+
+    if(records_data && records !== [])
+      setRecords(records_data.getAllRecords);
+    if(special_records_data && special_records !== [])
+      setSpecialRecords(special_records_data.getAllSpecialRecords);
+    if(extras_data && extras !== [])
+      setExtras(extras_data.getAllExtras);
+  }, [records_data, special_records_data, extras_data])
 
   const changeUserId = (id: string): void => {
 
