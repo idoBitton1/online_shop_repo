@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
-import * as uuid from "uuid"
+import { useMutation } from "@apollo/client"
+import { MUTATION_CREATE_USER } from "../../Queries/Mutations";
 
 //Material Ui
 import Button from '@mui/material/Button';
@@ -28,6 +29,10 @@ interface MyFormValues{
 export const SignUp: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
 
     const [open, SetOpen] = useState<boolean>(false);
+    const [ createUser, {data, loading, error} ] = useMutation(
+      MUTATION_CREATE_USER, 
+      {onCompleted: (data) => changeUserId(data.createUser.id)} //after submiting, return the user id
+    );
     var errmsg: string;
     
     const initialValues: MyFormValues = {
@@ -70,23 +75,15 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
       if(!checkPassword(values.password, values.confirm_password)) 
         return;
 
-      //http POST
       try {
-        const id = uuid.v4();
         const { username,password } = values;
-        const data = { id,username,password }
 
-        const response = await fetch("http://localhost:5000/users", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
+        await createUser({
+          variables: {
+            username: username,
+            password: password
+          }
         });
-        
-        console.log(response);
-        
-        changeUserId(id); //change the user_id to the currently connected user_id
       } catch (err: any) {
         console.error(err.message);
       }
@@ -100,8 +97,6 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
 
       SetOpen((prevState) => !prevState);    
     }
-
-   
 
     return(
       <>
