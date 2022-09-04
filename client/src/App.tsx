@@ -9,6 +9,10 @@ import {QUERY_GET_JOB_BY_NAME,
         QUERY_GET_ALL_SPECIAL_RECORDS,
         QUERY_GET_ALL_EXTRAS} from "./Queries/Queries"
 
+//Material Ui
+import { createTheme, ThemeProvider } from "@mui/material"
+import { grey } from "@mui/material/colors"
+
 export interface Record{
 
   start_time: string,
@@ -124,26 +128,36 @@ function App() {
     setExtras((prev_records) => [...prev_records, extra]);
   }
 
-  return (
-    <div className="app_container">
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: grey[500]
+      }
+    }
+  });
 
-      <Header
-        changeUserId={changeUserId}
-      />
-      <MainContent
-        records={records}
-        special_records={special_records}
-        extras={extras}
-        salary_per_hour={salary_per_hour}
-      />
-      <Footer
-        user_id={user_id}
-        job_id={job_id}
-        changeRecords={changeRecords}
-        changeSpecialRecords={changeSpecialRecords}
-        changeExtras={changeExtras}
-      />
-    </div>
+  return (
+    <ThemeProvider theme={theme}>
+      <div className="app_container">
+
+        <Header
+          changeUserId={changeUserId}
+        />
+        <MainContent
+          records={records}
+          special_records={special_records}
+          extras={extras}
+          salary_per_hour={salary_per_hour}
+        />
+        <Footer
+          user_id={user_id}
+          job_id={job_id}
+          changeRecords={changeRecords}
+          changeSpecialRecords={changeSpecialRecords}
+          changeExtras={changeExtras}
+        />
+      </div>
+    </ThemeProvider>
   );
 }
 

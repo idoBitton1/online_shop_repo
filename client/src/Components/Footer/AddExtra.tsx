@@ -86,7 +86,7 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
               size="large"
               aria-label="add_extra_button"
               variant="text"
-              color="secondary"
+              sx={{color: "black"}}
               onClick={toggleDialog}>
                 bonus / waste!
             </Button>
@@ -128,19 +128,8 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
                           onChange={props.handleChange}
                           helperText={<ErrorMessage name="date" />}
                         />
-                        <br />
-                        <FormControlLabel
-                          control={<Field 
-                            name="bonus"
-                            margin="normal"
-                            as={Checkbox}
-                            type="checkbox"
-                            color="secondary"
-                          />}
-                          label="bonus?"
-                        />
-                        <br />
                         <Field as={TextField} name="amount"
+                          sx={{marginLeft: 3}}
                           margin="normal"   
                           label="amount"               
                           variant="standard"
@@ -149,6 +138,17 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
                           value={props.values.amount}
                           onChange={props.handleChange}
                           helperText={<ErrorMessage name="amount" />}
+                        />
+                        <FormControlLabel
+                          control={<Field 
+                            name="bonus"
+                            margin="normal"
+                            as={Checkbox}
+                            type="checkbox"
+                            color="primary"
+                          />}
+                          label="bonus?"
+                          sx={{margin: 3}}
                         />
                         <br />
                         <Field as={TextField} name="description"
@@ -166,8 +166,9 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
                         <br />
                         <br />
                         <Button type="submit"
-                          color="secondary"
-                          variant="contained">
+                          sx={{marginLeft: "42%", color: "black"}}
+                          color="primary"
+                          variant="outlined">
                             submit
                         </Button>
                     </Form>

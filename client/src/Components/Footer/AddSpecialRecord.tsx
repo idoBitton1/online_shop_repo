@@ -96,7 +96,7 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
               size="large"
               aria-label="add_extra_button"
               variant="text"
-              color="secondary"
+              sx={{color: "black"}}
               onClick={toggleDialog}>
                 special Record!
             </Button>
@@ -124,6 +124,7 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
                       {(props) => (
                         <Form>
                           <Field as={TextField} name="date"
+                            sx={{marginRight: 3}}
                             margin="normal"
                             type="date"  
                             label="date"                   
@@ -137,21 +138,10 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
                             onChange={props.handleChange}
                             helperText={<ErrorMessage name="date" />}
                           />
-                          <br />
-                          <Field as={TextField} name="hours_amount"
-                            margin="normal"   
-                            label="hours_amount"               
-                            variant="standard"
-                            required
-                            color="secondary"
-                            value={props.values.hours_amount}
-                            onChange={props.handleChange}
-                            helperText={<ErrorMessage name="hours_amount" />}
-                          />
-                          <br />
                           <Field 
                             name="type"
                             type="select" 
+                            sx={{marginTop: 1}}
                             as={Select}
                             helpertext={<ErrorMessage name="type" />}>
                             {optionList.map((option) => {
@@ -162,11 +152,24 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
                             })}
                           </Field>
                           <br />
+                          <Field as={TextField} name="hours_amount"
+                            sx={{marginLeft: 5}}
+                            margin="normal"   
+                            label="hours_amount"               
+                            variant="standard"
+                            required
+                            color="secondary"
+                            value={props.values.hours_amount}
+                            onChange={props.handleChange}
+                            helperText={<ErrorMessage name="hours_amount" />}
+                          />
+                          <br />
                           <br />
                           <Button type="submit"
-                            color="secondary"
-                            variant="contained">
-                            submit
+                            sx={{marginLeft: "34%", color: "black"}}
+                            color="primary"
+                            variant="outlined">
+                              submit
                           </Button>
                         </Form>
                       )}

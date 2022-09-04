@@ -119,9 +119,9 @@ export const SignIn: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
                         <br />
                         <br />
                         <Button type="submit"
-                          sx={{marginLeft: "29%"}}
-                          color="secondary"
-                          variant="contained">
+                          sx={{marginLeft: "31%", color: "black"}}
+                          color="primary"
+                          variant="outlined">
                             submit
                         </Button>
                         <Typography

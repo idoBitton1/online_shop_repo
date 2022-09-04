@@ -99,7 +99,7 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
               size="large"
               aria-label="add_record_button"
               variant="text"
-              color="secondary"
+              sx={{color: "black"}}
               onClick={toggleDialog}>
                 Add Record!
             </Button>
@@ -141,8 +141,8 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
                         onChange={props.handleChange}
                         helperText={<ErrorMessage name="start_date" />}
                       />
-                      <br />
                       <Field as={TextField} name="start_time"
+                        sx={{marginLeft: 3}}
                         margin="normal"
                         type="time"    
                         label="start time"                 
@@ -171,8 +171,8 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
                         onChange={props.handleChange}
                         helperText={<ErrorMessage name="end_date" />}
                       />
-                      <br />
                       <Field as={TextField} name="end_time"
+                        sx={{marginLeft: 3}}
                         margin="normal"
                         type="time"   
                         label="end time"                 
@@ -188,6 +188,7 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
                       />
                       <br />
                       <Field as={TextField} name="daily_break"
+                        sx={{marginLeft: 5}}
                         margin="normal"   
                         label="daily break (minutes)"               
                         variant="standard"
@@ -200,8 +201,9 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
                       <br />
                       <br />
                       <Button type="submit"
-                        color="secondary"
-                        variant="contained">
+                        sx={{marginLeft: "34%", color: "black"}}
+                        color="primary"
+                        variant="outlined">
                           submit
                       </Button>
                       <Typography

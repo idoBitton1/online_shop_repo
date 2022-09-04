@@ -16,23 +16,23 @@ export interface MyProps{
 
 export const Footer: React.FC<MyProps> = ({user_id, job_id, changeRecords, changeSpecialRecords, changeExtras}) => {
 
-    return(
-        <footer>
-            <AddRecord 
-              user_id={user_id} 
-              job_id={job_id}
-              changeRecords={changeRecords}
-            />
-            <AddExtra
-              user_id={user_id} 
-              job_id={job_id} 
-              changeExtras={changeExtras}
-            />
-            <AddSpecialRecord
-              user_id={user_id} 
-              job_id={job_id}
-              changeSpecialRecords={changeSpecialRecords}
-            />
-        </footer>
-    )
+  return(
+    <footer>
+      <AddRecord 
+        user_id={user_id} 
+        job_id={job_id}
+        changeRecords={changeRecords}
+      />
+      <AddExtra
+        user_id={user_id} 
+        job_id={job_id} 
+        changeExtras={changeExtras}
+      />
+      <AddSpecialRecord
+        user_id={user_id} 
+        job_id={job_id}
+        changeSpecialRecords={changeSpecialRecords}
+      />
+    </footer>
+  )
 }

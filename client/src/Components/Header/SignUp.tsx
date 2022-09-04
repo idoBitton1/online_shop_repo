@@ -101,10 +101,12 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
       SetOpen((prevState) => !prevState);    
     }
 
+   
+
     return(
-        <>
+      <>
             <Button
-              color="secondary"
+              color="primary"
               variant="outlined"
               sx={{color: "black"}}
               onClick={toggleDialog}>
@@ -182,11 +184,10 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
                           />
                           <br />
                           <br />
-
                           <Button type="submit"
-                            sx={{marginLeft: "38%"}}
-                            color="secondary"
-                            variant="contained">
+                            sx={{marginLeft: "38%", color: "black"}}
+                            color="primary"
+                            variant="outlined">
                               submit
                           </Button>
                           <Typography
@@ -200,6 +201,6 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
                   </Formik>
                 </DialogContent>
             </Dialog>
-        </>
+      </>
     )
 }
