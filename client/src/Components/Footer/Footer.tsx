@@ -3,35 +3,29 @@ import "./Footer.css"
 import { AddExtra } from "./AddExtra"
 import { AddRecord } from "./AddRecord"
 import { AddSpecialRecord } from "./AddSpecialRecord"
-import { Record, SpecialRecord, Extra } from "../../App"
+import { Extra } from "../../App"
 
 export interface MyProps{
 
-    user_id: string,
-    job_id: string,
-    changeRecords: (record: Record) => void,
-    changeSpecialRecords: (special_record: SpecialRecord) => void,
-    changeExtras: (extra: Extra) => void,
+  user_id: string,
+  job_id: string,
 }
 
-export const Footer: React.FC<MyProps> = ({user_id, job_id, changeRecords, changeSpecialRecords, changeExtras}) => {
+export const Footer: React.FC<MyProps> = ({user_id, job_id}) => {
 
   return(
     <footer>
       <AddRecord 
         user_id={user_id} 
         job_id={job_id}
-        changeRecords={changeRecords}
       />
       <AddExtra
         user_id={user_id} 
         job_id={job_id} 
-        changeExtras={changeExtras}
       />
       <AddSpecialRecord
         user_id={user_id} 
         job_id={job_id}
-        changeSpecialRecords={changeSpecialRecords}
       />
     </footer>
   )

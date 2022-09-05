@@ -4,6 +4,10 @@ import { useQuery, useLazyQuery, gql } from "@apollo/client"
 import { Footer } from './Components/Footer/Footer';
 import { MainContent } from './Components/MainContent/MainContent';
 import { Header } from './Components/Header/Header';
+import {recordsContext,
+        specialRecordsContext,
+        extrasContext } from './Helper/Context';
+
 import {QUERY_GET_JOB_BY_NAME,
         QUERY_GET_ALL_RECORDS,
         QUERY_GET_ALL_SPECIAL_RECORDS,
@@ -61,13 +65,13 @@ function App() {
   }, [job_data])
 
   //gets all the records of the corrent user
-  const [ getRecords, {data: records_data}] = useLazyQuery(QUERY_GET_ALL_RECORDS);
+  const [ getRecords, {data: records_data, refetch: refetchRecords}] = useLazyQuery(QUERY_GET_ALL_RECORDS);
 
   //gets all the special records of the corrent user
-  const [ getSpecialRecords, {data:special_records_data} ] = useLazyQuery(QUERY_GET_ALL_SPECIAL_RECORDS);
+  const [ getSpecialRecords, {data:special_records_data, refetch: refetchSpecialRecords} ] = useLazyQuery(QUERY_GET_ALL_SPECIAL_RECORDS);
 
   //gets all the extra records of the corrent user
-  const [ getExtras, {data: extras_data} ] = useLazyQuery(QUERY_GET_ALL_EXTRAS);
+  const [ getExtras, {data: extras_data, refetch: refetchExtras} ] = useLazyQuery(QUERY_GET_ALL_EXTRAS);
 
   useEffect(() => {
 
@@ -100,32 +104,17 @@ function App() {
 
   useEffect(() => {
 
-    if(records_data && records !== [])
+    if(records_data)
       setRecords(records_data.getAllRecords);
-    if(special_records_data && special_records !== [])
+    if(special_records_data)
       setSpecialRecords(special_records_data.getAllSpecialRecords);
-    if(extras_data && extras !== [])
+    if(extras_data)
       setExtras(extras_data.getAllExtras);
   }, [records_data, special_records_data, extras_data])
 
   const changeUserId = (id: string): void => {
 
     setUserId(id);
-  }
-
-  const changeRecords = (record: Record) => {
-
-    setRecords((prev_records) => [...prev_records, record]);
-  }
-
-  const changeSpecialRecords = (special_record: SpecialRecord) => {
-
-    setSpecialRecords((prev_records) => [...prev_records, special_record]);
-  }
-
-  const changeExtras = (extra: Extra) => {
-
-    setExtras((prev_records) => [...prev_records, extra]);
   }
 
   const theme = createTheme({
@@ -138,24 +127,28 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      
       <div className="app_container">
 
         <Header
           changeUserId={changeUserId}
         />
-        <MainContent
-          records={records}
-          special_records={special_records}
-          extras={extras}
-          salary_per_hour={salary_per_hour}
-        />
-        <Footer
-          user_id={user_id}
-          job_id={job_id}
-          changeRecords={changeRecords}
-          changeSpecialRecords={changeSpecialRecords}
-          changeExtras={changeExtras}
-        />
+        <recordsContext.Provider value={{records, setRecords}}>
+        <specialRecordsContext.Provider value={{special_records, setSpecialRecords}}>
+        <extrasContext.Provider value={{extras, setExtras}}>
+          <MainContent
+            records={records}
+            special_records={special_records}
+            extras={extras}
+            salary_per_hour={salary_per_hour}
+          />
+          <Footer
+            user_id={user_id}
+            job_id={job_id}
+          />
+        </extrasContext.Provider>
+        </specialRecordsContext.Provider>
+        </recordsContext.Provider>
       </div>
     </ThemeProvider>
   );

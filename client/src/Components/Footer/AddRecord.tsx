@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { Record } from "../../App"
 import { useMutation } from "@apollo/client";
 import { MUTATION_CREATE_RECORD } from "../../Queries/Mutations";
+import { recordsContext } from "../../Helper/Context"; 
 
 //Material Ui
 import Button from '@mui/material/Button';
@@ -18,7 +19,6 @@ interface MyProps{
 
   user_id: string,
   job_id: string,
-  changeRecords: (record: Record) => void
 }
 
 interface MyFormValues{
@@ -32,8 +32,19 @@ interface MyFormValues{
 
 export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
+    const {setRecords} = useContext(recordsContext);
     const [open, SetOpen] = useState<boolean>(false);
-    const [createRecord, {data}] = useMutation(MUTATION_CREATE_RECORD);
+    const [createRecord, {data}] = useMutation(MUTATION_CREATE_RECORD, {
+      onCompleted: (data) => {
+        const record: Record = {
+          start_time: data.createRecord.start_time,
+          end_time: data.createRecord.end_time,
+          daily_break: data.createRecord.daily_break
+        };
+
+        setRecords((prev_records) => [...prev_records, record]);
+      }
+    });
     var errmsg: string;
 
     const initialValues: MyFormValues = {
@@ -195,6 +206,7 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
                       <Field as={TextField} name="daily_break"
                         sx={{marginLeft: 5}}
                         margin="normal"   
+                        type="number"
                         label="daily break (minutes)"               
                         variant="standard"
                         required

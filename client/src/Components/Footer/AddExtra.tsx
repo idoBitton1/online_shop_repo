@@ -1,9 +1,10 @@
-import React, { useState} from "react"
+import React, { useState, useContext } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { useMutation } from "@apollo/client"
 import { MUTATUIN_CREATE_EXTRA } from "../../Queries/Mutations"
 import { Extra } from "../../App"
+import { extrasContext } from "../../Helper/Context"
 
 //Material Ui
 import Button from '@mui/material/Button';
@@ -16,25 +17,38 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 
+
 interface MyProps{
 
   user_id: string,
   job_id: string,
-  changeExtras: (extra: Extra) => void
 }
 
 interface MyFormValues{
 
-    date: string,
-    bonus: boolean,
-    amount: number,
-    description?: string
+  date: string,
+  bonus: boolean,
+  amount: number,
+  description?: string
 }
 
 export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
 
+    const {setExtras} = useContext(extrasContext);
     const [open, SetOpen] = useState<boolean>(false);
-    const [createExtra, {data}] = useMutation(MUTATUIN_CREATE_EXTRA);
+
+    const [createExtra, {data}] = useMutation(MUTATUIN_CREATE_EXTRA, {
+      onCompleted: (data) => {
+        const extra: Extra = {
+          date: data.createExtra.date,
+          bonus: data.createExtra.bonus,
+          amount: data.createExtra.amount,
+          description: data.createExtra.description          
+        };
+
+        setExtras((prev_records) => [...prev_records, extra]);
+      }
+    });
     
     const initialValues: MyFormValues = {
         date: "",
@@ -53,7 +67,6 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
     //Add to data base with http
     const onSubmit = async(values: MyFormValues) => {
 
-      //http POST
       try {
         const { date,bonus,amount,description } = values;
 

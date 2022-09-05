@@ -1,10 +1,12 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { DisplayRecord } from "./DisplayRecord"
 import "./MainContent.css"
 import { Extra, Record, SpecialRecord } from "../../App"
 
 //Material Ui
 import Grid from "@mui/material/Grid"
+import Button from "@mui/material/Button"
+import { Typography } from "@mui/material"
 
 interface MyProps{
 
@@ -18,41 +20,47 @@ const getMonthName = (month_number: number): string => {
 
     var month_name: string = "";
     switch (month_number) {
+        case 0:
+            month_name = "DECEMBER";
+            break;
         case 1:
-            month_name = "January";
+            month_name = "JANUARY";
             break;
         case 2:
-            month_name = "February";
+            month_name = "FEBRUARY";
             break;
         case 3:
-            month_name = "March";
+            month_name = "MARCH";
             break;
         case 4:
-            month_name = "April";
+            month_name = "APRIL";
             break;
         case 5:
-            month_name = "May";
+            month_name = "MAY";
             break;
         case 6:
-            month_name = "June";
+            month_name = "JUNE";
             break;
         case 7:
-            month_name = "July";
+            month_name = "JULY";
             break;
         case 8:
-            month_name = "August";
+            month_name = "AUGUST";
             break;
         case 9:
-            month_name = "September";
+            month_name = "SEPTEMBER";
             break;
         case 10:
-            month_name = "October";
+            month_name = "OCTOBER";
             break;
         case 11:
-            month_name = "November";
+            month_name = "NOVEMBER";
             break;
         case 12:
-            month_name = "December";
+            month_name = "DECEMBER";
+            break;
+        case 13:
+            month_name = "JANUARY";
             break;
     }
     return month_name;
@@ -61,7 +69,25 @@ const getMonthName = (month_number: number): string => {
 export const MainContent: React.FC<MyProps> = ({records, special_records, extras}) => {
 
     var current_date: Date = new Date();
-    current_date.setMonth(current_date.getMonth() + 1);
+
+    const [month_number, setMonthNumber] = useState<number>(current_date.getMonth() + 1);
+    
+    useEffect(() => {
+        if(month_number > 12)
+            setMonthNumber(1);
+        else if(month_number < 1)
+            setMonthNumber(12);
+    }, [month_number]);
+
+    const oneMonthBackwards = () => {
+        
+        setMonthNumber((prevMonth) => prevMonth - 1);
+    }
+
+    const oneMonthForward = () => {
+       
+        setMonthNumber((prevMonth) => prevMonth + 1);
+    }
 
     return(
         <>
@@ -73,13 +99,27 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                 fontFamily: "Rubik"
             }}>
             <Grid item xs={2}>
-                left
+                <Button
+                  sx={{color: "black"}}
+                  onClick={oneMonthBackwards}
+                  >
+                    {`<${getMonthName(month_number - 1)}`}
+                </Button>
             </Grid>
             <Grid item xs={8}>
-                {getMonthName(current_date.getMonth())}
+                <Typography
+                  marginTop={1}
+                  >
+                    {getMonthName(month_number)}
+                </Typography>
             </Grid>
             <Grid item xs={2}>
-                right
+                <Button
+                  sx={{color: "black"}}
+                  onClick={oneMonthForward}
+                  >
+                    {`${getMonthName(month_number + 1)}>`}
+                </Button>
             </Grid>
         </Grid>
 

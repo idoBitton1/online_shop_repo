@@ -1,10 +1,11 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup"
 import { SpecialRecord } from "../../App"
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { MUTATION_CREATE_SPECIAL_RECORD } from "../../Queries/Mutations";
 import { QUERY_SPECIAL_RECORD_TYPE } from "../../Queries/Queries";
+import { specialRecordsContext } from "../../Helper/Context"; 
 
 //Material Ui
 import Button from "@mui/material/Button"
@@ -20,7 +21,6 @@ interface MyProps{
 
   user_id: string,
   job_id: string,
-  changeSpecialRecords: (special_record: SpecialRecord) => void
 }
 
 interface MyFormValues{
@@ -32,10 +32,27 @@ interface MyFormValues{
 
 export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
+    const {setSpecialRecords} = useContext(specialRecordsContext);
     const [open, setOpen] = useState<boolean>(false);
+    const [optionList, setOptionsList] = useState<string[]>([
+      "vacation", "sick day", "holiday"
+    ]);
+
     const [date, setDate] = useState<String>("");
     const [hours_amount, setHoursAmount] = useState<Number>(0);
-    const [createSpecialRecord, {data: special_record_data, loading, error}] = useMutation(MUTATION_CREATE_SPECIAL_RECORD);
+
+    const [createSpecialRecord, {data: special_record_data, loading, error}] = useMutation(MUTATION_CREATE_SPECIAL_RECORD, {
+      onCompleted: (special_record_data) => {
+        const special_record: SpecialRecord = {
+          date: special_record_data.createSpecialRecord.date,
+          hours_amount: special_record_data.createSpecialRecord.hours_amount,
+          special_record_type_id: special_record_data.createSpecialRecord.special_record_type_id
+        };
+
+        setSpecialRecords((prev_records) => [...prev_records, special_record]);
+      }
+    });
+
     const [getSpecialRecordType, {data}] = useLazyQuery(QUERY_SPECIAL_RECORD_TYPE,{
       onCompleted: (data) => {
         try {
@@ -54,9 +71,6 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         }
       }}
     );
-    const [optionList, setOptionsList] = useState<string[]>([
-        "vacation", "sick day", "holiday"
-    ]);
 
     const initialValues: MyFormValues = {
         date: "",
