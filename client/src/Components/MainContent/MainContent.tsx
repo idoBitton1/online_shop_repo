@@ -20,6 +20,7 @@ interface MyProps{
     salary_per_hour: number
 }
 
+//converts the month's number to its name
 const getMonthName = (month_number: number): string => {
 
     var month_name: string = "";
@@ -74,8 +75,10 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
 
     var current_date: Date = new Date();
 
+    //the displayed month
     const [month_number, setMonthNumber] = useState<number>(current_date.getMonth() + 1);
     
+    //checks that the month number is valid
     useEffect(() => {
         if(month_number > 12)
             setMonthNumber(1);

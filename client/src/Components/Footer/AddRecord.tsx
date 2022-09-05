@@ -40,6 +40,7 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const {setRecords} = useContext(recordsContext);
     const [open, SetOpen] = useState<boolean>(false);
+
     const [createRecord, {data}] = useMutation(MUTATION_CREATE_RECORD, {
       onCompleted: (data) => {
         const record: Record = {
@@ -51,6 +52,7 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         setRecords((prev_records) => [...prev_records, record]);
       }
     });
+
     var errmsg: string;
 
     const initialValues: MyFormValues = {
@@ -70,12 +72,12 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
       .required("Required")
     })
 
-    //Add to database with http POST
     const onSubmit = async(values: MyFormValues) => {
 
       const start_datetime: Date = new Date(`${values.start_date} ${values.start_time}`);
       const end_datetime: Date = new Date(`${values.end_date} ${values.end_time}`);
 
+      //if the end time is before the start time, dont continue
       if(end_datetime.getTime() < start_datetime.getTime())
       {
         errmsg = "end date can't be before the start date";
@@ -87,6 +89,7 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         const start_time = `${values.start_date} ${values.start_time}`;
         const end_time = `${values.end_date} ${values.end_time}`;
 
+        //creates the records in the data base
         createRecord({
           variables: {
             startTime: start_time,

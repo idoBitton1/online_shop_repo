@@ -89,10 +89,6 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         hours_amount: Yup.number().min(1, "can't be negative or zero").required("Required"),
         type: Yup.string().required("Required")
     })
-
-    const handleChange = (value: String) => {
-      console.log(value);
-    }
   
     const onSubmit = (values: MyFormValues) => {
     
@@ -101,6 +97,8 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
       setHoursAmount(hours_amount);
       const { type } = values
       try {
+
+        //creates the special record in the data base
         getSpecialRecordType({
           variables: {
             type: type

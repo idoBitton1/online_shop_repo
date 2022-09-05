@@ -22,11 +22,12 @@ export const Header: React.FC<MyProps> = ({changeUserId}) => {
 
     const toggleConnected = (): void => {
 
-        setConnected((prevState) => !prevState);
+      setConnected((prevState) => !prevState);
     }
 
     const date = new Date();
 
+    //today's date
     const today = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
     return(

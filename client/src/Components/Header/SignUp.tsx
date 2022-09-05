@@ -31,6 +31,7 @@ interface MyFormValues{
 export const SignUp: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
 
     const [open, SetOpen] = useState<boolean>(false);
+
     const [ createUser, {data, loading, error} ] = useMutation(
       MUTATION_CREATE_USER, 
       {onCompleted: (data) => changeUserId(data.createUser.id)} //after submiting, return the user id
@@ -74,12 +75,14 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
     //Add to data base with http
     const onSubmit = async(values: MyFormValues) => {
 
+      //if the password is not valid, dont continue
       if(!checkPassword(values.password, values.confirm_password)) 
         return;
 
       try {
         const { username,password } = values;
 
+        //creates the user in the data base
         await createUser({
           variables: {
             username: username,

@@ -76,6 +76,7 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
       try {
         const { date,bonus,amount,description } = values;
 
+        //creates the extra record in the data base
         createExtra({
           variables: {
             date: date,

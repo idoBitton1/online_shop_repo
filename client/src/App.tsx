@@ -54,6 +54,7 @@ function App() {
   const [special_records, setSpecialRecords] = useState<SpecialRecord[]>([]);
   const [extras, setExtras] = useState<Extra[]>([]);
 
+  //query the first job
   const { data: job_data } = useQuery(QUERY_GET_JOB_BY_NAME, {
     variables: {
       name: "job 1"
@@ -64,10 +65,10 @@ function App() {
 
     if(job_data) //if the data is fetched
     {
-      setJobId(job_data.getJobByName.id);
-      setSalaryPerHour(job_data.getJobByName.salary_per_hour);
+      setJobId(job_data.getJobByName.id); //set the job id
+      setSalaryPerHour(job_data.getJobByName.salary_per_hour); //set the salary
     }
-  }, [job_data])
+  }, [job_data]) //updates everytime the user is changing the current job
 
   //gets all the records of the corrent user
   const [ getRecords, {data: records_data, refetch: refetchRecords}] = useLazyQuery(QUERY_GET_ALL_RECORDS);
@@ -78,23 +79,27 @@ function App() {
   //gets all the extra records of the corrent user
   const [ getExtras, {data: extras_data, refetch: refetchExtras} ] = useLazyQuery(QUERY_GET_ALL_EXTRAS);
 
+  //fetching all the records
   useEffect(() => {
 
-    if(user_id)
+    if(user_id) //if the user is connected
     {
       try {
+        //fetch the records
         getRecords({
           variables: {
             userId: user_id,
             jobId: job_id
           }
         });
+        //fetch the special records
         getSpecialRecords({
           variables: {
             userId: user_id,
             jobId: job_id
           }
         });
+        //fetch the extra records
         getExtras({
           variables: {
             userId: user_id,
@@ -107,6 +112,7 @@ function App() {
     }
   }, [user_id]);
 
+  //assign the records to the records arrays
   useEffect(() => {
 
     if(records_data)
@@ -115,13 +121,15 @@ function App() {
       setSpecialRecords(special_records_data.getAllSpecialRecords);
     if(extras_data)
       setExtras(extras_data.getAllExtras);
-  }, [records_data, special_records_data, extras_data])
+  }, [records_data, special_records_data, extras_data]);
 
+  //change the user id
   const changeUserId = (id: string): void => {
 
     setUserId(id);
   }
 
+  //change the primary color
   const theme = createTheme({
     palette: {
       primary: {
