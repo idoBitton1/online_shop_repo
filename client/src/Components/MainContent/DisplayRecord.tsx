@@ -1,6 +1,8 @@
-import { Grid } from "@mui/material";
 import React from "react"
 import "./DisplayRecord.css"
+
+//Material Ui
+import { Grid } from "@mui/material";
 
 interface MyProps{
 

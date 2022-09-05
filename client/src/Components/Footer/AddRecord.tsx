@@ -1,9 +1,15 @@
 import React, { useState, useContext } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
+import { Formik, Form, Field, ErrorMessage } from "formik"
+
+//Inteface
 import { Record } from "../../App"
+
+//Apollo and Graphql
 import { useMutation } from "@apollo/client";
 import { MUTATION_CREATE_RECORD } from "../../Queries/Mutations";
+
+//Context
 import { recordsContext } from "../../Helper/Context"; 
 
 //Material Ui

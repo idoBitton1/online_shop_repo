@@ -1,6 +1,8 @@
 import React, { useState } from "react"
-import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
+import { Formik, Form, Field, ErrorMessage } from "formik"
+
+//Apollo and graphql
 import { useMutation } from "@apollo/client"
 import { MUTATION_CREATE_USER } from "../../Queries/Mutations";
 

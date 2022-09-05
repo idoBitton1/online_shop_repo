@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react"
-import { DisplayRecord } from "./DisplayRecord"
 import "./MainContent.css"
+
+//Components
+import { DisplayRecord } from "./DisplayRecord"
+
+//Interface
 import { Extra, Record, SpecialRecord } from "../../App"
 
 //Material Ui

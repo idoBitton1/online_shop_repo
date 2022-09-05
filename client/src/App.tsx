@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { useQuery, useLazyQuery, gql } from "@apollo/client"
+
+//Components
 import { Footer } from './Components/Footer/Footer';
 import { MainContent } from './Components/MainContent/MainContent';
 import { Header } from './Components/Header/Header';
+
+//Apollo and Graphql
+import { useQuery, useLazyQuery} from "@apollo/client"
+import {QUERY_GET_JOB_BY_NAME,
+  QUERY_GET_ALL_RECORDS,
+  QUERY_GET_ALL_SPECIAL_RECORDS,
+  QUERY_GET_ALL_EXTRAS} from "./Queries/Queries"
+
+//Context
 import {recordsContext,
         specialRecordsContext,
         extrasContext } from './Helper/Context';
-
-import {QUERY_GET_JOB_BY_NAME,
-        QUERY_GET_ALL_RECORDS,
-        QUERY_GET_ALL_SPECIAL_RECORDS,
-        QUERY_GET_ALL_EXTRAS} from "./Queries/Queries"
 
 //Material Ui
 import { createTheme, ThemeProvider } from "@mui/material"

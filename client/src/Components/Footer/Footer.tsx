@@ -1,9 +1,10 @@
 import React from "react"
 import "./Footer.css"
+
+//Components
 import { AddExtra } from "./AddExtra"
 import { AddRecord } from "./AddRecord"
 import { AddSpecialRecord } from "./AddSpecialRecord"
-import { Extra } from "../../App"
 
 export interface MyProps{
 

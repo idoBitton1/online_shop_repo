@@ -1,10 +1,16 @@
 import React, { useState, useContext } from "react"
-import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup"
+import { ErrorMessage, Field, Form, Formik } from "formik";
+
+//Interface
 import { SpecialRecord } from "../../App"
+
+//Apollo and Graphql
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { MUTATION_CREATE_SPECIAL_RECORD } from "../../Queries/Mutations";
 import { QUERY_SPECIAL_RECORD_TYPE } from "../../Queries/Queries";
+
+//Context
 import { specialRecordsContext } from "../../Helper/Context"; 
 
 //Material Ui

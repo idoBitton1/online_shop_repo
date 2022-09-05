@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 import "./Header.css"
+
+//Components
 import { SignUp } from "./SignUp";
 import { SignIn } from "./SignIn";
 import { Profile } from "./Profile";
