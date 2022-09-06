@@ -17,7 +17,7 @@ export const Profile: React.FC<MyProps> = ({connected, toggleConnected}) => {
         <>
             {/* onClick={toggleDialog} add later */}
             <IconButton
-              sx={{color: "black"}}>
+              sx={{color: "white"}}>
               <PersonRounded sx={{fontSize: 30}} />
             </IconButton>
         </>

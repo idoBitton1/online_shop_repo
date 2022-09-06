@@ -2,6 +2,9 @@ import React, { useState, useContext } from "react"
 import * as Yup from "yup"
 import { ErrorMessage, Field, Form, Formik } from "formik";
 
+//Components
+import { AddButton } from "./AddButton";
+
 //Interface
 import { SpecialRecord } from "../../App"
 
@@ -121,19 +124,11 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     return(
         <>
-          <Tooltip title={user_id ? "" : "sign up or sign in to preform this action"}>
-            <span>
-              <Button
-                size="large"
-                aria-label="add_extra_button"
-                variant="text"
-                disabled={user_id ? false : true}
-                sx={{color: "black"}}
-                onClick={toggleDialog}>
-                  special Record
-              </Button>
-            </span>
-          </Tooltip>
+            <AddButton 
+              is_disabled={user_id ? false : true}
+              onClick={toggleDialog}
+              text={"special record"}
+            />
 
             <Dialog open={open} onClose={toggleDialog}>
                 <DialogTitle>

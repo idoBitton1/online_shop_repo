@@ -39,3 +39,14 @@ const extraState = {
 }
 
 export const extrasContext = createContext<extraType>(extraState)
+
+//change the user id
+type userIdType = {
+    setUserId: React.Dispatch<React.SetStateAction<string>>
+}
+
+const userIdState = {
+    setUserId: () => {}
+}
+
+export const userIdContext = createContext<userIdType>(userIdState)

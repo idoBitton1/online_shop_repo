@@ -67,7 +67,7 @@ export const SignIn: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
         <Button
           color="secondary"
           variant="text"
-          sx={{color: "black", marginRight: 1}}
+          sx={{color: "white", marginRight: 1}}
           onClick={toggleDialog}>
             sign in
         </Button>

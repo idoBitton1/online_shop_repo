@@ -16,7 +16,8 @@ import {QUERY_GET_JOB_BY_NAME,
 //Context
 import {recordsContext,
         specialRecordsContext,
-        extrasContext } from './Helper/Context';
+        extrasContext,
+        userIdContext } from './Helper/Context';
 
 //Material Ui
 import { createTheme, ThemeProvider } from "@mui/material"
@@ -139,13 +140,15 @@ function App() {
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      
+    <ThemeProvider theme={theme}>    
       <div className="app_container">
 
-        <Header
-          changeUserId={changeUserId}
-        />
+        <userIdContext.Provider value={{setUserId}}>
+          <Header
+            changeUserId={changeUserId}
+          />
+        </userIdContext.Provider>
+
         <recordsContext.Provider value={{records, setRecords}}>
         <specialRecordsContext.Provider value={{special_records, setSpecialRecords}}>
         <extrasContext.Provider value={{extras, setExtras}}>

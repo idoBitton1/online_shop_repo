@@ -5,9 +5,10 @@ html, body{
 
 .main_content_container{
 
-    background-color: white;
+    background-color: #3E567C;
     height: 74vh;
     overflow: hidden;
     overflow-y: scroll;
     color: black;
+    padding-bottom: 15px;
 }

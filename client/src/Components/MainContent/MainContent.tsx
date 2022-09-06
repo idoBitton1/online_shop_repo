@@ -103,11 +103,12 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                 paddingLeft: "2em",
                 paddingRight: "2em",
                 padding: "5px",
-                fontFamily: "Rubik"
+                fontFamily: "Rubik",
+                color: "white"
             }}>
             <Grid item xs={2}>
                 <Button
-                  sx={{color: "black"}}
+                  sx={{color: "white"}}
                   onClick={oneMonthBackwards}
                   >
                     {`<${getMonthName(month_number - 1)}`}
@@ -122,7 +123,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
             </Grid>
             <Grid item xs={2}>
                 <Button
-                  sx={{color: "black"}}
+                  sx={{color: "white"}}
                   onClick={oneMonthForward}
                   >
                     {`${getMonthName(month_number + 1)}>`}
@@ -131,13 +132,14 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
         </Grid>
 
         <Grid container sx={{
-                backgroundColor: "rgb(230, 230, 230)",
+                backgroundColor: "#8CA0B1",
                 fontFamily: "Rubik",
                 fontSize: "20px",
                 padding: "5px",
                 paddingLeft: "2em",
                 paddingRight: "2em",
-                textAlign: "center"
+                textAlign: "center",
+                color: "white"
             }}>
 
             <Grid item xs={2}>

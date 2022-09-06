@@ -48,13 +48,14 @@ export const DisplayRecord: React.FC<MyProps> = ({start_time, end_time, daily_br
 
     return(
         <Grid container sx={{
-                backgroundColor: "whitesmoke",
+                backgroundColor: "#A7BBCB",
                 fontFamily: "Rubik",
                 fontSize: "20px",
                 padding: "15px",
                 paddingLeft: "2em",
                 paddingRight: "2em",
-                textAlign: "center"
+                textAlign: "center",
+                color: "white"
             }}>
             <Grid item xs={2}>
                 <div className="date_display">

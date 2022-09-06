@@ -3,10 +3,10 @@ footer{
     display: flex;
     justify-content: space-between;
 
-    background-color: white;
+    background-color: #A7BBCB;
     padding-left: 2em;
     padding-right: 2em;
-    margin-top: 15px;
+    padding-bottom: 3px;
 
-    box-shadow: 0px -2px 30px 0 rgba(0,0,0,.2);
+    box-shadow: 0px -2px 30px 10px rgb(36, 52, 77);
 }

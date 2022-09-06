@@ -2,6 +2,9 @@ import React, { useState, useContext } from "react";
 import * as Yup from "yup"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 
+//Components
+import { AddButton } from "./AddButton";
+
 //Inteface
 import { Record } from "../../App"
 
@@ -19,7 +22,6 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
-import Tooltip from "@mui/material/Tooltip";
 
 interface MyProps{
 
@@ -115,19 +117,11 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     return(
         <>
-          <Tooltip title={user_id ? "" : "sign up or sign in to preform this action"}>
-            <span>
-              <Button
-                size="large"
-                aria-label="add_record_button"
-                variant="text"
-                disabled={user_id ? false : true}
-                sx={{color: "black"}}
-                onClick={toggleDialog}>
-                  Add Record
-              </Button>
-            </span>
-          </Tooltip>
+            <AddButton 
+              is_disabled={user_id ? false : true}
+              onClick={toggleDialog}
+              text={"Record"}
+            />
 
             <Dialog open={open} onClose={toggleDialog}>
                 <DialogTitle>

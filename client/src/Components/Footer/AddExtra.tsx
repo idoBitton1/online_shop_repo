@@ -2,6 +2,9 @@ import React, { useState, useContext } from "react"
 import * as Yup from "yup"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 
+//Components
+import { AddButton } from "./AddButton";
+
 //Interface
 import { Extra } from "../../App"
 
@@ -103,19 +106,12 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
 
     return(
         <>
-            <Tooltip title={user_id ? "" : "sign up or sign in to preform this action"}>
-              <span>
-                <Button
-                  size="large"
-                  aria-label="add_extra_button"
-                  variant="text"
-                  disabled={user_id ? false : true}
-                  sx={{color: "black"}}
-                  onClick={toggleDialog}>
-                    bonus / waste
-                </Button>
-              </span>
-            </Tooltip>
+            <AddButton 
+              is_disabled={user_id ? false : true}
+              onClick={toggleDialog}
+              text={"bonus / waste"}
+            />
+            
 
             <Dialog open={open} onClose={toggleDialog}>
                 <DialogTitle>
