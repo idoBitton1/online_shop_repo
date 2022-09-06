@@ -25,6 +25,7 @@ import { grey } from "@mui/material/colors"
 
 export interface Record{
 
+  id: string,
   start_time: string,
   end_time: string,
   daily_break: number
@@ -32,6 +33,7 @@ export interface Record{
 
 export interface SpecialRecord{
 
+  id: string,
   date: string,
   hours_amount: number,
   special_record_type_id: string
@@ -39,6 +41,7 @@ export interface SpecialRecord{
 
 export interface Extra{
 
+  id: string,
   date: string,
   bonus: boolean,
   amount: number,
@@ -147,15 +150,17 @@ function App() {
           <Header/>
         </userIdContext.Provider>
 
-        <recordsContext.Provider value={{records, setRecords}}>
-        <specialRecordsContext.Provider value={{special_records, setSpecialRecords}}>
-        <extrasContext.Provider value={{extras, setExtras}}>
-          <MainContent
-            records={records}
-            special_records={special_records}
-            extras={extras}
-            salary_per_hour={salary_per_hour}
-          />
+        
+        <MainContent
+          records={records}
+          special_records={special_records}
+          extras={extras}
+          salary_per_hour={salary_per_hour}
+        />
+
+        <recordsContext.Provider value={{setRecords}}>
+        <specialRecordsContext.Provider value={{setSpecialRecords}}>
+        <extrasContext.Provider value={{setExtras}}>
           <Footer
             user_id={user_id}
             job_id={job_id}

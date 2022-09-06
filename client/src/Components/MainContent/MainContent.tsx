@@ -5,12 +5,18 @@ import "./MainContent.css"
 import { DisplayRecord } from "./DisplayRecord"
 
 //Interface
-import { Extra, Record, SpecialRecord } from "../../App"
+import { Record, SpecialRecord, Extra } from "../../App"
 
 //Material Ui
 import Grid from "@mui/material/Grid"
 import Button from "@mui/material/Button"
-import { Typography } from "@mui/material"
+import { IconButton, Typography } from "@mui/material"
+import SpecialRecordIcon from "@mui/icons-material/PhotoFilterOutlined"
+import ExtraIcon from "@mui/icons-material/NoteAddOutlined"
+import RecordIcon from "@mui/icons-material/InsertDriveFileOutlined"
+import Tooltip from "@mui/material/Tooltip"
+import { DisplaySpecialRecord } from "./DisplaySpecialRecord"
+import { DisplayExtra } from "./DisplayExtra"
 
 interface MyProps{
 
@@ -71,8 +77,9 @@ const getMonthName = (month_number: number): string => {
     return month_name;
 }
 
-export const MainContent: React.FC<MyProps> = ({records, special_records, extras}) => {
+export const MainContent: React.FC<MyProps> = ({records, special_records, extras,  salary_per_hour}) => {
 
+    const [record_type, setType] = useState<number>(1);
     var current_date: Date = new Date();
 
     //the displayed month
@@ -86,6 +93,12 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
             setMonthNumber(12);
     }, [month_number]);
 
+    //checks that the type is valid
+    useEffect(() => {
+        if(record_type > 3)
+            setType(1);
+    }, [record_type]);
+
     const oneMonthBackwards = () => {
         
         setMonthNumber((prevMonth) => prevMonth - 1);
@@ -94,6 +107,96 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
     const oneMonthForward = () => {
        
         setMonthNumber((prevMonth) => prevMonth + 1);
+    }
+
+    //displays the icon of the current display type of records
+    const chooseIcon = (): any => {
+        
+        if(record_type == 1){
+            return (
+                <Tooltip title="record">
+                    <RecordIcon sx={{fontSize: 20}} />
+                </Tooltip>
+            );
+        }
+        else if(record_type == 2){
+            return  (
+                <Tooltip title="special record">
+                    <SpecialRecordIcon sx={{fontSize: 20}} />
+                </Tooltip>
+            );
+        }
+        else{
+            return (
+                <Tooltip title="extra record">
+                    <ExtraIcon sx={{fontSize: 20}} />
+                </Tooltip>
+            );
+        }
+    }
+
+    //displays the current type of records
+    const displayCurrentRecordType = (): any => {
+
+        if(record_type == 1){ //records
+            return (
+                //display each record
+                records.map((record) => {
+
+                    //create a date object for the start and end times
+                    const start_time: Date = new Date(Number(record.start_time));
+                    const end_time: Date = new Date(Number(record.end_time));
+
+                    return (
+                        <DisplayRecord 
+                            start_time={start_time}
+                            end_time={end_time}
+                            daily_break={record.daily_break}
+                            salary_per_hour={salary_per_hour}
+                            key={record.id}
+                        /> 
+                    );
+                })
+            );
+        }
+        else if(record_type == 2){ //special records
+            return(
+                special_records.map((special_record) => {
+
+                    //create a date object for the date
+                    const date: Date = new Date(Number(special_record.date));
+
+                    return(
+                        <DisplaySpecialRecord
+                            date={date}
+                            hours_amount={special_record.hours_amount}
+                            special_record_type_id={special_record.special_record_type_id}
+                            salary_per_hour={salary_per_hour}
+                            key={special_record.id}
+                        />
+                    );
+                })
+            );
+        }
+        else if(record_type == 3){ //extra records
+            return(
+                extras.map((extra) => {
+
+                    //create a date object for the date
+                    const date: Date = new Date(Number(extra.date));
+
+                    return(
+                        <DisplayExtra
+                            date={date}
+                            bonus={extra.bonus}
+                            amount={extra.amount}
+                            description={extra.description}
+                            key={extra.id}
+                        />
+                    );
+                })
+            );
+        }
     }
 
     return(
@@ -119,6 +222,11 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                   marginTop={1}
                   >
                     {getMonthName(month_number)}
+                    <IconButton
+                      sx={{color: "white", marginBottom: 0.4}}
+                      onClick={() => setType((prevType) => prevType + 1)}>
+                        {chooseIcon()}
+                    </IconButton>
                 </Typography>
             </Grid>
             <Grid item xs={2}>
@@ -161,12 +269,8 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
 
         <div className="main_content_container">    
 
-            <DisplayRecord 
-                start_time="2022-08-23 22:00"
-                end_time="2022-08-23 23:00"
-                percentage={150}
-                salary_per_hour={30}
-            /> 
+            {displayCurrentRecordType()}
+
         </div>
         </>
     )

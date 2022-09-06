@@ -11,7 +11,7 @@ import { SpecialRecord } from "../../App"
 //Apollo and Graphql
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { MUTATION_CREATE_SPECIAL_RECORD } from "../../Queries/Mutations";
-import { QUERY_SPECIAL_RECORD_TYPE } from "../../Queries/Queries";
+import { QUERY_SPECIAL_RECORD_TYPE_BY_TYPE } from "../../Queries/Queries";
 
 //Context
 import { specialRecordsContext } from "../../Helper/Context"; 
@@ -52,17 +52,23 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const [createSpecialRecord, {data: special_record_data, loading, error}] = useMutation(MUTATION_CREATE_SPECIAL_RECORD, {
       onCompleted: (special_record_data) => {
+
+        //creates the special record
         const special_record: SpecialRecord = {
+          id: special_record_data.createSpecialRecord.id,
           date: special_record_data.createSpecialRecord.date,
           hours_amount: special_record_data.createSpecialRecord.hours_amount,
           special_record_type_id: special_record_data.createSpecialRecord.special_record_type_id
         };
 
+        console.log(special_record)
+
+        //add it to the special records array
         setSpecialRecords((prev_records) => [...prev_records, special_record]);
       }
     });
 
-    const [getSpecialRecordType, {data}] = useLazyQuery(QUERY_SPECIAL_RECORD_TYPE,{
+    const [getSpecialRecordType, {data}] = useLazyQuery(QUERY_SPECIAL_RECORD_TYPE_BY_TYPE,{
       onCompleted: (data) => {
         try {
           createSpecialRecord({

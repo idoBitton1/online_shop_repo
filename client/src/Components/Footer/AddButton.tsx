@@ -1,6 +1,8 @@
+import React from "react"
+
+//Material Ui
 import Button from "@mui/material/Button"
 import Tooltip from "@mui/material/Tooltip"
-import React from "react"
 
 interface MyProps{
     is_disabled: boolean,
@@ -18,7 +20,7 @@ export const AddButton: React.FC<MyProps> = ({is_disabled, onClick, text}) => {
                 size="large"
                 variant="text"
                 disabled={is_disabled}
-                sx={{color: "black"}}
+                sx={{color: "white"}}
                 onClick={onClick}>
                   {text}
               </Button>

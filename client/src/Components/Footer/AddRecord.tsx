@@ -46,10 +46,13 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
     const [createRecord, {data}] = useMutation(MUTATION_CREATE_RECORD, {
       onCompleted: (data) => {
         const record: Record = {
+          id: data.createRecord.id,
           start_time: data.createRecord.start_time,
           end_time: data.createRecord.end_time,
           daily_break: data.createRecord.daily_break
         };
+
+        console.log(record)
 
         setRecords((prev_records) => [...prev_records, record]);
       }

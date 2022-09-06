@@ -1,29 +1,23 @@
 import React from "react"
-import "./DisplayRecord.css"
+import "./DisplayRecords.css"
 
 //Material Ui
 import { Grid } from "@mui/material";
 
 interface MyProps{
 
-    start_time: string,
-    end_time: string,
-    daily_break?: number,
-    percentage?: number
+    start_time: Date,
+    end_time: Date,
+    daily_break: number,
     salary_per_hour: number
 }
 
-//Material Ui
-
-export const DisplayRecord: React.FC<MyProps> = ({start_time, end_time, daily_break, percentage, salary_per_hour}) => {
-
-    const start_datetime: Date = new Date(start_time);
-    const end_datetime: Date = new Date(end_time);
+export const DisplayRecord: React.FC<MyProps> = ({start_time, end_time, daily_break, salary_per_hour}) => {
 
     const getHours = (): number => {
     
         //the diff between the dates in milliseconds
-        const diff: number = end_datetime.getTime() - start_datetime.getTime();
+        const diff: number = end_time.getTime() - start_time.getTime();
     
         var msec = diff;
         var hh = Math.floor(msec / 1000 / 60 / 60);
@@ -36,15 +30,12 @@ export const DisplayRecord: React.FC<MyProps> = ({start_time, end_time, daily_br
         return Number(res.toFixed(2));
     }
 
+    //get the number of hours
     const hours: number = getHours();
 
-    var total;
-    if(daily_break !== undefined)
-        total = hours * salary_per_hour - ((daily_break / 60) * salary_per_hour); //salary_per_hour     
-    else if(percentage !== undefined)
-        total = ((hours * salary_per_hour) / 100) * percentage;
-    else
-        total = hours * salary_per_hour;     
+    //total calculation
+    var total = hours * salary_per_hour - ((daily_break / 60) * salary_per_hour); //salary_per_hour        
+    total = Number(total.toFixed(2));
 
     return(
         <Grid container sx={{
@@ -57,30 +48,35 @@ export const DisplayRecord: React.FC<MyProps> = ({start_time, end_time, daily_br
                 textAlign: "center",
                 color: "white"
             }}>
+            {/* date column */}
             <Grid item xs={2}>
                 <div className="date_display">
-                    {start_datetime.getDate()}
+                    {start_time.getDate()}
                 </div>
             </Grid>
+            {/* from column */}
             <Grid item xs={3}>
                 {
-                    `${start_datetime.getHours()}:${start_datetime.getMinutes() < 10 ? 
-                    `0${start_datetime.getMinutes()}`
+                    `${start_time.getHours()}:${start_time.getMinutes() < 10 ? 
+                    `0${start_time.getMinutes()}`
                     :
-                    `${start_datetime.getMinutes()}`}`
+                    `${start_time.getMinutes()}`}`
                 }
             </Grid>
+            {/* to column */}
             <Grid item xs={3}>
                 {
-                    `${end_datetime.getHours()}:${end_datetime.getMinutes() < 10 ? 
-                    `0${end_datetime.getMinutes()}`
+                    `${end_time.getHours()}:${end_time.getMinutes() < 10 ? 
+                    `0${end_time.getMinutes()}`
                     :
-                    `${end_datetime.getMinutes()}`}`
+                    `${end_time.getMinutes()}`}`
                 }
             </Grid>
+            {/* hours column */}
             <Grid item xs={2}>
                 {hours}
             </Grid>
+            {/* total column */}
             <Grid item xs={2}>
                 {total}
             </Grid>

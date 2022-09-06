@@ -6,7 +6,7 @@ footer{
     background-color: #A7BBCB;
     padding-left: 2em;
     padding-right: 2em;
-    padding-bottom: 3px;
+    padding-bottom: 7px;
 
-    box-shadow: 0px -2px 30px 10px rgb(36, 52, 77);
+    box-shadow: 0px -2px 30px 5px rgb(36, 52, 77);
 }

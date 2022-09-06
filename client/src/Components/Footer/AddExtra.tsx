@@ -49,6 +49,7 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
     const [createExtra, {data}] = useMutation(MUTATUIN_CREATE_EXTRA, {
       onCompleted: (data) => {
         const extra: Extra = {
+          id: data.createExtra.id,
           date: data.createExtra.date,
           bonus: data.createExtra.bonus,
           amount: data.createExtra.amount,
@@ -111,7 +112,6 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
               onClick={toggleDialog}
               text={"bonus / waste"}
             />
-            
 
             <Dialog open={open} onClose={toggleDialog}>
                 <DialogTitle>
