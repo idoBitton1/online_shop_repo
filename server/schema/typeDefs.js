@@ -53,6 +53,7 @@ const typeDefs = gql`
         getAllRecords(user_id: String!, job_id: String!): [Record],
         getAllSpecialRecords(user_id: String!, job_id: String!): [Special_record],
         getSpecialRecordTypeByType(type: String!): Special_record_type,
+        getSpecialRecordTypeById(id: String!): Special_record_type,
         getAllExtras(user_id: String!, job_id: String!): [Extra],
         validateUser(username: String!, password: String!): String,
         getJobByName(name: String!): Job

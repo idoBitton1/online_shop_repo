@@ -32,7 +32,19 @@ const resolvers = {
             try {
                 const special_record_type = await pool.query(
                 "SELECT * FROM special_record_types WHERE type = $1 ",
-                [type])
+                [type]);
+                return special_record_type.rows[0];
+            } catch (err) {
+                console.error(err.message);
+            }
+        },
+        //get a special record type by id
+        getSpecialRecordTypeById: async(_, args) => {
+            const {id} = args;
+            try {
+                const special_record_type = await pool.query(
+                "SELECT * FROM special_record_types WHERE id = $1 ",
+                [id]);
                 return special_record_type.rows[0];
             } catch (err) {
                 console.error(err.message);
