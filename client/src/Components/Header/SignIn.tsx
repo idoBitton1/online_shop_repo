@@ -1,6 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import * as Yup from "yup"
 import { Formik, Form, Field, ErrorMessage } from "formik"
+
+//Context
+import { userIdContext } from "../../Helper/Context"
 
 //Interface
 import { MyProps } from "./SignUp"
@@ -19,8 +22,9 @@ interface MyFormValues{
     password: string
 }
 
-export const SignIn: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
+export const SignIn: React.FC<MyProps> = ({toggleConnected}) => {
 
+    const { setUserId } = useContext(userIdContext);
     const [open, setOpen] = useState<boolean>(false);
     
     var errmsg: string;
@@ -52,7 +56,7 @@ export const SignIn: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
 
         var temp: string = "e68c7491-05c5-41ad-b9b2-bdcf931dbda1";
 
-        changeUserId(temp);
+        setUserId(temp);
         toggleConnected();
         toggleDialog();
     }

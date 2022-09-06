@@ -1,4 +1,7 @@
-import React from "react"
+import React, { useContext } from "react"
+
+//Context
+import { userIdContext } from "../../Helper/Context"
 
 //Material Ui
 import PersonRounded from "@mui/icons-material/PersonRounded"
@@ -8,10 +11,11 @@ interface MyProps{
 
     connected: boolean,
     toggleConnected: () => void,
-    changeUserId: (id: string) => void
 }
 
 export const Profile: React.FC<MyProps> = ({connected, toggleConnected}) => {
+
+    const {setUserId} = useContext(userIdContext);
 
     return(
         <>

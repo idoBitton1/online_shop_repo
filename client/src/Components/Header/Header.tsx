@@ -13,10 +13,10 @@ import Menu from "@mui/icons-material/Menu"
 
 interface MyProps{
 
-  changeUserId: (id: string) => void
+  //changeUserId: (id: string) => void
 }
 
-export const Header: React.FC<MyProps> = ({changeUserId}) => {
+export const Header: React.FC<MyProps> = ({/*changeUserId*/}) => {
 
     const [connected, setConnected] = useState<boolean>(false)
 
@@ -48,18 +48,18 @@ export const Header: React.FC<MyProps> = ({changeUserId}) => {
             <Profile 
               connected={connected}
               toggleConnected={toggleConnected}
-              changeUserId={changeUserId}
+              //changeUserId={changeUserId}
             />
             :
             <div>
               <SignIn
                 toggleConnected={toggleConnected}
-                changeUserId={changeUserId}
+                //changeUserId={changeUserId}
               />
 
               <SignUp
                 toggleConnected={toggleConnected}
-                changeUserId={changeUserId}
+                //changeUserId={changeUserId}
               />
             </div>
             }

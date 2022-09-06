@@ -144,9 +144,7 @@ function App() {
       <div className="app_container">
 
         <userIdContext.Provider value={{setUserId}}>
-          <Header
-            changeUserId={changeUserId}
-          />
+          <Header/>
         </userIdContext.Provider>
 
         <recordsContext.Provider value={{records, setRecords}}>

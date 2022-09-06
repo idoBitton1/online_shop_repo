@@ -1,10 +1,13 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import * as Yup from "yup"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 
 //Apollo and graphql
 import { useMutation } from "@apollo/client"
 import { MUTATION_CREATE_USER } from "../../Queries/Mutations";
+
+//Context
+import { userIdContext } from "../../Helper/Context";
 
 //Material Ui
 import Button from '@mui/material/Button';
@@ -16,8 +19,7 @@ import TextField from "@mui/material/TextField";
 
 export interface MyProps{
 
-  toggleConnected: () => void,
-  changeUserId: (id: string) => void
+  toggleConnected: () => void
 }
 
 interface MyFormValues{
@@ -28,13 +30,14 @@ interface MyFormValues{
     salary_per_hour: number
 }
 
-export const SignUp: React.FC<MyProps> = ({toggleConnected, changeUserId}) => {
+export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
 
+    const {setUserId} = useContext(userIdContext);
     const [open, SetOpen] = useState<boolean>(false);
 
     const [ createUser, {data, loading, error} ] = useMutation(
       MUTATION_CREATE_USER, 
-      {onCompleted: (data) => changeUserId(data.createUser.id)} //after submiting, return the user id
+      {onCompleted: (data) => setUserId(data.createUser.id)} //after submiting, return the user id
     );
     var errmsg: string;
     
