@@ -31,7 +31,7 @@ export const DisplayExtra: React.FC<MyProps> = ({date, bonus, amount, descriptio
                 </div>
             </Grid>
             {/* type column */}
-            <Grid item xs={6}>
+            <Grid item xs={3}>
                 {bonus ? "bonus" : "waste"}
             </Grid>
             {/* amount column */}
@@ -39,7 +39,7 @@ export const DisplayExtra: React.FC<MyProps> = ({date, bonus, amount, descriptio
                 {amount}
             </Grid>
             {/* description column */}
-            <Grid item xs={2}>
+            <Grid item xs={5}>
                 {description}
             </Grid>
         </Grid>

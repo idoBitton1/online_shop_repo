@@ -109,6 +109,67 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
         setMonthNumber((prevMonth) => prevMonth + 1);
     }
 
+    const chooseTableHeaders = (): any => {
+
+        if(record_type == 1){ //records table headers
+            return(
+                <>
+                    <Grid item xs={2}>
+                        date
+                    </Grid>
+                    <Grid item xs={3}>
+                        from
+                    </Grid>
+                    <Grid item xs={3}>
+                        to
+                    </Grid>
+                    <Grid item xs={2}>
+                        hours
+                    </Grid>
+                    <Grid item xs={2}>
+                        total
+                    </Grid> 
+                </>
+            );
+        }
+        else if(record_type == 2){ //special records table headers
+            return(
+                <>
+                    <Grid item xs={2}>
+                        date
+                    </Grid>
+                    <Grid item xs={6}>
+                        type
+                    </Grid>
+                    <Grid item xs={2}>
+                        hours
+                    </Grid>
+                    <Grid item xs={2}>
+                        total
+                    </Grid> 
+                </>
+            );
+        }
+        else if(record_type == 3){ //extra records table headers
+            return(
+                <>
+                    <Grid item xs={2}>
+                        date
+                    </Grid>
+                    <Grid item xs={3}>
+                        type
+                    </Grid>
+                    <Grid item xs={2}>
+                        amount
+                    </Grid>
+                    <Grid item xs={5}>
+                        description
+                    </Grid> 
+                </>
+            );
+        }
+    }
+
     //displays the icon of the current display type of records
     const chooseIcon = (): any => {
         
@@ -201,6 +262,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
 
     return(
         <>
+        {/** month displayer */}
         <Grid container sx={{
                 textAlign: "center",
                 paddingLeft: "2em",
@@ -239,6 +301,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
             </Grid>
         </Grid>
 
+        {/** table headers */}
         <Grid container sx={{
                 backgroundColor: "#8CA0B1",
                 fontFamily: "Rubik",
@@ -250,21 +313,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                 color: "white"
             }}>
 
-            <Grid item xs={2}>
-                date
-            </Grid>
-            <Grid item xs={3}>
-                from
-            </Grid>
-            <Grid item xs={3}>
-                to
-            </Grid>
-            <Grid item xs={2}>
-                hours
-            </Grid>
-            <Grid item xs={2}>
-                total
-            </Grid>  
+            {chooseTableHeaders()} 
         </Grid> 
 
         <div className="main_content_container">    
