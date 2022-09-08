@@ -82,15 +82,20 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
     const [record_type, setType] = useState<number>(1);
     var current_date: Date = new Date();
 
-    //the displayed month
+    //displayed month and year
     const [month_number, setMonthNumber] = useState<number>(current_date.getMonth() + 1);
-    
-    //checks that the month number is valid
+    const [year, setYear] = useState<number>(current_date.getFullYear());
+
+    //checks that the month number is valid, and updated the year if needed
     useEffect(() => {
-        if(month_number > 12)
+        if(month_number > 12){
             setMonthNumber(1);
-        else if(month_number < 1)
+            setYear((prevYear) => prevYear + 1);
+        }      
+        else if(month_number < 1){
             setMonthNumber(12);
+            setYear((prevYear) => prevYear - 1);
+        }      
     }, [month_number]);
 
     //checks that the type is valid
@@ -283,7 +288,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                 <Typography
                   marginTop={1}
                   >
-                    {getMonthName(month_number)}
+                    {getMonthName(month_number) + " " + year}
                     <IconButton
                       sx={{color: "white", marginBottom: 0.4}}
                       onClick={() => setType((prevType) => prevType + 1)}>
@@ -319,7 +324,6 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
         <div className="main_content_container">    
 
             {displayCurrentRecordType()}
-
         </div>
         </>
     )

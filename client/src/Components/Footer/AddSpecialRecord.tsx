@@ -14,7 +14,7 @@ import { MUTATION_CREATE_SPECIAL_RECORD } from "../../Queries/Mutations";
 import { QUERY_SPECIAL_RECORD_TYPE_BY_TYPE } from "../../Queries/Queries";
 
 //Context
-import { specialRecordsContext } from "../../Helper/Context"; 
+import { specialRecordsContext, lockContext } from "../../Helper/Context"; 
 
 //Material Ui
 import Button from "@mui/material/Button"
@@ -24,7 +24,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import { MenuItem, Select } from "@mui/material";
-import Tooltip from "@mui/material/Tooltip";
 
 interface MyProps{
 
@@ -41,7 +40,9 @@ interface MyFormValues{
 
 export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
-    const {setSpecialRecords} = useContext(specialRecordsContext);
+    const {special_records, setSpecialRecords} = useContext(specialRecordsContext);
+    const {setLock} = useContext(lockContext);
+    
     const [open, setOpen] = useState<boolean>(false);
     const [optionList, setOptionsList] = useState<string[]>([
       "vacation", "sick day", "holiday"
@@ -61,16 +62,21 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
           special_record_type_id: special_record_data.createSpecialRecord.special_record_type_id
         };
 
-        console.log(special_record)
+        //place the new object in the array and sort it
+        var array_for_sort = [...special_records, special_record];
+        array_for_sort.sort((a, b) => Number(a.date) - Number(b.date));
+        setSpecialRecords([...array_for_sort]);
 
-        //add it to the special records array
-        setSpecialRecords((prev_records) => [...prev_records, special_record]);
+        setLock(true); //opens the lock to re-sort the array
       }
     });
 
+    //gets the id of a special record type, by type
     const [getSpecialRecordType, {data}] = useLazyQuery(QUERY_SPECIAL_RECORD_TYPE_BY_TYPE,{
       onCompleted: (data) => {
         try {
+
+          //when the special record type id is fetched, add the special record to the data base
           createSpecialRecord({
             variables: {
               date: date,

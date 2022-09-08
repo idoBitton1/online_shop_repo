@@ -17,7 +17,8 @@ import {QUERY_GET_JOB_BY_NAME,
 import {recordsContext,
         specialRecordsContext,
         extrasContext,
-        userIdContext } from './Helper/Context';
+        userIdContext,
+        lockContext } from './Helper/Context';
 
 //Material Ui
 import { createTheme, ThemeProvider } from "@mui/material"
@@ -49,11 +50,12 @@ export interface Extra{
 }
 
 function App() {
-
+ 
   const [user_id, setUserId] = useState<string>("");
   const [salary_per_hour, setSalaryPerHour] = useState<number>(30); //default value 
   const [job_id, setJobId] = useState<string>("");
 
+  const [lock, setLock] = useState<boolean>(true);
   const [records, setRecords] = useState<Record[]>([]);
   const [special_records, setSpecialRecords] = useState<SpecialRecord[]>([]);
   const [extras, setExtras] = useState<Extra[]>([]);
@@ -75,13 +77,13 @@ function App() {
   }, [job_data]) //updates everytime the user is changing the current job
 
   //gets all the records of the corrent user
-  const [ getRecords, {data: records_data, refetch: refetchRecords}] = useLazyQuery(QUERY_GET_ALL_RECORDS);
+  const [ getRecords, {data: records_data}] = useLazyQuery(QUERY_GET_ALL_RECORDS);
 
   //gets all the special records of the corrent user
-  const [ getSpecialRecords, {data:special_records_data, refetch: refetchSpecialRecords} ] = useLazyQuery(QUERY_GET_ALL_SPECIAL_RECORDS);
+  const [ getSpecialRecords, {data:special_records_data} ] = useLazyQuery(QUERY_GET_ALL_SPECIAL_RECORDS);
 
   //gets all the extra records of the corrent user
-  const [ getExtras, {data: extras_data, refetch: refetchExtras} ] = useLazyQuery(QUERY_GET_ALL_EXTRAS);
+  const [ getExtras, {data: extras_data} ] = useLazyQuery(QUERY_GET_ALL_EXTRAS);
 
   //fetching all the records
   useEffect(() => {
@@ -116,22 +118,31 @@ function App() {
     }
   }, [user_id]);
 
-  //assign the records to the records arrays
+  //assign the data to the records arrays
   useEffect(() => {
 
-    if(records_data)
-      setRecords(records_data.getAllRecords);
-    if(special_records_data)
-      setSpecialRecords(special_records_data.getAllSpecialRecords);
-    if(extras_data)
-      setExtras(extras_data.getAllExtras);
-  }, [records_data, special_records_data, extras_data]);
+    if(records_data){
 
-  //change the user id
-  const changeUserId = (id: string): void => {
+      //sorting the records array
+      var array_for_sort = [...records_data.getAllRecords];
+      array_for_sort.sort((a, b) => Number(a.start_time) - Number(b.start_time));
+      setRecords([...array_for_sort]);
+    }
+    if(special_records_data){
 
-    setUserId(id);
-  }
+      //sorting the special records array
+      var array_for_sort = [...special_records_data.getAllSpecialRecords];
+      array_for_sort.sort((a, b) => Number(a.date) - Number(b.date));
+      setSpecialRecords([...array_for_sort]);
+    }
+    if(extras_data){
+
+      //sorting the extra records array
+      var array_for_sort = [...extras_data.getAllExtras];
+      array_for_sort.sort((a, b) => Number(a.date) - Number(b.date));
+      setExtras([...array_for_sort]);
+    }
+  }, [records_data, special_records_data, extras_data]); //update each one of the records when their data is fetched
 
   //change the primary color
   const theme = createTheme({
@@ -150,7 +161,6 @@ function App() {
           <Header/>
         </userIdContext.Provider>
 
-        
         <MainContent
           records={records}
           special_records={special_records}
@@ -158,13 +168,15 @@ function App() {
           salary_per_hour={salary_per_hour}
         />
 
-        <recordsContext.Provider value={{setRecords}}>
-        <specialRecordsContext.Provider value={{setSpecialRecords}}>
-        <extrasContext.Provider value={{setExtras}}>
+        <recordsContext.Provider value={{records, setRecords}}>
+        <specialRecordsContext.Provider value={{special_records, setSpecialRecords}}>
+        <extrasContext.Provider value={{extras, setExtras}}>
+        <lockContext.Provider value={{setLock}}>
           <Footer
             user_id={user_id}
             job_id={job_id}
           />
+        </lockContext.Provider>
         </extrasContext.Provider>
         </specialRecordsContext.Provider>
         </recordsContext.Provider>

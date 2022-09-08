@@ -13,7 +13,7 @@ import { useMutation } from "@apollo/client";
 import { MUTATION_CREATE_RECORD } from "../../Queries/Mutations";
 
 //Context
-import { recordsContext } from "../../Helper/Context"; 
+import { recordsContext, lockContext } from "../../Helper/Context"; 
 
 //Material Ui
 import Button from '@mui/material/Button';
@@ -40,7 +40,9 @@ interface MyFormValues{
 
 export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
-    const {setRecords} = useContext(recordsContext);
+    const {records, setRecords} = useContext(recordsContext);
+    const {setLock} = useContext(lockContext);
+
     const [open, SetOpen] = useState<boolean>(false);
 
     const [createRecord, {data}] = useMutation(MUTATION_CREATE_RECORD, {
@@ -52,9 +54,12 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
           daily_break: data.createRecord.daily_break
         };
 
-        console.log(record)
+        //place the new object in the array and sort it
+        var array_for_sort = [...records, record];
+        array_for_sort.sort((a, b) => Number(a.start_time) - Number(b.start_time));
+        setRecords([...array_for_sort]);
 
-        setRecords((prev_records) => [...prev_records, record]);
+        setLock(true); //opens the lock to re-sort the array
       }
     });
 

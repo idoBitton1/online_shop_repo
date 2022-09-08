@@ -13,7 +13,7 @@ import { useMutation } from "@apollo/client"
 import { MUTATUIN_CREATE_EXTRA } from "../../Queries/Mutations"
 
 //Context
-import { extrasContext } from "../../Helper/Context"
+import { extrasContext, lockContext } from "../../Helper/Context"
 
 //Material Ui
 import Button from '@mui/material/Button';
@@ -24,8 +24,6 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from "@mui/material/Typography";
-import Tooltip from "@mui/material/Tooltip";
-
 
 interface MyProps{
 
@@ -43,7 +41,9 @@ interface MyFormValues{
 
 export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
 
-    const {setExtras} = useContext(extrasContext);
+    const {extras, setExtras} = useContext(extrasContext);
+    const {setLock} = useContext(lockContext);
+
     const [open, SetOpen] = useState<boolean>(false);
 
     const [createExtra, {data}] = useMutation(MUTATUIN_CREATE_EXTRA, {
@@ -56,7 +56,12 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
           description: data.createExtra.description          
         };
 
-        setExtras((prev_records) => [...prev_records, extra]);
+        //place the new object in the array and sort it
+        var array_for_sort = [...extras, extra];
+        array_for_sort.sort((a, b) => Number(a.date) - Number(b.date));
+        setExtras([...array_for_sort]);
+
+        setLock(true); //opens the lock to re-sort the array
       }
     });
     
