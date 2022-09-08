@@ -286,7 +286,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
             </Grid>
             <Grid item xs={8}>
                 <Typography
-                  marginTop={1}
+                  marginBottom={1.5}
                   >
                     {getMonthName(month_number) + " " + year}
                     <IconButton
