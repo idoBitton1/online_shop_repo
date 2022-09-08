@@ -6,15 +6,16 @@ import Tooltip from "@mui/material/Tooltip"
 
 interface MyProps{
     is_disabled: boolean,
-    onClick: () => void,
-    text: string
+    text: string,
+    text_when_active: string,
+    onClick: () => void
 }
 
-export const AddButton: React.FC<MyProps> = ({is_disabled, onClick, text}) => {
+export const AddButton: React.FC<MyProps> = ({is_disabled, text_when_active, text, onClick}) => {
 
 
     return(
-        <Tooltip title={!is_disabled ? "" : "sign up or sign in to preform this action"}>
+        <Tooltip title={!is_disabled ? text_when_active : "sign up or sign in to preform this action"}>
             <span>
               <Button
                 size="large"

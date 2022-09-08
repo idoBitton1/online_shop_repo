@@ -114,8 +114,9 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
         <>
             <AddButton 
               is_disabled={user_id ? false : true}
-              onClick={toggleDialog}
+              text_when_active={"add an extra record"}
               text={"bonus / waste"}
+              onClick={toggleDialog}
             />
 
             <Dialog open={open} onClose={toggleDialog}>

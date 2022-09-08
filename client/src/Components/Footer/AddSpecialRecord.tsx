@@ -138,8 +138,9 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         <>
             <AddButton 
               is_disabled={user_id ? false : true}
-              onClick={toggleDialog}
+              text_when_active={"add a special record"}
               text={"special record"}
+              onClick={toggleDialog}
             />
 
             <Dialog open={open} onClose={toggleDialog}>
