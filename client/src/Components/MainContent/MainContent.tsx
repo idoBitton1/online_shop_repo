@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import "./MainContent.css"
 
 //Components
@@ -8,6 +8,12 @@ import { DisplayExtra } from "./DisplayExtra"
 
 //Interface
 import { Record, SpecialRecord, Extra } from "../../App"
+
+//Context
+import { connectContext } from "../../Helper/Context"
+
+//images
+import background from "../../Images/background.png"
 
 //Material Ui
 import Grid from "@mui/material/Grid"
@@ -81,7 +87,10 @@ const getMonthName = (month_number: number): string => {
 
 export const MainContent: React.FC<MyProps> = ({records, special_records, extras,  salary_per_hour}) => {
 
+    const {is_connected} = useContext(connectContext);
+
     const [record_type, setType] = useState<number>(1);
+
     var current_date: Date = new Date();
 
     //displayed month and year
@@ -302,6 +311,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
             <Grid item xs={2}>
                 <Button
                   sx={{color: "white"}}
+                  disabled={is_connected ? false : true}
                   onClick={oneMonthBackwards}
                   >
                     <ArrowBackIosIcon />
@@ -314,6 +324,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                     {getMonthName(month_number) + " " + year}
                     <IconButton
                       sx={{color: "white", marginBottom: 0.4}}
+                      disabled={is_connected ? false : true}
                       onClick={() => setType((prevType) => prevType + 1)}>
                         {chooseIcon()}
                     </IconButton>
@@ -322,6 +333,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
             <Grid item xs={2}>
                 <Button
                   sx={{color: "white"}}
+                  disabled={is_connected ? false : true}
                   onClick={oneMonthForward}
                   >
                     <ArrowForwardIosIcon />
@@ -346,7 +358,18 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
 
         <div className="main_content_container">    
 
-            {displayCurrentRecordType()}
+            {is_connected ? 
+                displayCurrentRecordType()
+                :
+                <div>
+                    <img src={background} alt="background image" className="background_image" style={{width: "20%"}} />
+                    <Typography
+                        color={"white"}
+                        fontSize={20}>
+                        Welcome to shift manager, sign in to begin!
+                    </Typography>
+                </div>
+            }
         </div>
         </>
     )
