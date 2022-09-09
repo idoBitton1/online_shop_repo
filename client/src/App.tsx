@@ -18,7 +18,7 @@ import {recordsContext,
         specialRecordsContext,
         extrasContext,
         userIdContext,
-        lockContext } from './Helper/Context';
+        connectContext } from './Helper/Context';
 
 //Material Ui
 import { createTheme, ThemeProvider } from "@mui/material"
@@ -51,11 +51,12 @@ export interface Extra{
 
 function App() {
  
+  const [is_connected, setConnected] = useState<boolean>(false); 
+
   const [user_id, setUserId] = useState<string>("");
   const [salary_per_hour, setSalaryPerHour] = useState<number>(30); //default value 
   const [job_id, setJobId] = useState<string>("");
 
-  const [lock, setLock] = useState<boolean>(true);
   const [records, setRecords] = useState<Record[]>([]);
   const [special_records, setSpecialRecords] = useState<SpecialRecord[]>([]);
   const [extras, setExtras] = useState<Extra[]>([]);
@@ -155,6 +156,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>    
+    <connectContext.Provider value={{is_connected, setConnected}}>
       <div className="app_container">
 
         <userIdContext.Provider value={{setUserId}}>
@@ -171,16 +173,15 @@ function App() {
         <recordsContext.Provider value={{records, setRecords}}>
         <specialRecordsContext.Provider value={{special_records, setSpecialRecords}}>
         <extrasContext.Provider value={{extras, setExtras}}>
-        <lockContext.Provider value={{setLock}}>
           <Footer
             user_id={user_id}
             job_id={job_id}
           />
-        </lockContext.Provider>
         </extrasContext.Provider>
         </specialRecordsContext.Provider>
         </recordsContext.Provider>
       </div>
+    </connectContext.Provider>
     </ThemeProvider>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext } from "react"
 import "./Header.css"
 
 //Components
@@ -6,19 +6,21 @@ import { SignUp } from "./SignUp";
 import { SignIn } from "./SignIn";
 import { Profile } from "./Profile";
 
+//Context
+import { connectContext } from "../../Helper/Context";
+
 //Material Ui
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Menu from "@mui/icons-material/Menu"
 
 interface MyProps{
-
-  //changeUserId: (id: string) => void
+ 
 }
 
-export const Header: React.FC<MyProps> = ({/*changeUserId*/}) => {
+export const Header: React.FC<MyProps> = ({}) => {
 
-    const [connected, setConnected] = useState<boolean>(false)
+    const {is_connected, setConnected} = useContext(connectContext);
 
     const toggleConnected = (): void => {
 
@@ -39,27 +41,21 @@ export const Header: React.FC<MyProps> = ({/*changeUserId*/}) => {
                 
             <Typography
               variant="h6"
-              marginLeft={connected ? 0 : 15}
+              marginLeft={is_connected ? 0 : 15}
               color={"white"}>
                 {today}
             </Typography>
 
-            {connected ? 
-            <Profile 
-              connected={connected}
-              toggleConnected={toggleConnected}
-              //changeUserId={changeUserId}
-            />
+            {is_connected ? 
+            <Profile />
             :
             <div>
-              <SignIn
+              <SignIn 
                 toggleConnected={toggleConnected}
-                //changeUserId={changeUserId}
               />
 
-              <SignUp
+              <SignUp 
                 toggleConnected={toggleConnected}
-                //changeUserId={changeUserId}
               />
             </div>
             }

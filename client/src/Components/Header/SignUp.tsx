@@ -46,10 +46,10 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
     var errmsg: string;
     
     const initialValues: MyFormValues = {
-        username: "",
-        password: "",
-        confirm_password: "",
-        salary_per_hour: 0
+      username: "",
+      password: "",
+      confirm_password: "",
+      salary_per_hour: 0
     }
 
     const validationSchema: any = Yup.object().shape({

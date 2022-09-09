@@ -13,7 +13,7 @@ import { useMutation } from "@apollo/client"
 import { MUTATUIN_CREATE_EXTRA } from "../../Queries/Mutations"
 
 //Context
-import { extrasContext, lockContext } from "../../Helper/Context"
+import { extrasContext, connectContext } from "../../Helper/Context"
 
 //Material Ui
 import Button from '@mui/material/Button';
@@ -45,7 +45,7 @@ interface MyFormValues{
 export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const {extras, setExtras} = useContext(extrasContext);
-    const {setLock} = useContext(lockContext);
+    const {is_connected} = useContext(connectContext);
 
     const [open, SetOpen] = useState<boolean>(false);
 
@@ -63,8 +63,6 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
         var array_for_sort = [...extras, extra];
         array_for_sort.sort((a, b) => Number(a.date) - Number(b.date));
         setExtras([...array_for_sort]);
-
-        setLock(true); //opens the lock to re-sort the array
       }
     });
     
@@ -116,7 +114,7 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
     return(
         <>
             <AddButton 
-              is_disabled={user_id ? false : true}
+              is_disabled={is_connected ? false : true}
               text_when_active={"add an extra record"}
               text={"bonus / waste"}
               onClick={toggleDialog}

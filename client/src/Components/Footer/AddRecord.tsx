@@ -13,7 +13,7 @@ import { useMutation } from "@apollo/client";
 import { MUTATION_CREATE_RECORD } from "../../Queries/Mutations";
 
 //Context
-import { recordsContext, lockContext } from "../../Helper/Context"; 
+import { recordsContext, connectContext } from "../../Helper/Context"; 
 
 //Material Ui
 import Button from '@mui/material/Button';
@@ -43,7 +43,7 @@ interface MyFormValues{
 export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const {records, setRecords} = useContext(recordsContext);
-    const {setLock} = useContext(lockContext);
+    const {is_connected} = useContext(connectContext);
 
     const [open, SetOpen] = useState<boolean>(false);
 
@@ -60,8 +60,6 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         var array_for_sort = [...records, record];
         array_for_sort.sort((a, b) => Number(a.start_time) - Number(b.start_time));
         setRecords([...array_for_sort]);
-
-        setLock(true); //opens the lock to re-sort the array
       }
     });
 
@@ -128,7 +126,7 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
     return(
         <>
             <AddButton 
-              is_disabled={user_id ? false : true}
+              is_disabled={is_connected ? false : true}
               text_when_active={"add a record"}
               text={"Record"}
               onClick={toggleDialog}

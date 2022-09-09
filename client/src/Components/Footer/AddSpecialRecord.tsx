@@ -14,7 +14,7 @@ import { MUTATION_CREATE_SPECIAL_RECORD } from "../../Queries/Mutations";
 import { QUERY_SPECIAL_RECORD_TYPE_BY_TYPE } from "../../Queries/Queries";
 
 //Context
-import { specialRecordsContext, lockContext } from "../../Helper/Context"; 
+import { specialRecordsContext, connectContext } from "../../Helper/Context"; 
 
 //Material Ui
 import Button from "@mui/material/Button"
@@ -43,8 +43,8 @@ interface MyFormValues{
 export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
     const {special_records, setSpecialRecords} = useContext(specialRecordsContext);
-    const {setLock} = useContext(lockContext);
-    
+    const {is_connected} = useContext(connectContext);
+
     const [open, setOpen] = useState<boolean>(false);
     const [optionList, setOptionsList] = useState<string[]>([
       "vacation", "sick day", "holiday"
@@ -68,8 +68,6 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         var array_for_sort = [...special_records, special_record];
         array_for_sort.sort((a, b) => Number(a.date) - Number(b.date));
         setSpecialRecords([...array_for_sort]);
-
-        setLock(true); //opens the lock to re-sort the array
       }
     });
 
@@ -139,7 +137,7 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
     return(
         <>
             <AddButton 
-              is_disabled={user_id ? false : true}
+              is_disabled={is_connected ? false : true}
               text_when_active={"add a special record"}
               text={"special record"}
               onClick={toggleDialog}
