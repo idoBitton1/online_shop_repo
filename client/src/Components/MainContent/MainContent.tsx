@@ -3,6 +3,8 @@ import "./MainContent.css"
 
 //Components
 import { DisplayRecord } from "./DisplayRecord"
+import { DisplaySpecialRecord } from "./DisplaySpecialRecord"
+import { DisplayExtra } from "./DisplayExtra"
 
 //Interface
 import { Record, SpecialRecord, Extra } from "../../App"
@@ -10,13 +12,13 @@ import { Record, SpecialRecord, Extra } from "../../App"
 //Material Ui
 import Grid from "@mui/material/Grid"
 import Button from "@mui/material/Button"
+import Tooltip from "@mui/material/Tooltip"
 import { IconButton, Typography } from "@mui/material"
 import SpecialRecordIcon from "@mui/icons-material/PhotoFilterOutlined"
 import ExtraIcon from "@mui/icons-material/NoteAddOutlined"
 import RecordIcon from "@mui/icons-material/InsertDriveFileOutlined"
-import Tooltip from "@mui/material/Tooltip"
-import { DisplaySpecialRecord } from "./DisplaySpecialRecord"
-import { DisplayExtra } from "./DisplayExtra"
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 interface MyProps{
 
@@ -85,6 +87,15 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
     //displayed month and year
     const [month_number, setMonthNumber] = useState<number>(current_date.getMonth() + 1);
     const [year, setYear] = useState<number>(current_date.getFullYear());
+
+    useEffect(() => {
+        if(records[0])
+            console.log(records.filter((record) => {
+                var cd = new Date(Number(record.start_time))
+
+                return ((cd.getMonth() + 1) === month_number)
+            }))
+    }, [records])
 
     //checks that the month number is valid, and updated the year if needed
     useEffect(() => {
@@ -207,7 +218,11 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
         if(record_type == 1){ //records
             return (
                 //display each record
-                records.map((record) => {
+                records.filter((record) => {
+                    const record_date = new Date(Number(record.start_time))
+    
+                    return ((record_date.getMonth() + 1) === month_number)
+                }).map((record) => {
 
                     //create a date object for the start and end times
                     const start_time: Date = new Date(Number(record.start_time));
@@ -227,7 +242,11 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
         }
         else if(record_type == 2){ //special records
             return(
-                special_records.map((special_record) => {
+                special_records.filter((special_record) => {
+                    const record_date = new Date(Number(special_record.date))
+    
+                    return ((record_date.getMonth() + 1) === month_number)
+                }).map((special_record) => {
 
                     //create a date object for the date
                     const date: Date = new Date(Number(special_record.date));
@@ -246,7 +265,11 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
         }
         else if(record_type == 3){ //extra records
             return(
-                extras.map((extra) => {
+                extras.filter((extra) => {
+                    const record_date = new Date(Number(extra.date))
+    
+                    return ((record_date.getMonth() + 1) === month_number)
+                }).map((extra) => {
 
                     //create a date object for the date
                     const date: Date = new Date(Number(extra.date));
@@ -281,7 +304,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                   sx={{color: "white"}}
                   onClick={oneMonthBackwards}
                   >
-                    {`<${getMonthName(month_number - 1)}`}
+                    <ArrowBackIosIcon />
                 </Button>
             </Grid>
             <Grid item xs={8}>
@@ -301,7 +324,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                   sx={{color: "white"}}
                   onClick={oneMonthForward}
                   >
-                    {`${getMonthName(month_number + 1)}>`}
+                    <ArrowForwardIosIcon />
                 </Button>
             </Grid>
         </Grid>
