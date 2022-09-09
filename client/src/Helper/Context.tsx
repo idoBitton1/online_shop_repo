@@ -51,13 +51,15 @@ const userIdState = {
 
 export const userIdContext = createContext<userIdType>(userIdState)
 
-//lock
-type lockType = {
-    setLock: React.Dispatch<React.SetStateAction<boolean>>
+//connect
+type connectType = {
+    is_connected: boolean,
+    setConnected: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const lockState = {
-    setLock: () => {}
+const connectState = {
+    is_connected: false,
+    setConnected: () => {}
 }
 
-export const lockContext = createContext<lockType>(lockState)
+export const connectContext = createContext<connectType>(connectState)
