@@ -15,6 +15,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 
 interface MyFormValues{
 
@@ -102,25 +105,41 @@ export const SignIn: React.FC<MyProps> = ({toggleConnected}) => {
                     <Form>
                         <Field as={TextField} name="username"
                           margin="normal"
-                          label="username"
-                          variant="standard"
+                          label="Username"
+                          placeholder="type your username"
+                          variant="outlined"
                           color="secondary"
                           required
                           value={props.values.username}
                           onChange={props.handleChange}
                           helperText={<ErrorMessage name="username" />}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <PermIdentityOutlinedIcon />
+                              </InputAdornment>
+                            ),
+                          }}
                         />
                         <br />
                         <Field as={TextField} name="password"
                           margin="normal"
-                          label="password"
+                          label="Password"
+                          placeholder="type your password"
                           type="password"
-                          variant="standard"
+                          variant="outlined"
                           color="secondary"
                           required
                           value={props.values.password}
                           onChange={props.handleChange}
                           helperText={<ErrorMessage name="password" />}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <LockOutlinedIcon />
+                              </InputAdornment>
+                            ),
+                          }}
                         />
                         <br />
                         <br />

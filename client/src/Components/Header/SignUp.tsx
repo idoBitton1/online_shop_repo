@@ -16,6 +16,10 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 
 export interface MyProps{
 
@@ -141,49 +145,81 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
                         <Form>
                           <Field as={TextField} name="username"
                             margin="normal"
-                            label="username"
-                            variant="standard"
+                            label="Username"
+                            placeholder="type your username"
+                            variant="outlined"
                             color="secondary"
                             required
                             value={props.values.username}
                             onChange={props.handleChange}
                             helperText={<ErrorMessage name="username" />}
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <PermIdentityOutlinedIcon />
+                                </InputAdornment>
+                              ),
+                            }}
                           />
                           <Field as={TextField} name="salary_per_hour"
                             sx={{marginLeft: 3}}
                             margin="normal"
                             type="number"
-                            label="salary per hour"
-                            variant="standard"
+                            label="Salary per hour"
+                            placeholder="type your hourly salary"
+                            variant="outlined"
                             color="secondary"
                             required
                             value={props.values.salary_per_hour}
                             onChange={props.handleChange}
                             helperText={<ErrorMessage name="salary_per_hour" />}
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <AttachMoneyOutlinedIcon />
+                                </InputAdornment>
+                              ),
+                            }}
                           />
                           <br />
                           <Field as={TextField} name="password"
                             margin="normal"
-                            label="password"
+                            label="Password"
+                            placeholder="type your password"
                             type="password"
-                            variant="standard"
+                            variant="outlined"
                             color="secondary"
                             required
                             value={props.values.password}
                             onChange={props.handleChange}
                             helperText={<ErrorMessage name="password" />}
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <LockOutlinedIcon />
+                                </InputAdornment>
+                              ),
+                            }}
                           />
                           <Field as={TextField} name="confirm_password"
                             sx={{marginLeft: 3}}
                             margin="normal"
                             label="confirm password"
+                            placeholder="confirm your password"
                             type="password"
-                            variant="standard"
+                            variant="outlined"
                             color="secondary"
                             required
                             value={props.values.confirm_password}
                             onChange={props.handleChange}
                             helperText={<ErrorMessage name="confirm_password" />}
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <LockOutlinedIcon />
+                                </InputAdornment>
+                              ),
+                            }}
                           />
                           <br />
                           <br />
@@ -194,7 +230,7 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
                               submit
                           </Button>
                           <Typography
-                            sx={{marginLeft: "28%"}}
+                            sx={{marginLeft: "50%"}}
                             fontFamily={"Rubik"}
                             color={"red"}>
                             {errmsg}

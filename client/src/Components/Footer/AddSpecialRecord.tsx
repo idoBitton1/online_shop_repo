@@ -24,6 +24,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import { MenuItem, Select } from "@mui/material";
+import InputAdornment from "@mui/material/InputAdornment";
+import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined';
 
 interface MyProps{
 
@@ -169,41 +171,48 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
                             sx={{marginRight: 3}}
                             margin="normal"
                             type="date"  
-                            label="date"                   
-                            variant="standard"
+                            label="Date"                   
+                            variant="outlined"
                             required
                             color="secondary"
-                            InputLabelProps={{
-                            shrink: true
-                            }}
                             value={props.values.date}
                             onChange={props.handleChange}
                             helperText={<ErrorMessage name="date" />}
+                            InputLabelProps={{
+                              shrink: true
+                            }}
                           />
                           <Field 
                             name="type"
                             type="select" 
-                            sx={{marginTop: 1}}
+                            sx={{marginTop: 2}}
                             as={Select}
                             helpertext={<ErrorMessage name="type" />}>
                             {optionList.map((option) => {
                                 return(
-                                    <MenuItem key={option} value={option}>{option}</MenuItem>
+                                  <MenuItem key={option} value={option}>{option}</MenuItem>
                                 )   
                             })}
                           </Field>
                           <br />
                           <Field as={TextField} name="hours_amount"
-                            sx={{marginLeft: 5}}
+                            sx={{marginLeft: 1}}
                             margin="normal"   
-                            label="hours_amount"   
+                            label="Hours amount"   
                             type="number"            
-                            variant="standard"
+                            variant="outlined"
                             required
                             color="secondary"
                             value={props.values.hours_amount}
                             onChange={props.handleChange}
                             helperText={<ErrorMessage name="hours_amount" />}
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <WatchLaterOutlinedIcon />
+                                </InputAdornment>
+                              ),
+                            }}
                           />
                           <br />
                           <br />

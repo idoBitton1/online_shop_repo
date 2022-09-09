@@ -24,6 +24,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from "@mui/material/Typography";
+import InputAdornment from "@mui/material/InputAdornment";
+import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 
 interface MyProps{
 
@@ -143,30 +146,38 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
                     {(props) => (
                     <Form>
                         <Field as={TextField} name="date"
+                          sx={{marginRight: 1}}
                           margin="normal"
                           type="date"  
-                          label="date"                   
-                          variant="standard"
+                          label="Date"                   
+                          variant="outlined"
                           required
                           color="secondary"
-                          InputLabelProps={{
-                            shrink: true
-                          }}
                           value={props.values.date}
                           onChange={props.handleChange}
                           helperText={<ErrorMessage name="date" />}
+                          InputLabelProps={{
+                            shrink: true
+                          }}
                         />
                         <Field as={TextField} name="amount"
-                          sx={{marginLeft: 3}}
+                          sx={{marginRight: 3}}
                           margin="normal"   
                           type="number"
-                          label="amount"               
-                          variant="standard"
+                          label="Amount"               
+                          variant="outlined"
                           color="secondary"
                           required
                           value={props.values.amount}
                           onChange={props.handleChange}
                           helperText={<ErrorMessage name="amount" />}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <AttachMoneyOutlinedIcon />
+                              </InputAdornment>
+                            ),
+                          }}
                         />
                         <FormControlLabel
                           control={<Field 
@@ -177,13 +188,13 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
                             color="primary"
                           />}
                           label="bonus?"
-                          sx={{margin: 3}}
+                          sx={{marginTop: 3}}
                         />
                         <br />
                         <Field as={TextField} name="description"
                           margin="normal"
-                          label="description"
-                          variant="standard"
+                          label="Description"
+                          variant="outlined"
                           color="secondary"
                           fullWidth
                           multiline
@@ -191,6 +202,13 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
                           value={props.values.description}
                           onChange={props.handleChange}
                           helperText={<ErrorMessage name="description" />}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <ArticleOutlinedIcon />
+                              </InputAdornment>
+                            ),
+                          }}
                         />
                         <br />
                         <br />

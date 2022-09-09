@@ -22,6 +22,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
+import InputAdornment from "@mui/material/InputAdornment";
+import FreeBreakfastOutlinedIcon from '@mui/icons-material/FreeBreakfastOutlined';
 
 interface MyProps{
 
@@ -158,74 +160,82 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
                       <Field as={TextField} name="start_date"
                         margin="normal"
                         type="date"  
-                        label="date"                   
-                        variant="standard"
+                        label="Start date"                   
+                        variant="outlined"
                         required
                         color="secondary"
-                        InputLabelProps={{
-                          shrink: true
-                        }}
                         value={props.values.start_date}
                         onChange={props.handleChange}
                         helperText={<ErrorMessage name="start_date" />}
+                        InputLabelProps={{
+                          shrink: true
+                        }}
                       />
                       <Field as={TextField} name="start_time"
                         sx={{marginLeft: 3}}
                         margin="normal"
                         type="time"    
-                        label="start time"                 
-                        variant="standard"
+                        label="Start time"                 
+                        variant="outlined"
                         required
                         color="secondary"
-                        InputLabelProps={{
-                          shrink: true
-                        }}
                         value={props.values.start_time}
                         onChange={props.handleChange}
                         helperText={<ErrorMessage name="start_time" />}
+                        InputLabelProps={{
+                          shrink: true
+                        }}
                       />
                       <br />
                       <Field as={TextField} name="end_date"
                         margin="normal"
                         type="date"  
-                        label="date"                   
-                        variant="standard"
+                        label="End date"                   
+                        variant="outlined"
                         required
                         color="secondary"
-                        InputLabelProps={{
-                          shrink: true
-                        }}
                         value={props.values.end_date}
                         onChange={props.handleChange}
                         helperText={<ErrorMessage name="end_date" />}
+                        InputLabelProps={{
+                          shrink: true
+                        }}
                       />
                       <Field as={TextField} name="end_time"
                         sx={{marginLeft: 3}}
                         margin="normal"
                         type="time"   
-                        label="end time"                 
-                        variant="standard"
+                        label="End time"                 
+                        variant="outlined"
                         required
                         color="secondary"
-                        InputLabelProps={{
-                          shrink: true
-                        }}
                         value={props.values.end_time}
                         onChange={props.handleChange}
                         helperText={<ErrorMessage name="end_time" />}
+                        InputLabelProps={{
+                          shrink: true
+                        }}
                       />
                       <br />
                       <Field as={TextField} name="daily_break"
-                        sx={{marginLeft: 5}}
+                        sx={{marginLeft: 4}}
                         margin="normal"   
                         type="number"
-                        label="daily break (minutes)"               
-                        variant="standard"
+                        label="Daily break (minutes)"
+                        placeholder="type your daily break"              
+                        variant="outlined"
                         required
                         color="secondary"
                         value={props.values.daily_break}
                         onChange={props.handleChange}
                         helperText={<ErrorMessage name="daily_break" />}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <FreeBreakfastOutlinedIcon />
+                            </InputAdornment>
+                          ),
+                        }}
                       />
                       <br />
                       <br />
