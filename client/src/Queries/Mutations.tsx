@@ -42,3 +42,13 @@ export const MUTATUIN_CREATE_EXTRA = gql`
     }
   }
 `;
+
+export const MUTATION_UPDATE_SALARY = gql`
+  mutation Mutation($id: String!, $salaryPerHour: Int!) {
+    updateSalary(id: $id, salary_per_hour: $salaryPerHour) {
+      name
+      type
+      salary_per_hour
+    }
+  }
+`;
