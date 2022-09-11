@@ -9,3 +9,13 @@
     box-shadow: 0px 2px 30px 0 rgba(0,0,0,.2);
     margin-bottom: 15px;
 }
+
+.profile_field{
+    display: flex;
+    align-items: center;
+}
+
+.profile_text{
+    font-family: sans-serif;
+    margin-right: 1em;
+}

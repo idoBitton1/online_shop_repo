@@ -30,15 +30,15 @@ interface MyFormValues{
 
     username: string,
     password: string,
-    confirm_password: string,
-    salary_per_hour: number
+    confirm_password: string
+    //salary_per_hour: number
 }
 
 export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
 
     const {setUserId} = useContext(userIdContext);
 
-    const [open, SetOpen] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(false);
 
     const [ createUser, {data, loading, error} ] = useMutation(MUTATION_CREATE_USER, {
       onCompleted: (data) => setUserId(data.createUser.id) //after submiting, return the user id
@@ -47,8 +47,8 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
     const initialValues: MyFormValues = {
       username: "",
       password: "",
-      confirm_password: "",
-      salary_per_hour: 0
+      confirm_password: ""
+      //salary_per_hour: 0
     }
 
     const validationSchema: any = Yup.object().shape({
@@ -58,8 +58,8 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
         .max(20, "password is too long").required("Required"),
         confirm_password: Yup.string().min(8, "password is too short")
         .max(20, "password is too long").required("Required"),
-        salary_per_hour: Yup.number().min(1, "can't be negative or zero")
-        .required("Required")
+        //salary_per_hour: Yup.number().min(1, "can't be negative or zero")
+        //.required("Required")
     })
 
     //Add to data base
@@ -88,7 +88,7 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
     //toggle the dialog
     const toggleDialog = () => {
 
-      SetOpen((prevState) => !prevState);    
+      setOpen((prevState) => !prevState);    
     }
 
     return(
@@ -142,7 +142,7 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
                               ),
                             }}
                           />
-                          <Field as={TextField} name="salary_per_hour"
+                          {/*<Field as={TextField} name="salary_per_hour"
                             sx={{marginLeft: 3}}
                             margin="normal"
                             type="number"
@@ -161,7 +161,7 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
                                 </InputAdornment>
                               ),
                             }}
-                          />
+                          />*/}
                           <br />
                           <Field as={TextField} name="password"
                             margin="normal"

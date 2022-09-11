@@ -42,10 +42,12 @@ export const extrasContext = createContext<extraType>(extraState)
 
 //change the user id
 type userIdType = {
+    user_id: string,
     setUserId: React.Dispatch<React.SetStateAction<string>>
 }
 
 const userIdState = {
+    user_id: "",
     setUserId: () => {}
 }
 
@@ -63,3 +65,16 @@ const connectState = {
 }
 
 export const connectContext = createContext<connectType>(connectState)
+
+//job
+type jobType = {
+    job_id: string,
+    setJobId: React.Dispatch<React.SetStateAction<string>>
+}
+
+const jobState = {
+    job_id: "",
+    setJobId: () => {}
+}
+
+export const jobContext = createContext<jobType>(jobState)

@@ -18,7 +18,8 @@ import {recordsContext,
         specialRecordsContext,
         extrasContext,
         userIdContext,
-        connectContext } from './Helper/Context';
+        connectContext,
+        jobContext } from './Helper/Context';
 
 //Material Ui
 import { createTheme, ThemeProvider } from "@mui/material"
@@ -159,8 +160,10 @@ function App() {
     <connectContext.Provider value={{is_connected, setConnected}}>
       <div className="app_container">
 
-        <userIdContext.Provider value={{setUserId}}>
+        <userIdContext.Provider value={{user_id, setUserId}}>
+        <jobContext.Provider value={{job_id, setJobId}}>
           <Header/>
+        </jobContext.Provider>
         </userIdContext.Provider>
 
         <MainContent
