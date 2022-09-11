@@ -1,5 +1,18 @@
 const pool = require("../db");
 
+const checkPassword = (password, confirm_password) => {
+
+    if (password.search(/\d/) == -1) {
+        return "please add at least 1 number";
+    } else if (password.search(/[a-zA-Z]/) == -1) {
+        return "please add at least 1 letter";
+    } else if(password !== confirm_password){
+        return "passwords do not match";
+    }
+
+    return "";
+}
+
 const resolvers = {
     Query: {
         //get all the records of a user in the current job
@@ -91,7 +104,25 @@ const resolvers = {
     Mutation: {
         //create a new user
         createUser: async(_, args) => {
-            const {username, password} = args;
+            const {username, password, confirm_password} = args;
+
+            var check_username;
+            try {
+                check_username = await pool.query(
+                "SELECT EXISTS(SELECT 1 FROM users WHERE username=$1)",    
+                [username])
+            } catch (err) {
+                console.log(err.message)
+            }
+
+            if(check_username.rows[0].exists){
+                throw new Error("username already used");
+            }
+
+            const pass_check = checkPassword(password, confirm_password);
+            if(pass_check !== "")
+                throw new Error(pass_check);
+
             try {
                 const user = await pool.query(
                 "INSERT INTO users (id,username,password) VALUES(uuid_generate_v4(),$1,$2) RETURNING * ",

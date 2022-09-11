@@ -60,7 +60,7 @@ const typeDefs = gql`
     }
 
     type Mutation{
-        createUser(username: String!, password: String!): User,
+        createUser(username: String!, password: String!, confirm_password: String!): User,
         createRecord(start_time: String!,
                      end_time: String!, 
                      daily_break: Int!, 
