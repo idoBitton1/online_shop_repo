@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import * as Yup from "yup"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 
@@ -37,13 +37,12 @@ interface MyFormValues{
 export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
 
     const {setUserId} = useContext(userIdContext);
+
     const [open, SetOpen] = useState<boolean>(false);
 
-    const [ createUser, {data, loading, error} ] = useMutation(
-      MUTATION_CREATE_USER, 
-      {onCompleted: (data) => setUserId(data.createUser.id)} //after submiting, return the user id
-    );
-    var errmsg: string;
+    const [ createUser, {data, loading, error} ] = useMutation(MUTATION_CREATE_USER, {
+      onCompleted: (data) => setUserId(data.createUser.id) //after submiting, return the user id
+    });
     
     const initialValues: MyFormValues = {
       username: "",
@@ -63,41 +62,23 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
         .required("Required")
     })
 
-    const checkPassword = (password: string, confirm_password: string): boolean => {
-
-      if (password.search(/\d/) == -1) {
-          errmsg = "please add at least 1 number";
-          return false;
-      } else if (password.search(/[a-zA-Z]/) == -1) {
-          errmsg = "please add at least 1 letter";
-          return false;
-      } else if(password !== confirm_password){
-          errmsg = "passwords do not match";
-          return false;
-      }
-
-      return true;
-    }
-
-    //Add to data base with http
+    //Add to data base
     const onSubmit = async(values: MyFormValues) => {
 
-      //if the password is not valid, dont continue
-      if(!checkPassword(values.password, values.confirm_password)) 
-        return;
-
       try {
-        const { username,password } = values;
+        const { username, password, confirm_password } = values;
 
         //creates the user in the data base
         await createUser({
           variables: {
             username: username,
-            password: password
+            password: password,
+            confirmPassword: confirm_password
           }
         });
       } catch (err: any) {
         console.error(err.message);
+        return;
       }
       
       toggleConnected();
@@ -230,10 +211,10 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
                               submit
                           </Button>
                           <Typography
-                            sx={{marginLeft: "50%"}}
+                            sx={{marginLeft: "31%"}}
                             fontFamily={"Rubik"}
                             color={"red"}>
-                            {errmsg}
+                              {error ? error.message : ""}
                           </Typography>
                         </Form>
                     )}
