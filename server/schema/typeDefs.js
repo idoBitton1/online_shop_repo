@@ -56,7 +56,9 @@ const typeDefs = gql`
         getSpecialRecordTypeById(id: String!): Special_record_type,
         getAllExtras(user_id: String!, job_id: String!): [Extra],
         validateUser(username: String!, password: String!): String,
-        getJobByName(name: String!): Job
+        getJobByName(name: String!): Job,
+        getJobById(id: String!): Job,
+        getUserById(id: String!): User
     }
 
     type Mutation{
@@ -78,7 +80,9 @@ const typeDefs = gql`
                     amount: Int!,
                     description: String,
                     user_id: String!, 
-                    job_id: String!): Extra
+                    job_id: String!): Extra,
+        
+        updateSalary(id: String!, salary_per_hour: Int!): Job
     }
 `;
 

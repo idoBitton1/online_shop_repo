@@ -1,3 +1,4 @@
+const { UserInputError } = require("apollo-server");
 const pool = require("../db");
 
 const checkPassword = (password, confirm_password) => {
@@ -91,10 +92,34 @@ const resolvers = {
         getJobByName: async(_, args) => {
             const { name } = args;
             try {
-                const is_valid = await pool.query(
+                const job = await pool.query(
                 "SELECT * FROM jobs WHERE name=$1",
                 [name])
-                return is_valid.rows[0];
+                return job.rows[0];
+            } catch (err) {
+                console.error(err.message);
+            }
+        },
+        //get job by id
+        getJobById: async(_, args) => {
+            const { id } = args;
+            try {
+                const job = await pool.query(
+                "SELECT * FROM jobs WHERE id=$1",
+                [id])
+                return job.rows[0];
+            } catch (err) {
+                console.error(err.message);
+            }
+        },
+        //get user by id
+        getUserById: async(_, args) => {
+            const { id } = args;
+            try {
+                const user = await pool.query(
+                "SELECT * FROM users WHERE id=$1",
+                [id])
+                return user.rows[0];
             } catch (err) {
                 console.error(err.message);
             }
@@ -116,12 +141,12 @@ const resolvers = {
             }
 
             if(check_username.rows[0].exists){
-                throw new Error("username already used");
+                throw new UserInputError("username already used");
             }
 
             const pass_check = checkPassword(password, confirm_password);
             if(pass_check !== "")
-                throw new Error(pass_check);
+                throw new UserInputError(pass_check);
 
             try {
                 const user = await pool.query(
@@ -164,6 +189,22 @@ const resolvers = {
                 "INSERT INTO extras (id,date,bonus,amount,description,user_id,job_id) VALUES(uuid_generate_v4(),$1,$2,$3,$4,$5,$6) RETURNING * ",
                 [date, bonus, amount, description, user_id, job_id]);
                 return extra.rows[0];
+            } catch (err) {
+                console.error(err.message);
+            }
+        },
+        //update the hourly salary
+        updateSalary: async(_, args) => {
+            const { id, salary_per_hour } = args;
+            try {
+                const update = await pool.query(
+                "UPDATE jobs SET salary_per_hour=$1 WHERE id=$2",
+                [salary_per_hour, id])
+
+                const job = await pool.query(
+                "SELECT * FROM jobs WHERE id=$1",
+                [id])
+                return job.rows[0];
             } catch (err) {
                 console.error(err.message);
             }
