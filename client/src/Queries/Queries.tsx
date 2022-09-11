@@ -61,3 +61,22 @@ export const QUERY_SPECIAL_RECORD_TYPE_BY_ID = gql`
     }
   }
 `;
+
+export const QUERY_USER_BY_ID = gql`
+  query Query($id: String!) {
+    getUserById(id: $id) {
+      username
+      password
+    }
+  }
+`;
+
+export const QUERY_JOB_BY_ID = gql`
+  query Query($id: String!) {
+    getJobById(id: $id) {
+      name
+      type
+      salary_per_hour
+    }
+  }
+`;
