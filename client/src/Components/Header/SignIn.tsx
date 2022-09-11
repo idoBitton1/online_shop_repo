@@ -46,15 +46,6 @@ export const SignIn: React.FC<MyProps> = ({toggleConnected}) => {
         .max(20, "password is too long").required("Required")
     })
 
-    const validateUser = async(username: string, password: string) => {
-
-        try {
-            
-        } catch (err: any) {
-            console.error(err.message);
-        }
-    }
-
     const onSubmit = async(values: MyFormValues) => {
 
         var temp: string = "e68c7491-05c5-41ad-b9b2-bdcf931dbda1";
