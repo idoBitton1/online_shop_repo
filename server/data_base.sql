@@ -64,7 +64,7 @@ $BODY$
 DECLARE
 BEGIN
 IF EXISTS(SELECT 1 FROM users WHERE username=_username AND password=_password) THEN
-SELECT id INTO result FROM users WHERE username=_username AND password=_password;
+SELECT * INTO result FROM users WHERE username=_username AND password=_password;
 ELSE
 result := '';
 END IF;
