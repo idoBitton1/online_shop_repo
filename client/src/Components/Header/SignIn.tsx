@@ -2,6 +2,10 @@ import React, { useState, useContext } from "react"
 import * as Yup from "yup"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 
+//Apollo and Graphql
+import { useMutation } from "@apollo/client"
+import { MUTATION_LOGIN } from "../../Queries/Mutations"
+
 //Context
 import { userIdContext } from "../../Helper/Context"
 
@@ -28,14 +32,17 @@ interface MyFormValues{
 export const SignIn: React.FC<MyProps> = ({toggleConnected}) => {
 
     const { setUserId } = useContext(userIdContext);
+
     const [open, setOpen] = useState<boolean>(false);
-    
-    var errmsg: string;
+
+    const [loginUser, {error}] = useMutation(MUTATION_LOGIN, {
+      onCompleted: (data) => setUserId(data.loginUser.id) //set the user id to the id of the current user
+    });
 
     const initialValues: MyFormValues = {
 
-        username: "",
-        password: ""
+      username: "",
+      password: ""
     }
 
     const validationSchema: any = Yup.object().shape({
@@ -48,11 +55,23 @@ export const SignIn: React.FC<MyProps> = ({toggleConnected}) => {
 
     const onSubmit = async(values: MyFormValues) => {
 
-        var temp: string = "e68c7491-05c5-41ad-b9b2-bdcf931dbda1";
+      try {
+        const { username, password } = values;
 
-        setUserId(temp);
-        toggleConnected();
-        toggleDialog();
+        //login
+        await loginUser({
+          variables: {
+            username: username,
+            password: password
+          }
+        });
+      } catch (err: any) {
+        console.error(err.message);
+        return;
+      }
+
+      toggleConnected();
+      toggleDialog();
     }
 
     const toggleDialog = () => {
@@ -141,9 +160,10 @@ export const SignIn: React.FC<MyProps> = ({toggleConnected}) => {
                             submit
                         </Button>
                         <Typography
+                          sx={{marginLeft: "20%"}}
                           fontFamily={"Rubik"}
                           color={"red"}>
-                            {errmsg}
+                            {error ? error.message : ""}
                         </Typography>
                     </Form>
                 )}  

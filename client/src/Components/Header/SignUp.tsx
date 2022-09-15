@@ -40,7 +40,7 @@ export const SignUp: React.FC<MyProps> = ({toggleConnected}) => {
 
     const [open, setOpen] = useState<boolean>(false);
 
-    const [ createUser, {data, loading, error} ] = useMutation(MUTATION_CREATE_USER, {
+    const [createUser, {data, loading, error}] = useMutation(MUTATION_CREATE_USER, {
       onCompleted: (data) => setUserId(data.createUser.id) //after submiting, return the user id
     });
     
