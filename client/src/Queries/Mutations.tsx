@@ -52,3 +52,11 @@ export const MUTATION_UPDATE_SALARY = gql`
     }
   }
 `;
+
+export const MUTATION_LOGIN = gql`
+  mutation Mutation($username: String!, $password: String!) {
+    loginUser(username: $username, password: $password) {
+      id
+    }
+  }
+`;
