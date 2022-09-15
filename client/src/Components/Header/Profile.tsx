@@ -38,6 +38,7 @@ export const Profile: React.FC<MyProps> = ({}) => {
 
     const [open, setOpen] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
+    const [salary_per_hour, setSalaryPerHour] = useState<number>(0);
     const [job_info, setjobInfo] = useState<Job>({name: "", type: "", salary_per_hour: 0});
 
     const [updateSalary, {data: updateData}] = useMutation(MUTATION_UPDATE_SALARY);
@@ -60,24 +61,30 @@ export const Profile: React.FC<MyProps> = ({}) => {
         }
     });
     useEffect(() => {
-        if(job_data)
+        if(job_data){
+            //set the job data
             setjobInfo({
                 name: job_data.getJobById.name,
                 type: job_data.getJobById.type,
                 salary_per_hour: job_data.getJobById.salary_per_hour
             });
+            //set the salaryper hour variable to the most recent value in the data base
+            setSalaryPerHour(job_data.getJobById.salary_per_hour);
+        }
     }, [job_data])
 
+    //update the salary per hour in the data base
     const changeSalaryPerHour = () => {
 
         try {
-
             updateSalary({
                 variables: {
                     id: job_id,
                     salaryPerHour: job_info.salary_per_hour
                 }
             });
+            //update the value when the user is changing the value in data base
+            setSalaryPerHour(job_info.salary_per_hour);
         } catch (err: any) {
             console.error(err.message);
         }
@@ -85,6 +92,9 @@ export const Profile: React.FC<MyProps> = ({}) => {
 
     //toggle the dialog
     const toggleDialog = () => {
+
+        //set the value of the salary to the most recent value from the base 
+        setjobInfo((prevInfo) => ({name: prevInfo.name, type: prevInfo.type, salary_per_hour: salary_per_hour}));
 
         setOpen((prevState) => !prevState);    
     }
@@ -106,26 +116,28 @@ export const Profile: React.FC<MyProps> = ({}) => {
                   </Typography>
                 </DialogTitle>
 
-                <DialogContent>
-                    <div className="profile_field">
-                        <h4 className="profile_text">your salary per hour: </h4>
-                        <TextField name="salary_field"
-                            variant="standard"
-                            type="number"
-                            value={job_info ? job_info.salary_per_hour : 0}
-                            onChange={(e) => setjobInfo((prevInfo) => ({name: prevInfo.name, type: prevInfo.type, salary_per_hour: Number(e.target.value)}))}
-                            inputProps={{style: { width: 40, textAlign: 'center' }}}
-                        />
-                        <Button color="success"
-                            sx={{marginLeft: 1}}
-                            onClick={changeSalaryPerHour}>
-                            change
-                        </Button>
-                    </div>
-                    <p>{job_info ? job_info.name : ""}</p>
-                    <p>{job_info ? job_info.type : ""}</p>
-                    <p>{job_info ? job_info.salary_per_hour : ""}</p>
-                </DialogContent>
+            <DialogContent>
+                <div className="profile_field">
+                    <h4 className="profile_text">your salary per hour: </h4>
+                    <TextField name="salary_field"
+                        variant="standard"
+                        type="number"
+                        value={job_info ? job_info.salary_per_hour : 0}
+                        InputProps={{inputProps: {min: 0}, style: { width: 40, textAlign: 'center'}}}
+                         onChange={(e) => {
+                            setjobInfo((prevInfo) => ({name: prevInfo.name, type: prevInfo.type, salary_per_hour: Number(e.target.value)}))
+                        }}
+                    />
+                    <Button color="success"
+                        sx={{marginLeft: 1}}
+                        onClick={changeSalaryPerHour}>
+                        change
+                    </Button>
+                </div>
+
+                <p>{job_info ? job_info.name : ""}</p>
+                <p>{job_info ? job_info.type : ""}</p>
+            </DialogContent>
             </Dialog>
         </>
     )
