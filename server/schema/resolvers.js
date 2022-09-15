@@ -76,18 +76,6 @@ const resolvers = {
                 console.error(err.message);
             }
         },
-        //validates if a user is exists, used to check if login details are true
-        validateUser: async(_, args) => {
-            const {username, password} = args;
-            try {
-                const is_valid = await pool.query(
-                "SELECT validate_user($1,$2)",
-                [username, password])
-                return is_valid.rows[0];
-            } catch (err) {
-                console.error(err.message);
-            }
-        },
         //get job by name
         getJobByName: async(_, args) => {
             const { name } = args;
@@ -205,6 +193,48 @@ const resolvers = {
                 "SELECT * FROM jobs WHERE id=$1",
                 [id])
                 return job.rows[0];
+            } catch (err) {
+                console.error(err.message);
+            }
+        },
+        //login
+        loginUser: async(_, args) => {
+            const { username, password } = args;
+            //check user
+            var check_user;
+            try {
+                check_user = await pool.query(
+                "SELECT EXISTS(SELECT 1 FROM users WHERE username=$1)",
+                [username])
+            } catch (err) {
+                console.error(err.message);
+            }
+
+            // if the user does not exists, error
+            if(!check_user.rows[0].exists){
+                throw new UserInputError("user does not exists");
+            }
+
+            //check the password
+            try {
+                check_user = await pool.query(
+                "SELECT EXISTS(SELECT 1 FROM users WHERE username=$1 AND password=$2)",
+                [username, password])
+            } catch (err) {
+                console.error(err.message);
+            }
+
+            //if the passwords are not the same, error
+            if(!check_user.rows[0].exists){
+                throw new UserInputError("incorrect password");
+            }
+
+            //if everything is good, login
+            try {
+                const user = await pool.query(
+                "SELECT * FROM users WHERE username=$1 AND password=$2",
+                [username, password])
+                return user.rows[0];
             } catch (err) {
                 console.error(err.message);
             }

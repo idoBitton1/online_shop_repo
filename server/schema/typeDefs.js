@@ -55,7 +55,6 @@ const typeDefs = gql`
         getSpecialRecordTypeByType(type: String!): Special_record_type,
         getSpecialRecordTypeById(id: String!): Special_record_type,
         getAllExtras(user_id: String!, job_id: String!): [Extra],
-        validateUser(username: String!, password: String!): String,
         getJobByName(name: String!): Job,
         getJobById(id: String!): Job,
         getUserById(id: String!): User
@@ -82,7 +81,8 @@ const typeDefs = gql`
                     user_id: String!, 
                     job_id: String!): Extra,
         
-        updateSalary(id: String!, salary_per_hour: Int!): Job
+        updateSalary(id: String!, salary_per_hour: Int!): Job,
+        loginUser(username: String!, password: String!): User
     }
 `;
 
