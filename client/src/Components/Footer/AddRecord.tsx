@@ -88,9 +88,9 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
       const end_datetime: Date = new Date(`${values.end_date} ${values.end_time}`);
 
       //if the end time is before the start time, dont continue
-      if(end_datetime.getTime() < start_datetime.getTime())
+      if(end_datetime.getTime() <= start_datetime.getTime())
       {
-        errmsg = "end date can't be before the start date";
+        errmsg = "end date can't be before or equals to the start date";
         return;
       }
 
