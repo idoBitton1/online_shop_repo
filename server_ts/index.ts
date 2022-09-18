@@ -244,8 +244,44 @@ const resolvers = {
                 const user = await pool.query(
                 "SELECT * FROM users WHERE username=$1 AND password=$2",
                 [username, password])
-                return user.rows[0];
+                return user.rowCount;
             } catch (err:any) {
+                console.error(err.message);
+            }
+        },
+        //delete record
+        deleteRecord:   async (_: any, args: any) => {
+            const { id } = args;
+            try {
+                const delete_record = await pool.query(
+                "DELETE FROM records WHERE id=$1 ",
+                [id])
+                return delete_record.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //delete special record
+        deleteSpecialRecord: async (_: any, args: any) => {
+            const { id } = args;
+            try {
+                const delete_special_record = await pool.query(
+                "DELETE FROM special_records WHERE id=$1 ",
+                [id])
+                return delete_special_record.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //delete extra record
+        deleteExtraRecord: async (_: any, args: any) => {
+            const { id } = args;
+            try {
+                const delete_extra_record = await pool.query(
+                "DELETE FROM extras WHERE id=$1 ",
+                [id])
+                return delete_extra_record.rows[0];
+            } catch (err: any) {
                 console.error(err.message);
             }
         }
@@ -334,7 +370,10 @@ const typeDefs = gql`
                     job_id: String!): Extra,
         
         updateSalary(id: String!, salary_per_hour: Int!): Job,
-        loginUser(username: String!, password: String!): User
+        loginUser(username: String!, password: String!): User,
+        deleteRecord(id: String!): Record,
+        deleteSpecialRecord(id: String!): Special_record,
+        deleteExtraRecord(id: String!): Extra
     }
 `;
 
