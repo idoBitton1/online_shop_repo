@@ -94,6 +94,12 @@ export const AddRecord: React.FC<MyProps> = ({user_id, job_id}) => {
         return;
       }
 
+      if(end_datetime.getTime() - start_datetime.getTime() <= values.daily_break*60000)
+      {
+        errmsg = "working time is less or equals to the break";
+        return;
+      }
+
       try {
         const { daily_break } = values;
         const start_time = `${values.start_date} ${values.start_time}`;
