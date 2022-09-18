@@ -148,12 +148,15 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                     <Grid item xs={3}>
                         to
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={1}>
                         hours
                     </Grid>
                     <Grid item xs={2}>
                         total
                     </Grid> 
+                    <Grid item xs={1}>
+                        
+                    </Grid>
                 </>
             );
         }
@@ -163,7 +166,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                     <Grid item xs={2}>
                         date
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={5}>
                         type
                     </Grid>
                     <Grid item xs={2}>
@@ -172,6 +175,9 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                     <Grid item xs={2}>
                         total
                     </Grid> 
+                    <Grid item xs={1}>
+                        
+                    </Grid>
                 </>
             );
         }
@@ -187,9 +193,12 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                     <Grid item xs={2}>
                         amount
                     </Grid>
-                    <Grid item xs={5}>
+                    <Grid item xs={4}>
                         description
                     </Grid> 
+                    <Grid item xs={1}>
+                        
+                    </Grid>
                 </>
             );
         }
@@ -239,6 +248,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
 
                     return (
                         <DisplayRecord 
+                            id={record.id}
                             start_time={start_time}
                             end_time={end_time}
                             daily_break={record.daily_break}
@@ -262,6 +272,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
 
                     return(
                         <DisplaySpecialRecord
+                            id={special_record.id}
                             date={date}
                             hours_amount={special_record.hours_amount}
                             special_record_type_id={special_record.special_record_type_id}
@@ -285,6 +296,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
 
                     return(
                         <DisplayExtra
+                            id={extra.id}
                             date={date}
                             bonus={extra.bonus}
                             amount={extra.amount}

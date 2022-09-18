@@ -3,9 +3,13 @@ import "./DisplayRecords.css"
 
 //Material Ui
 import { Grid } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface MyProps{
 
+    id: string,
     start_time: Date,
     end_time: Date,
     daily_break: number,
@@ -36,6 +40,14 @@ export const DisplayRecord: React.FC<MyProps> = ({start_time, end_time, daily_br
     //total calculation
     var total = hours * salary_per_hour - ((daily_break / 60) * salary_per_hour); //salary_per_hour        
     total = Number(total.toFixed(2));
+
+    const editRecord = () => {
+
+    }
+
+    const deleteRecord = () => {
+
+    }
 
     return(
         <Grid container sx={{
@@ -73,12 +85,22 @@ export const DisplayRecord: React.FC<MyProps> = ({start_time, end_time, daily_br
                 }
             </Grid>
             {/* hours column */}
-            <Grid item xs={2}>
+            <Grid item xs={1}>
                 {hours}
             </Grid>
             {/* total column */}
             <Grid item xs={2}>
                 {total}
+            </Grid>
+            <Grid item xs={1}>
+                <IconButton
+                    onClick={editRecord}>
+                    <EditIcon sx={{color: "white"}} />
+                </IconButton>
+                <IconButton
+                    onClick={deleteRecord}>
+                    <DeleteIcon sx={{color: "white"}} />
+                </IconButton>
             </Grid>
         </Grid>
     )

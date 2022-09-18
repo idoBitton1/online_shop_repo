@@ -2,9 +2,12 @@ import React from "react"
 
 //Material Ui
 import { Grid } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 interface MyProps{
 
+    id: string,
     date: Date,
     bonus: boolean,
     amount: number,
@@ -12,6 +15,10 @@ interface MyProps{
 }
 
 export const DisplayExtra: React.FC<MyProps> = ({date, bonus, amount, description}) => {
+
+    const showOptions = () => {
+        
+    }
 
     return(
         <Grid container sx={{
@@ -39,8 +46,14 @@ export const DisplayExtra: React.FC<MyProps> = ({date, bonus, amount, descriptio
                 {amount}
             </Grid>
             {/* description column */}
-            <Grid item xs={5}>
+            <Grid item xs={4}>
                 {description}
+            </Grid>
+            <Grid item xs={1}>
+                <IconButton
+                    onClick={showOptions}>
+                    <MoreVertIcon sx={{color: "white"}} />
+                </IconButton>
             </Grid>
         </Grid>
     );

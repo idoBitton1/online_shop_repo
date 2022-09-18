@@ -7,9 +7,12 @@ import { useQuery } from "@apollo/client"
 
 //Material Ui
 import { Grid } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 interface MyProps{
 
+    id: string,
     date: Date,
     hours_amount: number,
     special_record_type_id: string,
@@ -42,6 +45,10 @@ export const DisplaySpecialRecord: React.FC<MyProps> = ({date, hours_amount, spe
         }
     }, [data]) //when the data is fetched
 
+    const showOptions = () => {
+        
+    }
+
     return(
         <Grid container sx={{
             backgroundColor: "#A7BBCB",
@@ -60,7 +67,7 @@ export const DisplaySpecialRecord: React.FC<MyProps> = ({date, hours_amount, spe
                 </div>
             </Grid>
             {/* type column */}
-            <Grid item xs={6}>
+            <Grid item xs={5}>
                 {type}
             </Grid>
             {/* hours column */}
@@ -70,6 +77,12 @@ export const DisplaySpecialRecord: React.FC<MyProps> = ({date, hours_amount, spe
             {/* total column */}
             <Grid item xs={2}>
                 {total}
+            </Grid>
+            <Grid item xs={1}>
+                <IconButton
+                    onClick={showOptions}>
+                    <MoreVertIcon sx={{color: "white"}} />
+                </IconButton>
             </Grid>
         </Grid>
     )
