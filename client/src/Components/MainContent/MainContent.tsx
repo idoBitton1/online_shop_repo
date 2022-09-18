@@ -97,15 +97,6 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
     const [month_number, setMonthNumber] = useState<number>(current_date.getMonth() + 1);
     const [year, setYear] = useState<number>(current_date.getFullYear());
 
-    useEffect(() => {
-        if(records[0])
-            console.log(records.filter((record) => {
-                var cd = new Date(Number(record.start_time))
-
-                return ((cd.getMonth() + 1) === month_number)
-            }))
-    }, [records])
-
     //checks that the month number is valid, and updated the year if needed
     useEffect(() => {
         if(month_number > 12){
