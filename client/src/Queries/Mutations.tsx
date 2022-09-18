@@ -60,3 +60,27 @@ export const MUTATION_LOGIN = gql`
     }
   }
 `;
+
+export const MUTATION_DELETE_RECORD = gql`
+  mutation Mutation($id: String!) {
+    deleteRecord(id: $id) {
+      id
+    }
+  }
+`;
+
+export const MUTATION_DELETE_SPECIAL_RECORD = gql`
+  mutation Mutation($id: String!) {
+    deleteSpecialRecord(id: $id) {
+      id
+    }
+  }
+`;
+
+export const MUTATION_DELETE_EXTRA_RECORD = gql`
+  mutation Mutation($id: String!) {
+    deleteExtraRecord(id: $id) {
+      id
+    }
+  }
+`;
