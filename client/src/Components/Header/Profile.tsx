@@ -107,7 +107,7 @@ export const Profile: React.FC<MyProps> = ({}) => {
               <PersonRounded sx={{fontSize: 30}} />
             </IconButton>
 
-            <Dialog open={open} onClose={toggleDialog} sx={{textAlign: "center"}}>
+            <Dialog open={open} onClose={toggleDialog}>
                 <DialogTitle>
                   <Typography 
                     fontSize={25}

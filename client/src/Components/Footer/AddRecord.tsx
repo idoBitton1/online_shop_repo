@@ -31,7 +31,7 @@ interface MyProps{
   job_id: string,
 }
 
-interface MyFormValues{
+export interface MyFormValues{
 
   start_date: string,
   start_time: string,
