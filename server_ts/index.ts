@@ -244,7 +244,7 @@ const resolvers = {
                 const user = await pool.query(
                 "SELECT * FROM users WHERE username=$1 AND password=$2",
                 [username, password])
-                return user.rowCount;
+                return user.rows[0];
             } catch (err:any) {
                 console.error(err.message);
             }
@@ -281,6 +281,42 @@ const resolvers = {
                 "DELETE FROM extras WHERE id=$1 ",
                 [id])
                 return delete_extra_record.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //update record
+        updateRecord: async (_: any, args: any) => {
+            const { id, start_time, end_time, daily_break } = args;
+            try {
+                const update_record = await pool.query(
+                "UPDATE records SET start_time=$1, end_time=$2, daily_break=$3 WHERE id=$4",
+                [start_time, end_time, daily_break, id])
+                return update_record.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //update special record
+        updateSpecialRecord: async (_: any, args: any) => {
+            const { id, date, hours_amount, special_record_type_id } = args;
+            try {
+                const update_special_record = await pool.query(
+                "UPDATE special_records SET date=$1, hours_amount=$2, special_record_type_id=$3 WHERE id=$4",
+                [date, hours_amount, special_record_type_id, id])
+                return update_special_record.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //update extra record
+        updateExtra: async (_: any, args: any) => {
+            const { id, date, bonus, amount, description } = args;
+            try {
+                const update_extra = await pool.query(
+                "UPDATE extras SET date=$1, bonus=$2, amount=$3, description=$4 WHERE id=$5",
+                [date, bonus, amount, description, id])
+                return update_extra.rows[0];
             } catch (err: any) {
                 console.error(err.message);
             }
@@ -373,7 +409,22 @@ const typeDefs = gql`
         loginUser(username: String!, password: String!): User,
         deleteRecord(id: String!): Record,
         deleteSpecialRecord(id: String!): Special_record,
-        deleteExtraRecord(id: String!): Extra
+        deleteExtraRecord(id: String!): Extra,
+        updateRecord(id: String!,
+                    start_time: String!,
+                    end_time: String!,
+                    daily_break: Int!): Record,
+
+        updateSpecialRecord(id: String!,
+                            date: String!,
+                            hours_amount: Int!,
+                            special_record_type_id: String!): Special_record,
+
+        updateExtra(id: String!,
+                    date: String!,
+                    bonus: Boolean!,
+                    amount: Int!,
+                    description: String!): Extra
     }
 `;
 
