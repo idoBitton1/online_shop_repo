@@ -84,3 +84,27 @@ export const MUTATION_DELETE_EXTRA_RECORD = gql`
     }
   }
 `;
+
+export const MUTATION_UPDATE_RECORD = gql`
+  mutation Mutation($id: String!, $startTime: String!, $endTime: String!, $dailyBreak: Int!) {
+    updateRecord(id: $id, start_time: $startTime, end_time: $endTime, daily_break: $dailyBreak) {
+      id
+    }
+  }
+`;
+
+export const MUTATION_UPDATE_SPECIAL_RECORD = gql`
+  mutation Mutation($id: String!, $date: String!, $hoursAmount: Int!, $specialRecordTypeId: String!) {
+    updateSpecialRecord(id: $id, date: $date, hours_amount: $hoursAmount, special_record_type_id: $specialRecordTypeId) {
+      id
+    }
+  }
+`;
+
+export const MUTATION_UPDATE_EXTRA_RECORD = gql`
+  mutation Mutation($id: String!, $date: String!, $bonus: Boolean!, $amount: Int!, $description: String!) {
+    updateExtra(id: $id, date: $date, bonus: $bonus, amount: $amount, description: $description) {
+      id
+    }
+  }
+`;
