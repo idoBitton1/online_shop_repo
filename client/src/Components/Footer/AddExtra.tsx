@@ -34,7 +34,7 @@ interface MyProps{
   job_id: string,
 }
 
-interface MyFormValues{
+export interface MyFormValues{
 
   date: string,
   bonus: boolean,
@@ -87,7 +87,7 @@ export const AddExtra: React.FC<MyProps> = ({user_id, job_id}) => {
         const { date,bonus,amount,description } = values;
 
         //creates the extra record in the data base
-        createExtra({
+        await createExtra({
           variables: {
             date: date,
             bonus: bonus,
