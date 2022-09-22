@@ -33,7 +33,7 @@ interface MyProps{
   job_id: string,
 }
 
-interface MyFormValues{
+export interface MyFormValues{
 
     date: string,
     hours_amount: number,
@@ -50,9 +50,10 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
       "vacation", "sick day", "holiday"
     ]);
 
-    const [date, setDate] = useState<String>("");
-    const [hours_amount, setHoursAmount] = useState<Number>(0);
+    const [date, setDate] = useState<string>("");
+    const [hours_amount, setHoursAmount] = useState<number>(0);
 
+    //creates the special record in the data base
     const [createSpecialRecord, {data: special_record_data, loading, error}] = useMutation(MUTATION_CREATE_SPECIAL_RECORD, {
       onCompleted: (special_record_data) => {
 
@@ -72,7 +73,7 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
     });
 
     //gets the id of a special record type, by type
-    const [getSpecialRecordType, {data}] = useLazyQuery(QUERY_SPECIAL_RECORD_TYPE_BY_TYPE,{
+    const [getSpecialRecordType, {data}] = useLazyQuery(QUERY_SPECIAL_RECORD_TYPE_BY_TYPE, {
       onCompleted: (data) => {
         try {
 
@@ -107,10 +108,9 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
   
     const onSubmit = (values: MyFormValues) => {
     
-      const { date, hours_amount } = values; 
+      const { date, hours_amount, type } = values; 
       setDate(date);
       setHoursAmount(hours_amount);
-      const { type } = values
       try {
 
         //creates the special record in the data base
@@ -145,7 +145,7 @@ export const AddSpecialRecord: React.FC<MyProps> = ({user_id, job_id}) => {
 
             <Dialog open={open} onClose={toggleDialog}>
                 <DialogTitle>
-                <Typography 
+                  <Typography 
                    fontSize={20}
                    fontWeight={"bold"}>
                     Add a special record
