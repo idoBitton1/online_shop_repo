@@ -166,16 +166,16 @@ function App() {
         </jobContext.Provider>
         </userIdContext.Provider>
 
-        <MainContent
-          records={records}
-          special_records={special_records}
-          extras={extras}
-          salary_per_hour={salary_per_hour}
-        />
-
         <recordsContext.Provider value={{records, setRecords}}>
         <specialRecordsContext.Provider value={{special_records, setSpecialRecords}}>
         <extrasContext.Provider value={{extras, setExtras}}>
+          <MainContent
+            records={records}
+            special_records={special_records}
+            extras={extras}
+            salary_per_hour={salary_per_hour}
+          />
+
           <Footer
             user_id={user_id}
             job_id={job_id}
