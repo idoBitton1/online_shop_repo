@@ -114,7 +114,7 @@ export const DisplayRecord: React.FC<MyProps> = ({id, start_time, end_time, dail
     })
 
     //updates the record
-    const onSubmit = async(values: MyFormValues) => {
+    const onSubmit = (values: MyFormValues) => {
 
         const start_datetime: Date = new Date(`${values.start_date} ${values.start_time}`);
         const end_datetime: Date = new Date(`${values.end_date} ${values.end_time}`);
