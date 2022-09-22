@@ -90,12 +90,22 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
     const {is_connected} = useContext(connectContext);
 
     const [record_type, setType] = useState<number>(1);
+    const [record_name, setName] = useState<string>("");
 
     var current_date: Date = new Date();
 
     //displayed month and year
     const [month_number, setMonthNumber] = useState<number>(current_date.getMonth() + 1);
     const [year, setYear] = useState<number>(current_date.getFullYear());
+
+    useEffect(() => {
+        if(record_type == 1)
+            setName("Record");
+        else if(record_type == 2)
+            setName("Special Record");
+        else if(record_type == 3)
+            setName("Extra Record")
+    }, [record_type])
 
     //checks that the month number is valid, and updated the year if needed
     useEffect(() => {
@@ -226,16 +236,18 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
 
         if(record_type == 1){ //records
             return (
-                //display each record
-                records.filter((record) => {
+                //display each record  
+                records.filter((record) => {        
                     const record_date = new Date(Number(record.start_time))
-    
+
                     return ((record_date.getMonth() + 1) === month_number)
                 }).map((record) => {
 
                     //create a date object for the start and end times
                     const start_time: Date = new Date(Number(record.start_time));
                     const end_time: Date = new Date(Number(record.end_time));
+
+                    
 
                     return (
                         <DisplayRecord 
@@ -300,6 +312,8 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
         }
     }
 
+
+
     return(
         <>
         {/** month displayer */}
@@ -321,17 +335,18 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                 </Button>
             </Grid>
             <Grid item xs={8}>
-                <Typography
-                  marginBottom={1.5}
-                  >
+                <div className="date_and_type">
                     {getMonthName(month_number) + " " + year}
-                    <IconButton
-                      sx={{color: "white", marginBottom: 0.4}}
-                      disabled={is_connected ? false : true}
-                      onClick={() => setType((prevType) => prevType + 1)}>
-                        {chooseIcon()}
-                    </IconButton>
-                </Typography>
+                    <div className="just_type">
+                        {record_name}
+                        <IconButton
+                        sx={{color: "white", marginBottom: 0.4}}
+                        disabled={is_connected ? false : true}
+                        onClick={() => setType((prevType) => prevType + 1)}>
+                            {chooseIcon()}
+                        </IconButton>
+                    </div>
+                </div>
             </Grid>
             <Grid item xs={2}>
                 <Button
