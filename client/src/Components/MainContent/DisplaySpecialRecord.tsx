@@ -79,7 +79,7 @@ export const DisplaySpecialRecord: React.FC<MyProps> = ({id, date, hours_amount,
     
             //update the records array
             var index_of_current_record = -1;
-            const datetime: Date = new Date(date_state)
+            const datetime: Date = new Date(date_state);
 
             //find the index of the record in the array
             index_of_current_record = special_records.findIndex((special_record) => special_record.id == id);
@@ -168,7 +168,7 @@ export const DisplaySpecialRecord: React.FC<MyProps> = ({id, date, hours_amount,
         setHoursAmount(hours_amount);
         try {
 
-            //creates the special record in the data base
+            //updates the special record in the data base
             getSpecialRecordType({
             variables: {
                 type: type
@@ -234,12 +234,12 @@ export const DisplaySpecialRecord: React.FC<MyProps> = ({id, date, hours_amount,
 
 
 
-        <Dialog open={open} onClose={toggleEditDialog}>
+        <Dialog open={open} onClose={toggleEditDialog} sx={{textAlign: "center"}}>
             <DialogTitle>
                 <Typography 
                     fontSize={25}
                     fontWeight={"bold"}>
-                        Add a special record
+                        Edit special record
                 </Typography>
             </DialogTitle>
 
@@ -301,7 +301,7 @@ export const DisplaySpecialRecord: React.FC<MyProps> = ({id, date, hours_amount,
                         <br />
                         <br />
                         <Button type="submit"
-                            sx={{marginLeft: "34%", color: "black"}}
+                            sx={{marginLeft: "5%", color: "black"}}
                             color="primary"
                             variant="outlined">
                               submit
