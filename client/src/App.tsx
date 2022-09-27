@@ -163,26 +163,24 @@ function App() {
         <userIdContext.Provider value={{user_id, setUserId}}>
         <jobContext.Provider value={{job_id, setJobId}}>
           <Header/>
+        
+
+          <recordsContext.Provider value={{records, setRecords}}>
+          <specialRecordsContext.Provider value={{special_records, setSpecialRecords}}>
+          <extrasContext.Provider value={{extras, setExtras}}>
+            <MainContent
+              records={records}
+              special_records={special_records}
+              extras={extras}
+              salary_per_hour={salary_per_hour}
+            />
+
+            <Footer />
+          </extrasContext.Provider>
+          </specialRecordsContext.Provider>
+          </recordsContext.Provider>
         </jobContext.Provider>
         </userIdContext.Provider>
-
-        <recordsContext.Provider value={{records, setRecords}}>
-        <specialRecordsContext.Provider value={{special_records, setSpecialRecords}}>
-        <extrasContext.Provider value={{extras, setExtras}}>
-          <MainContent
-            records={records}
-            special_records={special_records}
-            extras={extras}
-            salary_per_hour={salary_per_hour}
-          />
-
-          <Footer
-            user_id={user_id}
-            job_id={job_id}
-          />
-        </extrasContext.Provider>
-        </specialRecordsContext.Provider>
-        </recordsContext.Provider>
       </div>
     </connectContext.Provider>
     </ThemeProvider>
