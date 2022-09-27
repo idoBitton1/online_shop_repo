@@ -2,9 +2,9 @@ import React, { useEffect, useState, useContext } from "react"
 import "./MainContent.css"
 
 //Components
-import { DisplayRecord } from "./DisplayRecord"
-import { DisplaySpecialRecord } from "./DisplaySpecialRecord"
-import { DisplayExtra } from "./DisplayExtra"
+import { DisplayRecord } from "./DisplayRecords/DisplayRecord"
+import { DisplaySpecialRecord } from "./DisplayRecords/DisplaySpecialRecord"
+import { DisplayExtra } from "./DisplayRecords/DisplayExtra"
 
 //Interface
 import { Record, SpecialRecord, Extra } from "../../App"
@@ -25,6 +25,9 @@ import ExtraIcon from "@mui/icons-material/NoteAddOutlined"
 import RecordIcon from "@mui/icons-material/InsertDriveFileOutlined"
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { AddRecord } from "./AddingRecords/AddRecord"
+import { AddSpecialRecord } from "./AddingRecords/AddSpecialRecord"
+import { AddExtra } from "./AddingRecords/AddExtra"
 
 interface MyProps{
 
@@ -312,7 +315,18 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
         }
     }
 
+    const whatToAdd = (): any => {
 
+        if(record_type == 1){// normal record
+            return <AddRecord />;
+        }
+        else if(record_type == 2){// special record
+            return <AddSpecialRecord />;
+        }
+        else if(record_type == 3){// extra record
+            return <AddExtra />;
+        }
+    }
 
     return(
         <>
@@ -345,6 +359,7 @@ export const MainContent: React.FC<MyProps> = ({records, special_records, extras
                         onClick={() => setType((prevType) => prevType + 1)}>
                             {chooseIcon()}
                         </IconButton>
+                        {whatToAdd()}
                     </div>
                 </div>
             </Grid>
