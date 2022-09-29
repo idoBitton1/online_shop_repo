@@ -121,8 +121,21 @@ const resolvers = {
             } catch (err:any) {
                 console.error(err.message);
             }
+        },
+        //get all jobs
+        getAllJobs: async (_: any, args: any) => {
+            try {
+                const all_jobs = await pool.query(
+                "SELECT * FROM jobs"
+                );
+                return all_jobs.rows;
+            } catch (err: any) {
+                console.error(err.message);
+            }
         }
     },
+
+    /////////////////////////////////////////////////////////////////////////
 
     Mutation: {
         //create a new user
@@ -381,7 +394,8 @@ const typeDefs = gql`
         getAllExtras(user_id: String!, job_id: String!): [Extra],
         getJobByName(name: String!): Job,
         getJobById(id: String!): Job,
-        getUserById(id: String!): User
+        getUserById(id: String!): User,
+        getAllJobs: [Job],
     }
 
     type Mutation{
@@ -433,3 +447,5 @@ const server = new ApolloServer({typeDefs, resolvers});
 server.listen().then(({ url }) => {
     console.log(`API is running at: ${url}`);
 })
+
+//to run the server: ts-node-esm index.ts
