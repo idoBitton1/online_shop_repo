@@ -116,3 +116,11 @@ export const MUTATION_UPDATE_JOB_TYPE = gql`
     }
   }
 `;
+
+export const MUTATION_UPDATE_JOB_NAME = gql`
+  mutation Mutation($id: String!, $name: String!) {
+    updateJobName(id: $id, name: $name) {
+      id
+    }
+  }
+`;
