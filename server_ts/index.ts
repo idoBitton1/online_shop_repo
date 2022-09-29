@@ -333,6 +333,18 @@ const resolvers = {
             } catch (err: any) {
                 console.error(err.message);
             }
+        },
+        //update the type of a job
+        updateJobType: async (_: any, args: any) => {
+            const {id, type} = args;
+            try {
+                const update_type = await pool.query(
+                "UPDATE jobs SET type=$1 WHERE id=$2 ",
+                [type, id])
+                return update_type.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
         }
     }  
 };
@@ -438,7 +450,9 @@ const typeDefs = gql`
                     date: String!,
                     bonus: Boolean!,
                     amount: Int!,
-                    description: String!): Extra
+                    description: String!): Extra,
+
+        updateJobType(id: String!, type: String!): Job
     }
 `;
 
