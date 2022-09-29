@@ -82,11 +82,21 @@ export const QUERY_GET_JOB_BY_NAME_FULL = gql`
   }
 `;
 
+export const QUERY_JOB_BY_ID_FULL = gql`
+  query Query($id: String!) {
+    getJobById(id: $id) {
+      id
+      name
+      type
+      salary_per_hour
+    }
+  }
+`;
+
 export const QUERY_JOB_BY_ID = gql`
   query Query($id: String!) {
     getJobById(id: $id) {
-      name
-      type
+      id
       salary_per_hour
     }
   }
