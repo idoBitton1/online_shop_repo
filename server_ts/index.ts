@@ -345,6 +345,18 @@ const resolvers = {
             } catch (err: any) {
                 console.error(err.message);
             }
+        },
+        //update jobs name
+        updateJobName:async (_: any, args: any) => {
+            const {id, name} = args;
+            try {
+                const update_name = await pool.query(
+                "UPDATE jobs SET name=$1 WHERE id=$2 ",
+                [name, id])
+                return update_name.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
         }
     }  
 };
@@ -452,7 +464,8 @@ const typeDefs = gql`
                     amount: Int!,
                     description: String!): Extra,
 
-        updateJobType(id: String!, type: String!): Job
+        updateJobType(id: String!, type: String!): Job,
+        updateJobName(id: String!, name: String!): Job
     }
 `;
 
