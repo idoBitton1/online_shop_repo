@@ -8,7 +8,7 @@ import { Header } from './Components/Header/Header';
 
 //Apollo and Graphql
 import { useQuery, useLazyQuery} from "@apollo/client"
-import {QUERY_GET_JOB_BY_NAME,
+import {QUERY_JOB_BY_ID,
   QUERY_GET_ALL_RECORDS,
   QUERY_GET_ALL_SPECIAL_RECORDS,
   QUERY_GET_ALL_EXTRAS} from "./Queries/Queries"
@@ -63,9 +63,9 @@ function App() {
   const [extras, setExtras] = useState<Extra[]>([]);
 
   //query the first job
-  const { data: job_data } = useQuery(QUERY_GET_JOB_BY_NAME, {
+  const { data: job_data } = useQuery(QUERY_JOB_BY_ID, {
     variables: {
-      name: "job 1"
+      id: "49b7a3c6-5732-453c-b004-9a8a7fc8ea9a"
     }
   });
 
@@ -73,8 +73,8 @@ function App() {
 
     if(job_data) //if the data is fetched
     {
-      setJobId(job_data.getJobByName.id); //set the job id
-      setSalaryPerHour(job_data.getJobByName.salary_per_hour); //set the salary
+      setJobId(job_data.getJobById.id); //set the job id
+      setSalaryPerHour(job_data.getJobById.salary_per_hour); //set the salary
     }
   }, [job_data]) //updates everytime the user is changing the current job
 
