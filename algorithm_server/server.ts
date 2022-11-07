@@ -297,5 +297,5 @@ const server = new ApolloServer({typeDefs, resolvers});
 server.listen().then(({ url }) => {
     console.log(`API is running at: ${url}`);
 })
-
 //to run the server: ts-node-esm server.ts
+//if comment not found, run: npm i -g ts-node
