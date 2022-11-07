@@ -17,7 +17,6 @@ var demand: number[];
 var supply: number[];
 var costs: number[][];
 var shipment_matrix: Shipment[][];
-var keep_delete: boolean;
 
 //object that holds the data of each shipment
 class Shipment {
@@ -82,8 +81,7 @@ const getNeighbors = (s: Shipment, elements: Shipment[]) => {
             }
         })
     }
-    console.log(s)
-    console.log(neighbors)
+
     return neighbors;
 }
 
@@ -112,9 +110,6 @@ const getClosedPath = (s: Shipment): Shipment[] => {
         path = path.filter(item => item.quantity != undefined);
     }while(prev_path_length != path.length)
 
-    console.log("path")
-    console.log(path)
-
     //finds the closed path
     var stones: Shipment[] = new Array(path.length);
     var prev: Shipment = s;
@@ -122,10 +117,6 @@ const getClosedPath = (s: Shipment): Shipment[] => {
         stones[i] = prev;
         prev = getNeighbors(prev, path)[i % 2];
     }
-
-    console.log("stones")
-    console.log(stones)
-    console.log("///////////////////////")
 
     return stones;
 }
@@ -292,8 +283,6 @@ const resolvers = {
             for (let i = 0; i < supply.length; i++)
                 for (let j = 0; j < demand.length; j++)
                     costs[i][j] = costs[i][j] == undefined ? 0 : costs[i][j];
-
-            keep_delete = true;
 
             northWestCornerRule();
             steppingStone();
