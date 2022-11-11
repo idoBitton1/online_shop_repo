@@ -36,5 +36,16 @@
 
 .categories_container{
     display: flex;
+    font-family: "Rubik";
     margin: 10px 100px 10px 100px;
+}
+
+.category_style{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.category_icon{
+    font-size: 30px;
 }
