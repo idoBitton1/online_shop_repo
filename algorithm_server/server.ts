@@ -13,10 +13,13 @@ const pool = new pg.Pool({
 });
 
 //variables decleration
-var demand: number[];
-var supply: number[];
-var costs: number[][];
-var shipment_matrix: Shipment[][];
+let demand: number[];
+let supply: number[];
+let costs: number[][];
+let shipment_matrix: Shipment[][];
+
+let totalCosts: number = 0; //will hold the final total cost
+let resultMat: number[][]; //will hold the final result matrix
 
 //object that holds the data of each shipment
 class Shipment {
@@ -40,7 +43,7 @@ const northWestCornerRule = (): void => {
         for(let j = northwest; j < demand.length; j++)
         {
             //takes the smaller value between the supply and demand
-            var quantity = Math.min(supply[i], demand[j]);
+            let quantity = Math.min(supply[i], demand[j]);
             //if quantity is 0, the row or the column is canceled
             if (quantity > 0) {
                 //sets the smaller value as the quantity of the current cell
@@ -94,10 +97,10 @@ const getShipmentMatrixFlat = (): Shipment[] => {
 //get closed path from the current cell
 //closed path - a "circle" from the current cell
 const getClosedPath = (s: Shipment): Shipment[] => {
-    var path = getShipmentMatrixFlat();
+    let path = getShipmentMatrixFlat();
     path.unshift(s);
 
-    var prev_path_length;
+    let prev_path_length;
     //remove elements that do not have a
     //vertical and horizontal neighbor
     do
@@ -111,8 +114,8 @@ const getClosedPath = (s: Shipment): Shipment[] => {
     }while(prev_path_length != path.length)
 
     //finds the closed path
-    var stones: Shipment[] = new Array(path.length);
-    var prev: Shipment = s;
+    let stones: Shipment[] = new Array(path.length);
+    let prev: Shipment = s;
     for(let i = 0; i < stones.length; i++){
         stones[i] = prev;
         prev = getNeighbors(prev, path)[i % 2];
@@ -141,9 +144,9 @@ const fixDegenerateCase = () => {
 }
 
 const steppingStone = (): void => {
-    var maxReduction: number = 0;
-    var move: Shipment[] = [];
-    var leaving: Shipment = {} as Shipment;
+    let maxReduction: number = 0;
+    let move: Shipment[] = [];
+    let leaving: Shipment = {} as Shipment;
 
     fixDegenerateCase();
 
@@ -153,14 +156,14 @@ const steppingStone = (): void => {
             if (shipment_matrix[r][c] != null)
                 continue;
 
-            var trial: Shipment = new Shipment(0, costs[r][c], r, c);
-            var path: Shipment[] = getClosedPath(trial);
+            let trial: Shipment = new Shipment(0, costs[r][c], r, c);
+            let path: Shipment[] = getClosedPath(trial);
 
-            var reduction: number = 0;
-            var lowestQuantity: number = Number.MAX_VALUE;
-            var leavingCandidate: Shipment = {} as Shipment;
+            let reduction: number = 0;
+            let lowestQuantity: number = Number.MAX_VALUE;
+            let leavingCandidate: Shipment = {} as Shipment;
 
-            var plus: boolean = true;
+            let plus: boolean = true;
             path.forEach(item => {
                 if(plus){
                     reduction += item.costPerUnit;
@@ -184,8 +187,8 @@ const steppingStone = (): void => {
     }
 
     if (move.length != 0) {
-        var q: number = leaving.quantity;
-        var plus: boolean = true;
+        let q: number = leaving.quantity;
+        let plus: boolean = true;
         move.forEach(item => {
             item.quantity += plus ? q : -q;
             shipment_matrix[item.row][item.column] = item.quantity == 0 ? {} as Shipment : item;
@@ -197,27 +200,23 @@ const steppingStone = (): void => {
 
 //forming the results for the client
 const formReply = (): number[][] => {
-    var totalCosts: number = 0;
 
-    var resMat: number[][] = Array.from(Array(supply.length), () => new Array(demand.length));
+    let resMat: number[][] = Array.from(Array(supply.length), () => new Array(demand.length));
 
     for (let r = 0; r < supply.length; r++) {
         for (let c = 0; c < demand.length; c++) {
 
-            var s: Shipment = shipment_matrix[r][c];
-            if (s != undefined && s.row == r && s.column == c) {
+            let s: Shipment = shipment_matrix[r][c];
+            if(s != undefined && s.quantity === Number.MIN_VALUE){
+                resMat[r][c] = 0;
+            }
+            else if (s != undefined && s.row == r && s.column == c) {
                 resMat[r][c] = s.quantity;
                 totalCosts += (s.quantity * s.costPerUnit);
             } else
                 resMat[r][c] = 0;
         }
     }
-    console.log(resMat)
-
-    //change the console.log with data base call:
-    //save the totalCosts val with key value of search_key
-    //to fetch the value in the client
-    console.log("Total costs: ", totalCosts);
 
     return resMat;
 }
@@ -226,14 +225,14 @@ const typeDefs = gql`
 
     type Result{
         resMat: [[Int!]]!,
-        totalCosts: Float!
+        totalCost: Float!
     }
 
     type Query {
         getMinimumCost(all_supply: [Int!]!,
                        all_demand: [Int!]!,
                        costs_mat: [[Float!]]!,
-                       search_key: String!): [[Int]]
+                       search_key: String!): Result
     }
 `;
 
@@ -245,12 +244,12 @@ const resolvers = {
             console.log(search_key)
 
             //fix imbalance
-            var total_src = 0;
+            let total_src = 0;
             all_supply.forEach((item: number) => {
                 total_src += item;
             });
 
-            var total_dst = 0;
+            let total_dst = 0;
             all_demand.forEach((item: number) => {
                 total_dst += item;
             });
@@ -287,7 +286,19 @@ const resolvers = {
             northWestCornerRule();
             steppingStone();
 
-            return formReply();;
+            resultMat =  formReply();
+
+            console.log(resultMat)
+            console.log(totalCosts)
+
+            const result = {
+                resMat: resultMat,
+                totalCost: totalCosts
+            } 
+
+            console.log(result)
+
+            return result;
         }
     }
 };
