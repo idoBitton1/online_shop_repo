@@ -3,7 +3,7 @@ import './App.css';
 
 //components
 import { Header } from './Components/Header/Header';
-import { CatergoriesBar } from './Components/products/NavigationBar';
+import { CatergoriesBar } from './Components/Header/NavigationBar';
 import { ProductsGrid } from './Components/products/ProductsGrid';
 
 function App() {
