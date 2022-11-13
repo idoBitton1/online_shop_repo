@@ -23,10 +23,11 @@
   box-shadow: 0px 3px 5px 0 rgba(62, 62, 62, 0.30);
 }
 
-.categories_container{
+.navigation_bar{
     display: flex;
+    justify-content: space-between;
     font-family: "Rubik";
-    margin: 10px 100px 10px 100px;
+    margin: 15px 100px 15px 100px;
 }
 
 .category_style{
