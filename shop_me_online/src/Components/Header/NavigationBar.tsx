@@ -1,7 +1,13 @@
-import React, {useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 
 //material ui
 import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+
+//interface
+import { Product } from "../../App";
 
 //icons
 import CircleIcon from '@mui/icons-material/Circle';
@@ -20,30 +26,25 @@ interface CategoryStyle{
 }
 
 interface Filters{
+    category: string
     color: string,
     season: string
 }
 
-const chooseCurrentSeason = ():string => {
-    const current_date = new Date();
-
-    const current_month = current_date.getMonth() + 1;
-
-    if(current_month === 12 || current_month === 1 || current_month === 2)
-        return "winter";
-    else if(current_month >= 3 && current_month <= 5)
-        return "spring";
-    else if(current_month >= 6 && current_month <= 8)
-        return "summer";
-    else
-        return "autumn"
+interface MyProps{
+    products: Product[],
+    filtered_products: Product[],
+    setFilteredProducts: Dispatch<SetStateAction<Product[]>>
 }
 
-export const CatergoriesBar = () => {
+export const NavigationBar: React.FC<MyProps> = ({products, filtered_products, setFilteredProducts}) => {
+
+    const [open_dialog, setOpenDialog] = useState<boolean>(false);
 
     const [filters, setFilters] = useState<Filters>({
-        color: "any",
-        season: chooseCurrentSeason()
+        category: "any_category",
+        color: "any_color",
+        season: "any_season"
     });
 
     //colors array
@@ -55,11 +56,11 @@ export const CatergoriesBar = () => {
     const categories_array: CategoryStyle[] = [
         {
             icon: <GiConverseShoe className="category_icon"/>,
-            category_name: "Shoes"
+            category_name: "shoes"
         },
         {
             icon: <FaTshirt className="category_icon"/>,
-            category_name: "Shirts"
+            category_name: "shirts"
         },
         {
             icon: <GiShorts className="category_icon"/>,
@@ -67,19 +68,19 @@ export const CatergoriesBar = () => {
         },
         {
             icon: <GiMonclerJacket className="category_icon"/>,
-            category_name: "Jackets"
+            category_name: "jackets"
         },
         {
             icon: <GiLabCoat className="category_icon"/>,
-            category_name: "Coats"
+            category_name: "coats"
         },
         {
             icon: <GiDress className="category_icon"/>,
-            category_name: "Dresses"
+            category_name: "dresses"
         },
         {
             icon: <BsFillHandbagFill className="category_icon"/>,
-            category_name: "Bags"
+            category_name: "bags"
         }
     ];
 
@@ -93,31 +94,89 @@ export const CatergoriesBar = () => {
             return 0;
     })
 
+    const handleCategoryChange = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setFilters((prev) => {
+            if(prev.category === event.currentTarget.value as string)
+                return {
+                    category: "any_category",
+                    color: prev.color,
+                    season: prev.season
+                }
+            else
+                return {
+                    category: event.currentTarget.value as string,
+                    color: prev.color,
+                    season: prev.season
+                }
+        });
+    }
+
     const handleColorChange = (event: SelectChangeEvent) => {
         setFilters((prev) => {
             return {
+                category: prev.category,
                 color: event.target.value as string,
                 season: prev.season
             }
-        })
+        });
     }
 
     const handleSeasonChange = (event: SelectChangeEvent) => {
         setFilters((prev) => {
             return {
+                category: prev.category,
                 color: prev.color,
                 season: event.target.value as string
             }
+        });
+    }
+
+    //filter the products array by the filters object,
+    //and everytime a filter is changed, refilter the products 
+    //array and place the filtered array in the filtered_array
+    useEffect(() => {
+        filterProducts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filters.category])
+
+    const toggleDialog = () => {
+        setOpenDialog((prev) => !prev);
+    }
+
+    const handleFilterClick = () => {
+        filterProducts();
+
+        toggleDialog();
+    }
+
+    const filterProducts = () => {
+        setFilteredProducts(products);
+        
+        setFilteredProducts((prev) => {
+            return prev.filter((product) => {
+                return (
+                (filters.category === "any_category" ? true : product.categories.includes(filters.category)) &&
+                (filters.color === "any_color" ? true : product.categories.includes(filters.color)) &&
+                (filters.season === "any_season" ? true : product.categories.includes(filters.season))
+                );
+            })
         })
     }
 
     return(
+        <>
         <div className="navigation_bar">
             <div>
             {categories_array.map((item, i) => {
                 return(
-                    <Button key={i} className="category_style" 
-                    sx={{textTransform: "none", color: "gray", marginLeft: 3, fontFamily: "Rubik"}}>
+                    <Button key={i} 
+                    className="category_style"
+                    value={item.category_name}
+                    onClick={handleCategoryChange}
+                    sx={{textTransform: "none", marginLeft: 3, fontFamily: "Rubik", 
+                        color: item.category_name === filters.category ? "black" : "gray"
+                    }}
+                    >
                         {item.icon}
                         {item.category_name} 
                     </Button>
@@ -125,6 +184,15 @@ export const CatergoriesBar = () => {
             })}
             </div>
 
+            <button onClick={toggleDialog}>toggle</button>
+        </div>
+
+        <Dialog open={open_dialog} onClose={toggleDialog}>
+            <DialogTitle>
+                Filters
+            </DialogTitle>
+
+            <DialogContent>
             <div>
             <FormControl variant="standard" sx={{width: 150, marginRight: 3}}>
                 <InputLabel>Color</InputLabel>
@@ -138,7 +206,7 @@ export const CatergoriesBar = () => {
                     colors_array.map((colorI, i) => {
                         if(colorI === "any")
                             return(
-                                <MenuItem key={i} value={"any"}>any</MenuItem>
+                                <MenuItem key={i} value={"any_color"}>any</MenuItem>
                             )
                         else
                             return (
@@ -157,6 +225,7 @@ export const CatergoriesBar = () => {
                 label="Season"
                 onChange={handleSeasonChange}
                 >
+                <MenuItem value={"any_season"}>any</MenuItem>
                 <MenuItem value={"spring"}>spring</MenuItem>
                 <MenuItem value={"summer"}>summer</MenuItem>
                 <MenuItem value={"autumn"}>autumn</MenuItem>
@@ -164,6 +233,11 @@ export const CatergoriesBar = () => {
                 </Select>
             </FormControl>
             </div>
-        </div>
+            <Button onClick={handleFilterClick}>
+                Filter!
+            </Button>
+            </DialogContent>
+        </Dialog>
+        </>
     )
 }
