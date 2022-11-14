@@ -4,22 +4,31 @@ import "./Products.css"
 //components
 import { ProductDisplay } from "./ProductDisplay";
 
-export const ProductsGrid = () => {
+//interface
+import {Product} from "../../App"
+
+interface MyProps{
+    products: Product[],
+    filtered_products: Product[]
+}
+
+export const ProductsGrid: React.FC<MyProps> = ({products, filtered_products}) => {
 
     return(
-        <>
         <div className="products_grid">
-            <ProductDisplay />
-            <ProductDisplay />
-            <ProductDisplay />
-            <ProductDisplay />
-            <ProductDisplay />
-            <ProductDisplay />
-            <ProductDisplay />
-            <ProductDisplay />
-            <ProductDisplay />
-            <ProductDisplay />
+            {
+                filtered_products.map((product) => {
+                    return (
+                        <ProductDisplay
+                        key={product.id}
+                        id={product.id} 
+                        name={product.name} 
+                        price={product.price}
+                        quantity={product.quantity}
+                        categories={product.categories}/>
+                    )
+                })
+            }
         </div>
-        </>
     )
 }
