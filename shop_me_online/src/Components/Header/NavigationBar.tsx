@@ -11,6 +11,8 @@ import { Product } from "../../App";
 
 //icons
 import CircleIcon from '@mui/icons-material/Circle';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import {GiConverseShoe} from 'react-icons/gi';
 import {FaTshirt} from 'react-icons/fa';
 import {GiShorts} from 'react-icons/gi';
@@ -39,8 +41,10 @@ interface MyProps{
 
 export const NavigationBar: React.FC<MyProps> = ({products, filtered_products, setFilteredProducts}) => {
 
+    //toggles the dialog
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
 
+    //all filters settings are held in this object
     const [filters, setFilters] = useState<Filters>({
         category: "any_category",
         color: "any_color",
@@ -94,6 +98,7 @@ export const NavigationBar: React.FC<MyProps> = ({products, filtered_products, s
             return 0;
     })
 
+    //click handle for category filter change
     const handleCategoryChange = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setFilters((prev) => {
             if(prev.category === event.currentTarget.value as string)
@@ -111,6 +116,7 @@ export const NavigationBar: React.FC<MyProps> = ({products, filtered_products, s
         });
     }
 
+    //click handle for color filter change
     const handleColorChange = (event: SelectChangeEvent) => {
         setFilters((prev) => {
             return {
@@ -121,6 +127,7 @@ export const NavigationBar: React.FC<MyProps> = ({products, filtered_products, s
         });
     }
 
+    //click handle for season filter change
     const handleSeasonChange = (event: SelectChangeEvent) => {
         setFilters((prev) => {
             return {
@@ -131,24 +138,38 @@ export const NavigationBar: React.FC<MyProps> = ({products, filtered_products, s
         });
     }
 
-    //filter the products array by the filters object,
-    //and everytime a filter is changed, refilter the products 
-    //array and place the filtered array in the filtered_array
+    //filter when category is changed
     useEffect(() => {
         filterProducts();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters.category])
 
+    //toggle the filter dialog
     const toggleDialog = () => {
         setOpenDialog((prev) => !prev);
     }
 
+    //filter on click
     const handleFilterClick = () => {
         filterProducts();
 
         toggleDialog();
     }
 
+    //disable all filters and return filtered_products to the original
+    const disableFilters = () => {
+        setFilters({
+            category: "any_category",
+            color: "any_color",
+            season: "any_season"
+        });
+
+        setFilteredProducts(products);
+    }
+
+    //filter the products array by the filters object,
+    //and everytime a filter is changed, refilter the products 
+    //array and place the filtered array in the filtered_array
     const filterProducts = () => {
         setFilteredProducts(products);
         
@@ -184,8 +205,17 @@ export const NavigationBar: React.FC<MyProps> = ({products, filtered_products, s
             })}
             </div>
 
-            <button onClick={toggleDialog}>toggle</button>
+            <div>
+                <button onClick={toggleDialog} className="filter_button">
+                    {<FilterListIcon sx={{fontSize: 17}} />}Filters
+                </button>
+                <button onClick={disableFilters} className="filter_button">
+                    {<FilterListOffIcon sx={{fontSize: 17}} />}Unfilter
+                </button>
+            </div>
         </div>
+
+
 
         <Dialog open={open_dialog} onClose={toggleDialog}>
             <DialogTitle>
