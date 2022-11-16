@@ -19,14 +19,14 @@ function App() {
   const [products, setProducts] = useState<Product[]>([
     {
       id: "1",
-      name: "air jordan 1 lucky green",
+      name: "Air jordan 1 lucky green",
       price: 150,
       quantity: 150,
       categories: "#shoes#green"
     },
     {
       id: "2",
-      name: "air jordan travis scott",
+      name: "Air jordan travis scott",
       price: 300,
       quantity: 100,
       categories: "#shoes#black"
