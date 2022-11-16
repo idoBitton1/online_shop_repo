@@ -33,3 +33,19 @@
     padding-left: 5px;
     margin-top: -5px;
 }
+
+.buying_container{
+    display: flex;
+}
+
+.buying_img{
+    width: 290px;
+    height: 250px;
+    margin-right: 20px;
+}
+
+.buying_info{
+    display: flex;
+    flex-direction: column;
+    font-family: "Rubik";
+}
