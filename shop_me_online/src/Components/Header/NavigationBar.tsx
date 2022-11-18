@@ -47,7 +47,7 @@ export const NavigationBar: React.FC<MyProps> = ({products}) => {
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
 
     const dispatch = useDispatch();
-    const { resetFilterProducts } = bindActionCreators(actionsCreators, dispatch);
+    const { resetFilterProducts, filterFilterProducts } = bindActionCreators(actionsCreators, dispatch);
 
     //all filters settings are held in this object
     const [filters, setFilters] = useState<Filters>({
@@ -176,16 +176,9 @@ export const NavigationBar: React.FC<MyProps> = ({products}) => {
     //and everytime a filter is changed, refilter the products 
     //array and place the filtered array in the filtered_array
     const filterProducts = () => {
-        
-        resetFilterProducts(
-            products.filter((product) => {
-                return (
-                (filters.category === "any_category" ? true : product.categories.includes(filters.category)) &&
-                (filters.color === "any_color" ? true : product.categories.includes(filters.color)) &&
-                (filters.season === "any_season" ? true : product.categories.includes(filters.season))
-                );
-            })
-        )
+        resetFilterProducts(products)
+
+        filterFilterProducts(filters)
     }
 
     return(
