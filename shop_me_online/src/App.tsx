@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
+//redux
+import { useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { actionsCreators } from './state';
+
 //components
 import { Header } from './Components/Header/Header';
 import { NavigationBar } from './Components/Header/NavigationBar';
@@ -11,7 +16,16 @@ export interface Product{
   name: string,
   price: number,
   quantity: number,
-  categories: string
+  categories: string,
+  supplier_id?: string
+}
+
+interface Cart{ //customer_product table
+  address: string,
+  amount: number,
+  size: string,
+  ordering_time: string,
+  paid: boolean
 }
 
 function App() {
@@ -33,13 +47,22 @@ function App() {
     }
   ]);
 
-  const [filtered_products, setFilteredProducts] = useState<Product[]>(products);
+  const dispatch = useDispatch();
+  const { resetFilterProducts } = bindActionCreators(actionsCreators, dispatch);
+
+  useEffect(() => {
+    resetFilterProducts(products);
+  },[]);
+
+  const [cart, setCart] = useState<Cart[]>([]);
 
   return (
     <div className="app_container">
       <Header />
-      <NavigationBar products={products} filtered_products={filtered_products} setFilteredProducts={setFilteredProducts} />
-      <ProductsGrid products={products} filtered_products={filtered_products} />
+      <NavigationBar 
+      products={products} 
+      />
+      <ProductsGrid />
     </div>
   );
 }
