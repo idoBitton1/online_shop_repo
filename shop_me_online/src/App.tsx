@@ -20,7 +20,8 @@ export interface Product{
   supplier_id?: string
 }
 
-interface Cart{ //customer_product table
+export interface Cart{ //customer_product table
+  product_id: string,
   address: string,
   amount: number,
   size: string,
@@ -48,13 +49,11 @@ function App() {
   ]);
 
   const dispatch = useDispatch();
-  const { resetFilterProducts } = bindActionCreators(actionsCreators, dispatch);
+  const { resetFilterProducts, } = bindActionCreators(actionsCreators, dispatch);
 
   useEffect(() => {
     resetFilterProducts(products);
   },[]);
-
-  const [cart, setCart] = useState<Cart[]>([]);
 
   return (
     <div className="app_container">
