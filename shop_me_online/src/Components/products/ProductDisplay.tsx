@@ -19,12 +19,14 @@ import img from "../../Images/j1.png"
 
 export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, categories}) => {
 
+    const [size, setSize] = useState<string>("");
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
 
     const toggleDialog = () => {
         setOpenDialog((prev) => !prev);
     }
 
+    //theme
     const theme = createTheme({
         palette: {
             primary: {
@@ -68,8 +70,10 @@ export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, ca
                         <FormControl variant="standard" sx={{marginBottom: 2}}>
                             <InputLabel>Size</InputLabel>
                             <Select
-                            id="season_select"
-                            label="Season"
+                            id="size_select"
+                            label="size"
+                            value={size}
+                            onChange={(event) => setSize(event.target.value as string)}
                             >
                             <MenuItem value={categories.includes("shoes") ? "41" : "XS"}>{categories.includes("shoes") ? "41" : "XS"}</MenuItem>
                             <MenuItem value={categories.includes("shoes") ? "42" : "S"}>{categories.includes("shoes") ? "42" : "S"}</MenuItem>

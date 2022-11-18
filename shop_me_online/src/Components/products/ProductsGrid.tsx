@@ -1,18 +1,20 @@
 import React from "react";
 import "./Products.css"
 
+//redux
+import { useSelector } from 'react-redux';
+import { ReduxState } from "../../state"; 
+
 //components
 import { ProductDisplay } from "./ProductDisplay";
 
-//interface
-import {Product} from "../../App"
-
 interface MyProps{
-    products: Product[],
-    filtered_products: Product[]
+    
 }
 
-export const ProductsGrid: React.FC<MyProps> = ({products, filtered_products}) => {
+export const ProductsGrid: React.FC<MyProps> = () => {
+
+    const filtered_products = useSelector((redux_state: ReduxState) => redux_state.filter_products);
 
     return(
         <div className="products_grid">

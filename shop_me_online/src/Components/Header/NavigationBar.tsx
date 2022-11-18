@@ -1,4 +1,9 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+
+//redux
+import { useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { actionsCreators } from '../../state';
 
 //material ui
 import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
@@ -24,10 +29,9 @@ import {BsFillHandbagFill} from 'react-icons/bs';
 interface CategoryStyle{
     icon: JSX.Element,
     category_name: string
-    onClickFunc?: () => void //delete ? later
 }
 
-interface Filters{
+export interface Filters{
     category: string
     color: string,
     season: string
@@ -35,14 +39,15 @@ interface Filters{
 
 interface MyProps{
     products: Product[],
-    filtered_products: Product[],
-    setFilteredProducts: Dispatch<SetStateAction<Product[]>>
 }
 
-export const NavigationBar: React.FC<MyProps> = ({products, filtered_products, setFilteredProducts}) => {
+export const NavigationBar: React.FC<MyProps> = ({products}) => {
 
     //toggles the dialog
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
+
+    const dispatch = useDispatch();
+    const { resetFilterProducts } = bindActionCreators(actionsCreators, dispatch);
 
     //all filters settings are held in this object
     const [filters, setFilters] = useState<Filters>({
@@ -164,24 +169,23 @@ export const NavigationBar: React.FC<MyProps> = ({products, filtered_products, s
             season: "any_season"
         });
 
-        setFilteredProducts(products);
+        resetFilterProducts(products);
     }
 
     //filter the products array by the filters object,
     //and everytime a filter is changed, refilter the products 
     //array and place the filtered array in the filtered_array
     const filterProducts = () => {
-        setFilteredProducts(products);
         
-        setFilteredProducts((prev) => {
-            return prev.filter((product) => {
+        resetFilterProducts(
+            products.filter((product) => {
                 return (
                 (filters.category === "any_category" ? true : product.categories.includes(filters.category)) &&
                 (filters.color === "any_color" ? true : product.categories.includes(filters.color)) &&
                 (filters.season === "any_season" ? true : product.categories.includes(filters.season))
                 );
             })
-        })
+        )
     }
 
     return(
