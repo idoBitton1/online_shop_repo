@@ -1,6 +1,10 @@
+//filter_product
 import { Product } from "../../App";
 import { Filters } from "../../Components/Header/NavigationBar";
-import { FilterProductsActionType } from "../action_types"
+import { FilterProductsActionType } from "../action_types";
+//cart
+import { CartActionType } from "../action_types";
+import { Cart } from "../../App";
 
 interface ResetAction{
     type: FilterProductsActionType.RESET,
@@ -22,4 +26,16 @@ interface UpdateSupplyAction{
     payload: UpdateSupplyProps
 }
 
-export type Action = ResetAction | FilterAction | UpdateSupplyAction;
+export type FilterProductsActions = ResetAction | FilterAction | UpdateSupplyAction;
+
+interface AddProductAction{
+    type: CartActionType.ADD_PRODUCT,
+    payload: Cart
+}
+
+interface RemoveFromCartAction{
+    type: CartActionType.REMOVE,
+    payload: string
+}
+
+export type CartActions = AddProductAction | RemoveFromCartAction;

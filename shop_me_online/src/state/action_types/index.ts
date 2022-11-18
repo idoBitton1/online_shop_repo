@@ -3,3 +3,8 @@ export enum FilterProductsActionType{
     FILTER = "filter",
     UPDATE_SUPPLY = "update_supply"
 }
+
+export enum CartActionType{
+    ADD_PRODUCT = "add_product",
+    REMOVE = "remove"
+}

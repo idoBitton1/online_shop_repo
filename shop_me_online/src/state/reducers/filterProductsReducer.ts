@@ -1,11 +1,12 @@
 import { Product } from "../../App";
-import { Action } from "../actions";
+import { FilterProductsActions } from "../actions";
 import { FilterProductsActionType } from "../action_types"
 
 const initial_state: Product[] = [];
 
-const reducer = (state: Product[] = initial_state, action: Action) => {
-    switch(action.type){
+const reducer = (state: Product[] = initial_state, action: FilterProductsActions) => {
+    switch(action.type)
+    {
         case FilterProductsActionType.RESET:
             return action.payload;
         case FilterProductsActionType.FILTER:
@@ -18,10 +19,10 @@ const reducer = (state: Product[] = initial_state, action: Action) => {
             });
         case FilterProductsActionType.UPDATE_SUPPLY:
             {
-                let index_of_current_record = -1;
-                index_of_current_record = state.findIndex((product) => product.id === action.payload.id);
+                let index_of_current_product = -1;
+                index_of_current_product = state.findIndex((product) => product.id === action.payload.id);
                 
-                const prev_product = state[index_of_current_record];
+                const prev_product = state[index_of_current_product];
                 const product = {
                     id: prev_product.id,
                     name: prev_product.name,
@@ -31,7 +32,7 @@ const reducer = (state: Product[] = initial_state, action: Action) => {
                 }
                 
                 const temp = [...state];
-                temp[index_of_current_record] = product;
+                temp[index_of_current_product] = product;
 
                 return [...temp];
             }
