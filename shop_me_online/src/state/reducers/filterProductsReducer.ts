@@ -1,4 +1,4 @@
-import { Product } from "../../App";
+import { Product } from "../../Pages/Home";
 import { FilterProductsActions } from "../actions";
 import { FilterProductsActionType } from "../action_types"
 

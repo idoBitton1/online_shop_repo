@@ -14,7 +14,7 @@ import { Button, FormControl, InputLabel, MenuItem, Select, Typography,
          ThemeProvider, createTheme, SelectChangeEvent} from "@mui/material";
 
 //interface
-import {Product} from "../../App"
+import { Product } from "../../Pages/Home";
 
 //icons
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -28,10 +28,13 @@ interface MyProps extends Product{
 
 export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, categories, setProducts}) => {
 
-    const filtered_products = useSelector((redux_state: ReduxState) => redux_state.filter_products);
+    const filtered_products = useSelector((redux_state: ReduxState) => redux_state.filtered_products);
+    const is_connected = useSelector((redux_state: ReduxState) => redux_state.is_connected);
+
     const [size, setSize] = useState<string>("");
     const [amount, setAmount] = useState<number>(1);
     const [err_text, setErrText] = useState<string>("");
+
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
 
     const dispatch = useDispatch();
@@ -63,11 +66,19 @@ export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, ca
     }
 
     const handleAddToCard = () => {
+        //if no user is connected, cant buy
+        if(!is_connected){
+            setErrText("sign in to buy");
+            return;
+        }
+
+        //checks that size isn't empty
         if(size === ""){
             setErrText("please choose size");
             return;
         }
 
+        //update both arrays
         updateSupply({
             id: id,
             amount: amount
@@ -84,6 +95,7 @@ export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, ca
 
         //update db, amount and cart
 
+        //adds the product to the cart
         addProductToCart({
             product_id: id,
             size: size,

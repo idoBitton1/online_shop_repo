@@ -1,4 +1,4 @@
-import { Cart } from "../../App";
+import { Cart } from "../../Pages/Home";
 import { CartActions } from "../actions";
 import { CartActionType } from "../action_types"
 

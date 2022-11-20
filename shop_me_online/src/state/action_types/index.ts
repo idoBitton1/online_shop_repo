@@ -8,3 +8,8 @@ export enum CartActionType{
     ADD_PRODUCT = "add_product",
     REMOVE = "remove"
 }
+
+export enum IsConnectedActionType{
+    CONNECT = "connect",
+    DISCONNECT = "disconnect"
+}

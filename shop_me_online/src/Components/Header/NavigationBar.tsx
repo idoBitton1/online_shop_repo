@@ -12,7 +12,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
 //interface
-import { Product } from "../../App";
+import { Product } from "../../Pages/Home";
 
 //icons
 import CircleIcon from '@mui/icons-material/Circle';

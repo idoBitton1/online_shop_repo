@@ -1,16 +1,20 @@
 import { Dispatch } from "redux";
 
 //filtered_products
-import { Product } from "../../App"
+import { Product } from "../../Pages/Home";
 import { Filters } from "../../Components/Header/NavigationBar";
 import { UpdateSupplyProps } from "../actions";
 import { FilterProductsActions } from "../actions";
 import { FilterProductsActionType } from "../action_types";
 
 //cart
-import { Cart } from "../../App"
+import { Cart } from "../../Pages/Home";
 import { CartActions } from "../actions";
 import { CartActionType } from "../action_types";
+
+//is_connected
+import { IsConnectedActions } from "../actions";
+import { IsConnectedActionType } from "../action_types";
 
 //filtered_products functions
 export const resetFilterProducts = (products: Product[]) => {
@@ -55,6 +59,23 @@ export const removeFromCart = (product_id: string) => {
         dispatch({
             type: CartActionType.REMOVE,
             payload: product_id
+        });
+    }
+}
+
+//is_connected functions
+export const connect = () => {
+    return (dispatch: Dispatch<IsConnectedActions>) => {
+        dispatch({
+            type: IsConnectedActionType.CONNECT
+        });
+    }
+}
+
+export const disconnect = () => {
+    return (dispatch: Dispatch<IsConnectedActions>) => {
+        dispatch({
+            type: IsConnectedActionType.DISCONNECT
         });
     }
 }

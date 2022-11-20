@@ -1,10 +1,12 @@
 //filter_product
-import { Product } from "../../App";
+import { Product } from "../../Pages/Home";
 import { Filters } from "../../Components/Header/NavigationBar";
 import { FilterProductsActionType } from "../action_types";
 //cart
 import { CartActionType } from "../action_types";
-import { Cart } from "../../App";
+import { Cart } from "../../Pages/Home";
+//is_connected
+import { IsConnectedActionType } from "../action_types"
 
 interface ResetAction{
     type: FilterProductsActionType.RESET,
@@ -39,3 +41,12 @@ interface RemoveFromCartAction{
 }
 
 export type CartActions = AddProductAction | RemoveFromCartAction;
+
+interface ConnectAction{
+    type: IsConnectedActionType.CONNECT
+}
+interface DisconnectAction{
+    type: IsConnectedActionType.DISCONNECT
+}
+
+export type IsConnectedActions = ConnectAction | DisconnectAction;

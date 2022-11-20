@@ -7,7 +7,9 @@ import { ReduxState } from "../../state";
 
 //components
 import { ProductDisplay } from "./ProductDisplay";
-import { Product } from "../../App";
+
+//interface
+import { Product } from "../../Pages/Home";
 
 interface MyProps{
     setProducts: React.Dispatch<React.SetStateAction<Product[]>>
@@ -15,7 +17,7 @@ interface MyProps{
 
 export const ProductsGrid: React.FC<MyProps> = ({setProducts}) => {
 
-    const filtered_products = useSelector((redux_state: ReduxState) => redux_state.filter_products);
+    const filtered_products = useSelector((redux_state: ReduxState) => redux_state.filtered_products);
 
     return(
         <div className="products_grid">
