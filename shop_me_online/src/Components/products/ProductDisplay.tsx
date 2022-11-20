@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import "./Products.css"
 
+//redux
+import { useSelector, useDispatch } from 'react-redux';
+import { ReduxState, actionsCreators } from "../../state";
+import { bindActionCreators } from 'redux';
+
 //material ui
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Button, FormControl, InputLabel, MenuItem, Select, Typography,
-         ThemeProvider, createTheme} from "@mui/material";
+         ThemeProvider, createTheme, SelectChangeEvent} from "@mui/material";
 
 //interface
-import {Product as MyProps} from "../../App"
+import {Product} from "../../App"
 
 //icons
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -17,10 +22,20 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 //images
 import img from "../../Images/j1.png"
 
-export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, categories}) => {
+interface MyProps extends Product{
+    setProducts: React.Dispatch<React.SetStateAction<Product[]>>
+}
 
+export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, categories, setProducts}) => {
+
+    const filtered_products = useSelector((redux_state: ReduxState) => redux_state.filter_products);
     const [size, setSize] = useState<string>("");
+    const [amount, setAmount] = useState<number>(1);
+    const [err_text, setErrText] = useState<string>("");
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
+
+    const dispatch = useDispatch();
+    const { updateSupply, addProductToCart } = bindActionCreators(actionsCreators, dispatch);
 
     const toggleDialog = () => {
         setOpenDialog((prev) => !prev);
@@ -34,6 +49,52 @@ export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, ca
             }
         }
     })
+
+    const handleAmountSelect = (event: SelectChangeEvent<number>) => {
+        const amount = event.target.value as number;
+        
+        let index_of_product = filtered_products.findIndex((product) => product.id === id);
+        if(filtered_products[index_of_product].quantity < amount){
+            setErrText("not enough in stock");
+            return;
+        }
+
+        setAmount(amount);
+    }
+
+    const handleAddToCard = () => {
+        if(size === ""){
+            setErrText("please choose size");
+            return;
+        }
+
+        updateSupply({
+            id: id,
+            amount: amount
+        });
+
+        setProducts((prev_products) => {
+            prev_products.map((product) => {
+                if(product.id === id)
+                    product.quantity = product.quantity - amount;
+                return product;
+            });
+            return prev_products;
+        })
+
+        //update db, amount and cart
+
+        addProductToCart({
+            product_id: id,
+            size: size,
+            amount: amount,
+            address: "ddd",
+            paid: false,
+            ordering_time: "now"
+        })
+
+        toggleDialog();
+    }
 
     return(
         <>
@@ -66,6 +127,22 @@ export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, ca
 
                         <p>${price}</p>
 
+                        <div style={{display: "flex"}}>
+                            <p>amount: </p>
+                            <FormControl variant="standard" sx={{marginLeft: 1, marginTop: 1}}>
+                            <Select
+                            id="amount_select"
+                            value={amount}
+                            onChange={handleAmountSelect}
+                            >
+                            <MenuItem value={1}>1</MenuItem>
+                            <MenuItem value={2}>2</MenuItem>
+                            <MenuItem value={3}>3</MenuItem>
+                            <MenuItem value={4}>4</MenuItem>
+                            </Select>
+                            </FormControl>
+                        </div>
+
                         {!categories.includes("bags") ? 
                         <FormControl variant="standard" sx={{marginBottom: 2}}>
                             <InputLabel>Size</InputLabel>
@@ -87,6 +164,7 @@ export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, ca
 
                         <div style={{display: "flex"}}>
                             <Button variant="contained" 
+                            onClick={handleAddToCard}
                             sx={{textTransform: "none", marginRight: 1, fontWeight: "bold"}}>
                                 Add To Cart
                             </Button>
@@ -95,6 +173,7 @@ export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, ca
                                 Wishlist
                             </Button>
                         </div>
+                        <p>{err_text ? `*${err_text}` : ""}</p>
                     </div>
                 </div>
             </DialogContent>

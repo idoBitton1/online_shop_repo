@@ -49,10 +49,11 @@ function App() {
   ]);
 
   const dispatch = useDispatch();
-  const { resetFilterProducts, } = bindActionCreators(actionsCreators, dispatch);
+  const { resetFilterProducts } = bindActionCreators(actionsCreators, dispatch);
 
   useEffect(() => {
     resetFilterProducts(products);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
   return (
@@ -61,7 +62,7 @@ function App() {
       <NavigationBar 
       products={products} 
       />
-      <ProductsGrid />
+      <ProductsGrid setProducts={setProducts} />
     </div>
   );
 }
