@@ -71,8 +71,12 @@ ul{
     list-style: none;
 }
   
-a {
+h3 {
     text-decoration: none;
+    font-weight: normal;
+    font-size: medium;
+    margin-top: 0px;
+    margin-bottom: -5px; 
 }
   
 .dropdown_menu{
@@ -140,8 +144,12 @@ a {
     transition: var(--speed);
 }
   
-.dropdown_item a{
+.dropdown_item h3{
     max-width: 150px;
     margin-left: 10px;
     transition: var(--speed);
+}
+
+.dropdown_item h3:hover{
+    cursor: pointer;
 }
