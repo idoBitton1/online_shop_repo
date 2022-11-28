@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"
 
 //icons
 import MenuIcon from '@mui/icons-material/Menu';
@@ -10,6 +11,7 @@ import {FiUserPlus} from 'react-icons/fi';
 export const Profile = () => {
 
     const [open, setOpen] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     const handleClick = () => {
         setOpen((prev) => !prev)
@@ -26,23 +28,23 @@ export const Profile = () => {
           <ul>
             <li className = 'dropdown_item'>
               <FiUserPlus className="dropdown_item_icon"/>
-              <a style={{fontWeight: "bold"}} href="www.google.com"> sign up </a>
+              <h3 style={{fontWeight: "bold"}} onClick={() => navigate('/register')}> register </h3>
             </li>
             <li className = 'dropdown_item'>
               <CiLogin className="dropdown_item_icon"/>
-              <a href="www.google.com"> log in </a>
+              <h3> log in </h3>
             </li>            
             <li className = 'dropdown_item'>
               <FiUserPlus className="dropdown_item_icon"/>
-              <a href="www.google.com"> become a manager </a>
+              <h3> become a manager </h3>
             </li>
             <li className = 'dropdown_item'>
               <CiLogin className="dropdown_item_icon"/>
-              <a href="www.google.com"> manager log in </a>
+              <h3> manager log in </h3>
             </li>            
             <li className = 'dropdown_item'>
               <CiLogout className="dropdown_item_icon"/>
-              <a href="www.google.com"> log out </a>
+              <h3> log out </h3>
             </li>
           </ul>
         </div>
