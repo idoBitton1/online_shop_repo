@@ -17,7 +17,6 @@ export interface Product{
   price: number,
   quantity: number,
   categories: string,
-  supplier_id?: string
 }
 
 export interface Cart{ //customer_product table
@@ -57,7 +56,7 @@ function Home() {
   },[]);
 
   return (
-    <div className="app_container">
+    <div className="home_container">
       <Header />
       <NavigationBar 
       products={products} 
