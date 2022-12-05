@@ -31,6 +31,22 @@ const resolvers = {
             const {first_name, last_name, password, address,
                    email, credit_card_number, is_manager} = args;
             
+            var check_email;
+            try {
+                check_email = await pool.query(
+                "SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)",    
+                [email]);
+            } catch (err:any) {
+                console.log(err.message)
+            }
+       
+            //if email exists, throw user error
+            if(check_email && check_email.rows[0].exists){
+                console.log(check_email.rows[0].exists)
+                throw new UserInputError("email already used");
+            }
+
+            //if not, create the user
             try {
                 const user = await pool.query(
                 "INSERT INTO users (first_name,last_name,password,address,email,credit_card_number,is_manager) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING * ",
