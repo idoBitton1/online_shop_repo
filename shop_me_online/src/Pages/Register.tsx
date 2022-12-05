@@ -1,9 +1,9 @@
 import React from 'react'
-import * as Yup from "yup"
-import { Formik, Form, Field, ErrorMessage } from "formik"
+import './Register.css';
 
 //components
 import { Header } from '../Components/Header/Header';
+import { RegisterForm } from '../Components/Forms/RegisterForm';
 
 const Register = () => {
 
@@ -11,7 +11,9 @@ const Register = () => {
         <div className="register_container">
             <Header />
 
-
+            <div className="register_form">
+                <RegisterForm />
+            </div>
         </div>
     );
 }
