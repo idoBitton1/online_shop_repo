@@ -7,17 +7,32 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from './Pages/Home';
 import Register from './Pages/Register';
 
+//Material-ui
+import {ThemeProvider, createTheme} from "@mui/material"
+
 function App() {
 
+  //theme
+  const theme = createTheme({
+    palette: {
+        primary: {
+            main: '#000000'
+        }
+    }
+  });
+
   return (
-    <div className="app_container">
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-      </Router>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className="app_container">
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/register" element={<Register is_manager={false} />} />
+            <Route path="/registerManager" element={<Register is_manager={true} />} />
+          </Routes>
+        </Router>
+      </div>
+    </ThemeProvider>
   );
 }
 
