@@ -92,7 +92,6 @@ export const RegisterForm: React.FC<MyProps> = ({is_manager}) => {
                 onChange={props.handleChange}
                 margin="normal"
                 sx={{marginRight: 1}}
-                helperText={<ErrorMessage name="first_name" />}
                 />
                 <Field as={TextField} name="last_name"
                 label="last name"
@@ -100,7 +99,6 @@ export const RegisterForm: React.FC<MyProps> = ({is_manager}) => {
                 value={props.values.last_name}
                 onChange={props.handleChange}
                 margin="normal"
-                helperText={<ErrorMessage name="last_name" />}
                 />
 
                 <br />
@@ -112,7 +110,6 @@ export const RegisterForm: React.FC<MyProps> = ({is_manager}) => {
                 onChange={props.handleChange}
                 margin="normal"
                 fullWidth
-                helperText={<ErrorMessage name="password" />}
                 />
 
                 <br />
@@ -141,15 +138,18 @@ export const RegisterForm: React.FC<MyProps> = ({is_manager}) => {
                         onChange={props.handleChange}
                         margin="normal"
                         fullWidth
-                        helperText={<ErrorMessage name="address" />}
                         /> 
                     )
                 }   
 
+                {is_manager ? <></> : <br />}
                 <br />
+                <h3 className="point_me" style={{color: "gray"}}
+                onClick={() => navigate('/login')}>already have an account?</h3>
+
                 <br />
                 <Button type="submit"
-                sx={{textTransform: "none", fontWeight: "bold", fontSize: 17}}
+                sx={{textTransform: "none", fontWeight: "bold", fontSize: 17, marginTop: 1}}
                 color="primary"
                 fullWidth
                 variant="contained">
