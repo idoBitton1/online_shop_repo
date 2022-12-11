@@ -5,7 +5,7 @@ CREATE TABLE users (
     first_name VARCHAR(20) NOT NULL,
     last_name VARCHAR(20) NOT NULL,
     password VARCHAR(25) NOT NULL,
-    address VARCHAR(100) NOT NULL,
+    address VARCHAR(100),
     email VARCHAR(50) NOT NULL,
     credit_card_number VARCHAR(16),
     is_manager BOOLEAN NOT NULL,
