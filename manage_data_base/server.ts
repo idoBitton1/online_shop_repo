@@ -74,7 +74,6 @@ const resolvers = {
        
             //if email exists, throw user error
             if(check_email && check_email.rows[0].exists){
-                console.log(check_email.rows[0].exists)
                 throw new UserInputError("email already used");
             }
 
@@ -83,6 +82,48 @@ const resolvers = {
                 const user = await pool.query(
                 "INSERT INTO users (first_name,last_name,password,address,email,credit_card_number,is_manager) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING * ",
                 [first_name, last_name, password, address, email, credit_card_number, is_manager]);
+                return user.rows[0];
+            } catch (err:any) {
+                console.error(err.message);
+            }
+        },
+        //login
+        loginUser: async(_: any, args: any) => {
+            const { email, password } = args;
+            //check email
+            var check_user;
+            try {
+                check_user = await pool.query(
+                "SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)",
+                [email])
+            } catch (err:any) {
+                console.error(err.message);
+            }
+
+            // if the email does not exists, error
+            if(check_user && !check_user.rows[0].exists){
+                throw new UserInputError("email does not exists");
+            }
+
+            //check the password
+            try {
+                check_user = await pool.query(
+                "SELECT EXISTS(SELECT 1 FROM users WHERE email=$1 AND password=$2)",
+                [email, password])
+            } catch (err:any) {
+                console.error(err.message);
+            }
+
+            //if the passwords are not the same, error
+            if(check_user && !check_user.rows[0].exists){
+                throw new UserInputError("incorrect password");
+            }
+
+            //if everything is good, login
+            try {
+                const user = await pool.query(
+                "SELECT * FROM users WHERE email=$1 AND password=$2",
+                [email, password])
                 return user.rows[0];
             } catch (err:any) {
                 console.error(err.message);
@@ -139,7 +180,9 @@ const typeDefs = gql`
                    address: String!,
                    email: String!,
                    credit_card_number: String,
-                   is_manager: Boolean!): User
+                   is_manager: Boolean!): User,
+
+        loginUser(email: String!, password: String!): User
     }
 `;
 
