@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"
 
+//redux
+import { useSelector } from 'react-redux';
+import { ReduxState } from "../../state"; 
+import { useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { actionsCreators } from '../../state';
+
 //icons
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -10,6 +17,11 @@ import {CiLogout} from 'react-icons/ci';
 import {FiUserPlus} from 'react-icons/fi';
 
 export const Profile = () => {
+
+    const is_connected = useSelector((redux_state: ReduxState) => redux_state.is_connected);
+
+    const dispatch = useDispatch();
+    const { disconnect } = bindActionCreators(actionsCreators, dispatch);  
 
     const [open, setOpen] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -30,23 +42,41 @@ export const Profile = () => {
             <li className = 'dropdown_item'>
               <AiFillHome className="dropdown_item_icon"/>
               <h3 onClick={() => navigate('/')}> home </h3>
-            </li>
-            <li className = 'dropdown_item'>
-              <FiUserPlus className="dropdown_item_icon"/>
-              <h3 style={{fontWeight: "bold"}} onClick={() => navigate('/register')}> register </h3>
-            </li>
-            <li className = 'dropdown_item'>
-              <FiUserPlus className="dropdown_item_icon"/>
-              <h3 onClick={() => navigate('/registerManager')}> become a manager </h3>
-            </li> 
-            <li className = 'dropdown_item'>
-              <CiLogin className="dropdown_item_icon"/>
-              <h3 onClick={() => navigate('/login')}> log in </h3>
-            </li>                      
-            <li className = 'dropdown_item'>
-              <CiLogout className="dropdown_item_icon"/>
-              <h3> log out </h3>
-            </li>
+            </li>                     
+            {
+              is_connected
+              ?
+              //things that connected users see
+              (
+                <li className = 'dropdown_item'>
+                  <CiLogout className="dropdown_item_icon"/>
+                  <h3 onClick={() => {
+                    disconnect();
+                    navigate('/');
+                  }}> 
+                    log out 
+                  </h3>
+                </li>
+              )
+              :
+              //things that unconnected users see
+              (
+                <>
+                <li className = 'dropdown_item'>
+                  <FiUserPlus className="dropdown_item_icon"/>
+                  <h3 style={{fontWeight: "bold"}} onClick={() => navigate('/register')}> register </h3>
+                </li>
+                <li className = 'dropdown_item'>
+                  <FiUserPlus className="dropdown_item_icon"/>
+                  <h3 onClick={() => navigate('/registerManager')}> become a manager </h3>
+                </li> 
+                <li className = 'dropdown_item'>
+                  <CiLogin className="dropdown_item_icon"/>
+                  <h3 onClick={() => navigate('/login')}> log in </h3>
+                </li> 
+                </>
+              )
+            }
           </ul>
         </div>
         </>
