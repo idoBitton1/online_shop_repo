@@ -10,8 +10,8 @@ import { bindActionCreators } from 'redux';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Button, FormControl, InputLabel, MenuItem, Select, Typography,
-         ThemeProvider, createTheme, SelectChangeEvent} from "@mui/material";
+import {Button, FormControl, InputLabel, MenuItem, Select, Typography,
+        SelectChangeEvent} from "@mui/material";
 
 //interface
 import { Product } from "../../Pages/Home";
@@ -41,17 +41,13 @@ export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, ca
     const { updateSupply, addProductToCart } = bindActionCreators(actionsCreators, dispatch);
 
     const toggleDialog = () => {
+
+        setSize("");
+        setAmount(1);
+        setErrText("");
+
         setOpenDialog((prev) => !prev);
     }
-
-    //theme
-    const theme = createTheme({
-        palette: {
-            primary: {
-                main: '#000000'
-            }
-        }
-    })
 
     const handleAmountSelect = (event: SelectChangeEvent<number>) => {
         const amount = event.target.value as number;
@@ -68,7 +64,7 @@ export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, ca
     const handleAddToCard = () => {
         //if no user is connected, cant buy
         if(!is_connected){
-            setErrText("sign in to buy");
+            setErrText("log in to buy");
             return;
         }
 
@@ -110,7 +106,6 @@ export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, ca
 
     return(
         <>
-        <ThemeProvider theme={theme}>
         <div className="Product_container" onClick={toggleDialog}>
             <img src={img} alt={name} className="img product_img" />
             <div className="product_details">
@@ -190,7 +185,6 @@ export const ProductDisplay: React.FC<MyProps> = ({id, name, price, quantity, ca
                 </div>
             </DialogContent>
         </Dialog>
-        </ThemeProvider>
         </>
     )
 }
