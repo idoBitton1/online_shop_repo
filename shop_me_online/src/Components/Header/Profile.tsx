@@ -41,7 +41,7 @@ export const Profile = () => {
             </li> 
             <li className = 'dropdown_item'>
               <CiLogin className="dropdown_item_icon"/>
-              <h3> log in </h3>
+              <h3 onClick={() => navigate('/login')}> log in </h3>
             </li>                      
             <li className = 'dropdown_item'>
               <CiLogout className="dropdown_item_icon"/>
