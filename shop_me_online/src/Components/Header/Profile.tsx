@@ -36,17 +36,13 @@ export const Profile = () => {
               <h3 style={{fontWeight: "bold"}} onClick={() => navigate('/register')}> register </h3>
             </li>
             <li className = 'dropdown_item'>
-              <CiLogin className="dropdown_item_icon"/>
-              <h3> log in </h3>
-            </li>            
-            <li className = 'dropdown_item'>
               <FiUserPlus className="dropdown_item_icon"/>
               <h3 onClick={() => navigate('/registerManager')}> become a manager </h3>
-            </li>
+            </li> 
             <li className = 'dropdown_item'>
               <CiLogin className="dropdown_item_icon"/>
-              <h3> manager log in </h3>
-            </li>            
+              <h3> log in </h3>
+            </li>                      
             <li className = 'dropdown_item'>
               <CiLogout className="dropdown_item_icon"/>
               <h3> log out </h3>
