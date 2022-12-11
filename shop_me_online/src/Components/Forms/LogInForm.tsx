@@ -5,6 +5,15 @@ import { useNavigate } from "react-router-dom"
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
+//Apollo and graphql
+import { useMutation } from "@apollo/client"
+import { LOGIN_USER } from "../../Queries/Mutations";
+
+//redux
+import { useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { actionsCreators } from '../../state';
+
 //material- ui
 import { TextField, Button, Typography } from '@mui/material';
 
@@ -17,18 +26,43 @@ export const LogInForm = () => {
 
     const navigate = useNavigate();
 
+    const dispatch = useDispatch();
+    const { connect } = bindActionCreators(actionsCreators, dispatch);  
+
+    const [loginUser, {error}] = useMutation(LOGIN_USER, {
+        onCompleted: (data) => connect() //after logging, connect the user
+    });
+
     //the initial values of the form
     const initial_values: MyFormValues = {
         email: "",
         password: ""
     };
 
+    //the validation schema 
     const validation_schema: any = Yup.object().shape({
         email: Yup.string().email().required("Required")
     });
 
+    //after submiting the form
     const onSubmit = (values: MyFormValues) => {
 
+        //login the user
+        try {
+            const {email, password} = values;
+
+            loginUser({
+                variables: {
+                    email: email,
+                    password: password
+                }
+            })
+        } catch (err: any) {
+            console.error(err.message);
+        }
+
+        //if logined successfully, navigate back to the home page
+        navigate('/')
     }
 
     return (
@@ -80,7 +114,7 @@ export const LogInForm = () => {
                 marginTop={2}
                 fontFamily={"Rubik"}
                 color={"red"}>
-                    {/* error ? error.message : "" */}
+                    {error ? error.message : ""}
                 </Typography> 
             </Form>
             )}
