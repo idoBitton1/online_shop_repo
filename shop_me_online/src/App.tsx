@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 //Pages
 import Home from './Pages/Home';
 import Register from './Pages/Register';
+import LogIn from './Pages/LogIn';
 
 //Material-ui
 import {ThemeProvider, createTheme} from "@mui/material"
@@ -29,6 +30,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register is_manager={false} />} />
             <Route path="/registerManager" element={<Register is_manager={true} />} />
+            <Route path="/login" element={<LogIn />} />
           </Routes>
         </Router>
       </div>
