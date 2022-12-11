@@ -11,6 +11,36 @@ const pool = new pg.Pool({
     database: "shop_me_online"
 });
 
+function onlyLetters(str: string) {
+    return /^[A-Za-z]*$/.test(str);
+}
+
+//check the inforamtion
+const checkRegisterInformation = (first_name: string, last_name: string, password: string, address: string, is_manager: boolean) => {
+    
+    if(first_name.length < 3)
+        throw new UserInputError("first name is too short");
+    if(first_name.length > 15)
+        throw new UserInputError("first name is too long");
+    if(!onlyLetters(first_name))
+        throw new UserInputError("first name must contain only letters");
+
+    if(last_name.length < 3)
+        throw new UserInputError("last name is too short");
+    if(last_name.length > 20)
+        throw new UserInputError("last name is too long");
+    if(!onlyLetters(last_name))
+        throw new UserInputError("last name must contain only letters");
+    
+    if(password.length < 8)
+        throw new UserInputError("password is too short");
+    if(password.length > 20)
+        throw new UserInputError("password is too long");
+    
+    if(!is_manager && address === "")
+        throw new UserInputError("must enter an address");
+}
+
 const resolvers = {
     Query: {
         getAll: async (_: any, args: any) => {
@@ -30,6 +60,8 @@ const resolvers = {
         createUser: async(_: any, args: any) => {
             const {first_name, last_name, password, address,
                    email, credit_card_number, is_manager} = args;
+            
+            checkRegisterInformation(first_name, last_name, password, address, is_manager);
             
             var check_email;
             try {
