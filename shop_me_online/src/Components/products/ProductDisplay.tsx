@@ -52,21 +52,21 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
     }
 
     const handleAmountSelect = (event: SelectChangeEvent<number>) => {
-        const amount = event.target.value as number;
+        const products_amount = event.target.value as number;
 
-        let index_of_product = filtered_products.findIndex((product) => product.id === id);
-        if (filtered_products[index_of_product].quantity < amount) {
-            setErrText("not enough in stock");
-            return;
-        }
-
-        setAmount(amount);
+        setAmount(products_amount);
     }
 
     const handleAddToCard = () => {
         //if no user is connected, cant buy
         if (!is_connected) {
             setErrText("log in to buy");
+            return;
+        }
+
+        let index_of_product = filtered_products.findIndex((product) => product.id === id);
+        if (filtered_products[index_of_product].quantity < amount) {
+            setErrText("not enough in stock");
             return;
         }
 
@@ -114,7 +114,12 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
                     <p className="product_name">{name}</p>
                     <p className="product_quantity">Left: {quantity}</p>
                 </div>
-                <p className="product_price">{price}$</p>
+                <div className="product_details">
+                    <p className="product_price">{price}$</p>
+                    <p className="product_oos">
+                        {quantity === 0 ? "*out of stock" : ""}
+                    </p>
+                </div>
             </div>
 
             <Dialog open={open_dialog} onClose={toggleDialog} fullWidth>
