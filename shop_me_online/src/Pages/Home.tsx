@@ -19,7 +19,7 @@ export interface Product {
   categories: string,
 }
 
-export interface Cart { //customer_product table
+export interface CartProduct { //customer_product table
   product_id: string,
   address: string,
   amount: number,
