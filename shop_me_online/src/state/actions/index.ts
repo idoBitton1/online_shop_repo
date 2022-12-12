@@ -4,7 +4,7 @@ import { Filters } from "../../Components/Header/NavigationBar";
 import { FilterProductsActionType } from "../action_types";
 //cart
 import { CartActionType } from "../action_types";
-import { Cart } from "../../Pages/Home";
+import { CartProduct } from "../../Pages/Home";
 //is_connected
 import { IsConnectedActionType } from "../action_types"
 
@@ -32,7 +32,17 @@ export type FilterProductsActions = ResetAction | FilterAction | UpdateSupplyAct
 
 interface AddProductAction {
     type: CartActionType.ADD_PRODUCT,
-    payload: Cart
+    payload: CartProduct
+}
+
+interface SetPaidAction {
+    type: CartActionType.SET_PAID,
+    payload: string
+}
+
+interface SetNotPaidAction {
+    type: CartActionType.SET_NOT_PAID,
+    payload: string
 }
 
 interface RemoveFromCartAction {
@@ -40,7 +50,7 @@ interface RemoveFromCartAction {
     payload: string
 }
 
-export type CartActions = AddProductAction | RemoveFromCartAction;
+export type CartActions = AddProductAction | RemoveFromCartAction | SetPaidAction | SetNotPaidAction;
 
 interface ConnectAction {
     type: IsConnectedActionType.CONNECT

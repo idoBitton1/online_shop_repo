@@ -8,7 +8,7 @@ import { FilterProductsActions } from "../actions";
 import { FilterProductsActionType } from "../action_types";
 
 //cart
-import { Cart } from "../../Pages/Home";
+import { CartProduct } from "../../Pages/Home";
 import { CartActions } from "../actions";
 import { CartActionType } from "../action_types";
 
@@ -45,11 +45,29 @@ export const updateSupply = (data: UpdateSupplyProps) => {
 }
 
 //cart functions
-export const addProductToCart = (product: Cart) => {
+export const addProductToCart = (product: CartProduct) => {
     return (dispatch: Dispatch<CartActions>) => {
         dispatch({
             type: CartActionType.ADD_PRODUCT,
             payload: product
+        });
+    }
+}
+
+export const setPaid = (product_id: string) => {
+    return (dispatch: Dispatch<CartActions>) => {
+        dispatch({
+            type: CartActionType.SET_PAID,
+            payload: product_id
+        });
+    }
+}
+
+export const setNotPaid = (product_id: string) => {
+    return (dispatch: Dispatch<CartActions>) => {
+        dispatch({
+            type: CartActionType.SET_NOT_PAID,
+            payload: product_id
         });
     }
 }
