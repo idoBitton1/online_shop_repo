@@ -11,7 +11,7 @@ import { Header } from '../Components/Header/Header';
 import { NavigationBar } from '../Components/Header/NavigationBar';
 import { ProductsGrid } from '../Components/products/ProductsGrid';
 
-export interface Product{
+export interface Product {
   id: string,
   name: string,
   price: number,
@@ -19,7 +19,7 @@ export interface Product{
   categories: string,
 }
 
-export interface Cart{ //customer_product table
+export interface Cart { //customer_product table
   product_id: string,
   address: string,
   amount: number,
@@ -53,13 +53,13 @@ function Home() {
   useEffect(() => {
     resetFilterProducts(products);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  }, []);
 
   return (
     <div className="home_container">
       <Header />
-      <NavigationBar 
-      products={products} 
+      <NavigationBar
+        products={products}
       />
       <ProductsGrid setProducts={setProducts} />
     </div>

@@ -7,7 +7,7 @@
     --speed: 500ms;
 }
 
-.header_container{
+.header_container {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -15,7 +15,7 @@
     border-bottom: 1px solid lightgray;
 }
 
-.site_name{
+.site_name {
     font-size: xx-large;
     font-family: 'Bebas Neue', cursive;
 }
@@ -29,7 +29,7 @@
     transition-duration: 0.4s;
 }
 
-.filter_button{
+.filter_button {
     font-size: 17px;
     font-family: "Rubik";
     height: fit-content;
@@ -50,36 +50,36 @@
     background-color: rgb(225, 225, 225);
 }
 
-.navigation_bar{
+.navigation_bar {
     display: flex;
     justify-content: space-between;
     font-family: "Rubik";
     margin: 15px 100px 15px 100px;
 }
 
-.category_style{
+.category_style {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.category_icon{
+.category_icon {
     font-size: 30px;
 }
 
-ul{
+ul {
     list-style: none;
 }
-  
+
 h3 {
     text-decoration: none;
     font-weight: normal;
     font-size: medium;
     margin-top: 0px;
-    margin-bottom: -5px; 
+    margin-bottom: -5px;
 }
-  
-.dropdown_menu{
+
+.dropdown_menu {
     position: absolute;
     top: 90px;
     right: 105px;
@@ -91,8 +91,8 @@ h3 {
     width: 250px;
     font-family: "Rubik";
 }
-  
-.dropdown_menu::before{
+
+.dropdown_menu::before {
     content: '';
     position: absolute;
     top: -5px;
@@ -102,27 +102,27 @@ h3 {
     background: var(--secondary-bg);
     transform: rotate(45deg);
 }
-  
-.dropdown_menu.active{
+
+.dropdown_menu.active {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
     transition: var(--speed) ease;
 }
-  
-.dropdown_menu.inactive{
+
+.dropdown_menu.inactive {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-20px);
     transition: var(--speed) ease;
 }
-  
-.dropdown_menu ul li{
-    padding: 10px  0;
+
+.dropdown_menu ul li {
+    padding: 10px 0;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
-  
-.dropdown_menu ul li:hover a{
+
+.dropdown_menu ul li:hover a {
     color: black;
     cursor: pointer;
 }
@@ -130,26 +130,26 @@ h3 {
 .dropdown_item_icon:hover {
     cursor: pointer;
 }
-  
-.dropdown_item{
+
+.dropdown_item {
     display: flex;
     margin: 10px auto;
 }
-  
-.dropdown_item_icon{
+
+.dropdown_item_icon {
     max-width: 20px;
     margin-right: 10px;
     margin-top: 2px;
     opacity: 1;
     transition: var(--speed);
 }
-  
-.dropdown_item h3{
+
+.dropdown_item h3 {
     max-width: 150px;
     margin-left: 10px;
     transition: var(--speed);
 }
 
-.dropdown_item h3:hover{
+.dropdown_item h3:hover {
     cursor: pointer;
 }

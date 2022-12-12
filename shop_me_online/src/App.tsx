@@ -9,16 +9,16 @@ import Register from './Pages/Register';
 import LogIn from './Pages/LogIn';
 
 //Material-ui
-import {ThemeProvider, createTheme} from "@mui/material"
+import { ThemeProvider, createTheme } from "@mui/material"
 
 function App() {
 
   //theme
   const theme = createTheme({
     palette: {
-        primary: {
-            main: '#000000'
-        }
+      primary: {
+        main: '#000000'
+      }
     }
   });
 

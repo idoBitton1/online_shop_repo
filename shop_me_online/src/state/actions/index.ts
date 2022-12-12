@@ -8,44 +8,44 @@ import { Cart } from "../../Pages/Home";
 //is_connected
 import { IsConnectedActionType } from "../action_types"
 
-interface ResetAction{
+interface ResetAction {
     type: FilterProductsActionType.RESET,
     payload: Product[]
 }
 
-interface FilterAction{
+interface FilterAction {
     type: FilterProductsActionType.FILTER,
     payload: Filters
 }
 
-export interface UpdateSupplyProps{
+export interface UpdateSupplyProps {
     id: string,
     amount: number
 }
 
-interface UpdateSupplyAction{
+interface UpdateSupplyAction {
     type: FilterProductsActionType.UPDATE_SUPPLY,
     payload: UpdateSupplyProps
 }
 
 export type FilterProductsActions = ResetAction | FilterAction | UpdateSupplyAction;
 
-interface AddProductAction{
+interface AddProductAction {
     type: CartActionType.ADD_PRODUCT,
     payload: Cart
 }
 
-interface RemoveFromCartAction{
+interface RemoveFromCartAction {
     type: CartActionType.REMOVE,
     payload: string
 }
 
 export type CartActions = AddProductAction | RemoveFromCartAction;
 
-interface ConnectAction{
+interface ConnectAction {
     type: IsConnectedActionType.CONNECT
 }
-interface DisconnectAction{
+interface DisconnectAction {
     type: IsConnectedActionType.DISCONNECT
 }
 

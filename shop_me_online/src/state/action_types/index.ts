@@ -1,15 +1,15 @@
-export enum FilterProductsActionType{
+export enum FilterProductsActionType {
     RESET = "reset",
     FILTER = "filter",
     UPDATE_SUPPLY = "update_supply"
 }
 
-export enum CartActionType{
+export enum CartActionType {
     ADD_PRODUCT = "add_product",
     REMOVE = "remove"
 }
 
-export enum IsConnectedActionType{
+export enum IsConnectedActionType {
     CONNECT = "connect",
     DISCONNECT = "disconnect"
 }

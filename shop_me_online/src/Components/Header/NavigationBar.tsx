@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
 //redux
 import { useDispatch } from 'react-redux';
@@ -18,30 +18,30 @@ import { Product } from "../../Pages/Home";
 import CircleIcon from '@mui/icons-material/Circle';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
-import {GiConverseShoe} from 'react-icons/gi';
-import {FaTshirt} from 'react-icons/fa';
-import {GiShorts} from 'react-icons/gi';
-import {GiMonclerJacket} from 'react-icons/gi';
-import {GiLabCoat} from 'react-icons/gi';
-import {GiDress} from 'react-icons/gi';
-import {BsFillHandbagFill} from 'react-icons/bs';
+import { GiConverseShoe } from 'react-icons/gi';
+import { FaTshirt } from 'react-icons/fa';
+import { GiShorts } from 'react-icons/gi';
+import { GiMonclerJacket } from 'react-icons/gi';
+import { GiLabCoat } from 'react-icons/gi';
+import { GiDress } from 'react-icons/gi';
+import { BsFillHandbagFill } from 'react-icons/bs';
 
-interface CategoryStyle{
+interface CategoryStyle {
     icon: JSX.Element,
     category_name: string
 }
 
-export interface Filters{
+export interface Filters {
     category: string
     color: string,
     season: string
 }
 
-interface MyProps{
+interface MyProps {
     products: Product[],
 }
 
-export const NavigationBar: React.FC<MyProps> = ({products}) => {
+export const NavigationBar: React.FC<MyProps> = ({ products }) => {
 
     //toggles the dialog
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
@@ -64,40 +64,40 @@ export const NavigationBar: React.FC<MyProps> = ({products}) => {
     //categories array
     const categories_array: CategoryStyle[] = [
         {
-            icon: <GiConverseShoe className="category_icon"/>,
+            icon: <GiConverseShoe className="category_icon" />,
             category_name: "shoes"
         },
         {
-            icon: <FaTshirt className="category_icon"/>,
+            icon: <FaTshirt className="category_icon" />,
             category_name: "shirts"
         },
         {
-            icon: <GiShorts className="category_icon"/>,
+            icon: <GiShorts className="category_icon" />,
             category_name: "shorts"
         },
         {
-            icon: <GiMonclerJacket className="category_icon"/>,
+            icon: <GiMonclerJacket className="category_icon" />,
             category_name: "jackets"
         },
         {
-            icon: <GiLabCoat className="category_icon"/>,
+            icon: <GiLabCoat className="category_icon" />,
             category_name: "coats"
         },
         {
-            icon: <GiDress className="category_icon"/>,
+            icon: <GiDress className="category_icon" />,
             category_name: "dresses"
         },
         {
-            icon: <BsFillHandbagFill className="category_icon"/>,
+            icon: <BsFillHandbagFill className="category_icon" />,
             category_name: "bags"
         }
     ];
 
     //sort the categories array
     categories_array.sort((a, b) => {
-        if(a.category_name < b.category_name)
+        if (a.category_name < b.category_name)
             return -1;
-        else if(a.category_name > b.category_name)
+        else if (a.category_name > b.category_name)
             return 1;
         else
             return 0;
@@ -106,7 +106,7 @@ export const NavigationBar: React.FC<MyProps> = ({products}) => {
     //click handle for category filter change
     const handleCategoryChange = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setFilters((prev) => {
-            if(prev.category === event.currentTarget.value as string)
+            if (prev.category === event.currentTarget.value as string)
                 return {
                     category: "any_category",
                     color: prev.color,
@@ -181,90 +181,91 @@ export const NavigationBar: React.FC<MyProps> = ({products}) => {
         filterFilterProducts(filters)
     }
 
-    return(
+    return (
         <>
-        <div className="navigation_bar">
-            <div>
-            {categories_array.map((item, i) => {
-                return(
-                    <Button key={i} 
-                    className="category_style"
-                    value={item.category_name}
-                    onClick={handleCategoryChange}
-                    sx={{textTransform: "none", marginLeft: 3, fontFamily: "Rubik", 
-                        color: item.category_name === filters.category ? "black" : "gray"
-                    }}
-                    >
-                        {item.icon}
-                        {item.category_name} 
+            <div className="navigation_bar">
+                <div>
+                    {categories_array.map((item, i) => {
+                        return (
+                            <Button key={i}
+                                className="category_style"
+                                value={item.category_name}
+                                onClick={handleCategoryChange}
+                                sx={{
+                                    textTransform: "none", marginLeft: 3, fontFamily: "Rubik",
+                                    color: item.category_name === filters.category ? "black" : "gray"
+                                }}
+                            >
+                                {item.icon}
+                                {item.category_name}
+                            </Button>
+                        )
+                    })}
+                </div>
+
+                <div>
+                    <button onClick={toggleDialog} className="filter_button">
+                        {<FilterListIcon sx={{ fontSize: 17 }} />}Filters
+                    </button>
+                    <button onClick={disableFilters} className="filter_button">
+                        {<FilterListOffIcon sx={{ fontSize: 17 }} />}Unfilter
+                    </button>
+                </div>
+            </div>
+
+
+
+            <Dialog open={open_dialog} onClose={toggleDialog}>
+                <DialogTitle>
+                    Filters
+                </DialogTitle>
+
+                <DialogContent>
+                    <div>
+                        <FormControl variant="standard" sx={{ width: 150, marginRight: 3 }}>
+                            <InputLabel>Color</InputLabel>
+                            <Select
+                                id="color_select"
+                                value={filters.color}
+                                label="Color"
+                                onChange={handleColorChange}
+                            >
+                                {
+                                    colors_array.map((colorI, i) => {
+                                        if (colorI === "any")
+                                            return (
+                                                <MenuItem key={i} value={"any_color"}>any</MenuItem>
+                                            )
+                                        else
+                                            return (
+                                                <MenuItem key={i} value={colorI}>{colorI}{<CircleIcon sx={{ marginLeft: "auto", color: colorI, marginBottom: -1 }} />}</MenuItem>
+                                            )
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
+
+                        <FormControl variant="standard" sx={{ width: 120 }}>
+                            <InputLabel>Season</InputLabel>
+                            <Select
+                                id="season_select"
+                                value={filters.season}
+                                label="Season"
+                                onChange={handleSeasonChange}
+                            >
+                                <MenuItem value={"any_season"}>any</MenuItem>
+                                <MenuItem value={"spring"}>spring</MenuItem>
+                                <MenuItem value={"summer"}>summer</MenuItem>
+                                <MenuItem value={"autumn"}>autumn</MenuItem>
+                                <MenuItem value={"winter"}>winter</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
+                    <Button onClick={handleFilterClick}>
+                        Filter!
                     </Button>
-                )
-            })}
-            </div>
-
-            <div>
-                <button onClick={toggleDialog} className="filter_button">
-                    {<FilterListIcon sx={{fontSize: 17}} />}Filters
-                </button>
-                <button onClick={disableFilters} className="filter_button">
-                    {<FilterListOffIcon sx={{fontSize: 17}} />}Unfilter
-                </button>
-            </div>
-        </div>
-
-
-
-        <Dialog open={open_dialog} onClose={toggleDialog}>
-            <DialogTitle>
-                Filters
-            </DialogTitle>
-
-            <DialogContent>
-            <div>
-            <FormControl variant="standard" sx={{width: 150, marginRight: 3}}>
-                <InputLabel>Color</InputLabel>
-                <Select
-                id="color_select"
-                value={filters.color}
-                label="Color"
-                onChange={handleColorChange}
-                >
-                {
-                    colors_array.map((colorI, i) => {
-                        if(colorI === "any")
-                            return(
-                                <MenuItem key={i} value={"any_color"}>any</MenuItem>
-                            )
-                        else
-                            return (
-                                <MenuItem key={i} value={colorI}>{colorI}{<CircleIcon sx={{marginLeft: "auto", color: colorI, marginBottom: -1}} />}</MenuItem>
-                            )
-                    })
-                }
-                </Select>
-            </FormControl>
-
-            <FormControl variant="standard" sx={{width: 120}}>
-                <InputLabel>Season</InputLabel>
-                <Select
-                id="season_select"
-                value={filters.season}
-                label="Season"
-                onChange={handleSeasonChange}
-                >
-                <MenuItem value={"any_season"}>any</MenuItem>
-                <MenuItem value={"spring"}>spring</MenuItem>
-                <MenuItem value={"summer"}>summer</MenuItem>
-                <MenuItem value={"autumn"}>autumn</MenuItem>
-                <MenuItem value={"winter"}>winter</MenuItem>
-                </Select>
-            </FormControl>
-            </div>
-            <Button onClick={handleFilterClick}>
-                Filter!
-            </Button>
-            </DialogContent>
-        </Dialog>
+                </DialogContent>
+            </Dialog>
         </>
     )
 }

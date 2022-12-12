@@ -5,19 +5,19 @@ import './Register.css';
 import { Header } from '../Components/Header/Header';
 import { RegisterForm } from '../Components/Forms/RegisterForm';
 
-interface MyProps{
+interface MyProps {
     is_manager: boolean
 }
 
-const Register: React.FC<MyProps> = ({is_manager}) => {
+const Register: React.FC<MyProps> = ({ is_manager }) => {
 
-    return(
+    return (
         <div className="register_container">
             <Header />
 
             <div className="register_form">
-                <h1 style={{fontFamily: "Arial"}}>{is_manager ? "Become a manager" : "Create an account"}</h1>            
-                <RegisterForm is_manager={is_manager} />           
+                <h1 style={{ fontFamily: "Arial" }}>{is_manager ? "Become a manager" : "Create an account"}</h1>
+                <RegisterForm is_manager={is_manager} />
             </div>
         </div>
     );

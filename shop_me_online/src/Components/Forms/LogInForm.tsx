@@ -17,7 +17,7 @@ import { actionsCreators } from '../../state';
 //material- ui
 import { TextField, Button, Typography } from '@mui/material';
 
-interface MyFormValues{
+interface MyFormValues {
     email: string,
     password: string
 }
@@ -27,9 +27,9 @@ export const LogInForm = () => {
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
-    const { connect } = bindActionCreators(actionsCreators, dispatch);  
+    const { connect } = bindActionCreators(actionsCreators, dispatch);
 
-    const [loginUser, {error}] = useMutation(LOGIN_USER, {
+    const [loginUser, { error }] = useMutation(LOGIN_USER, {
         onCompleted: (data) => connect() //after logging, connect the user
     });
 
@@ -49,7 +49,7 @@ export const LogInForm = () => {
 
         //login the user
         try {
-            const {email, password} = values;
+            const { email, password } = values;
 
             loginUser({
                 variables: {
@@ -67,56 +67,56 @@ export const LogInForm = () => {
 
     return (
         <Formik
-        initialValues={initial_values}
-        validationSchema={validation_schema}
-        onSubmit={onSubmit}
+            initialValues={initial_values}
+            validationSchema={validation_schema}
+            onSubmit={onSubmit}
         >
             {(props) => (
-            <Form>
-                <Field as={TextField} name="email"
-                label="email"
-                variant="outlined"
-                type="email"
-                value={props.values.email}
-                onChange={props.handleChange}
-                margin="normal"
-                fullWidth
-                helperText={<ErrorMessage name="email" />}
-                />
+                <Form>
+                    <Field as={TextField} name="email"
+                        label="email"
+                        variant="outlined"
+                        type="email"
+                        value={props.values.email}
+                        onChange={props.handleChange}
+                        margin="normal"
+                        fullWidth
+                        helperText={<ErrorMessage name="email" />}
+                    />
 
-                <Field as={TextField} name="password"
-                label="password"
-                variant="outlined"
-                type="password"
-                value={props.values.password}
-                onChange={props.handleChange}
-                margin="normal"
-                fullWidth
-                />
+                    <Field as={TextField} name="password"
+                        label="password"
+                        variant="outlined"
+                        type="password"
+                        value={props.values.password}
+                        onChange={props.handleChange}
+                        margin="normal"
+                        fullWidth
+                    />
 
-                <br />
-                <br />
-                <h3 className="point_me" style={{color: "gray"}}
-                onClick={() => navigate('/register')}>don't have an account?</h3>
-                <br />
-                <h3 className="point_me" style={{color: "gray"}}
-                onClick={() => navigate('/registerManager')}>become a manager</h3>
+                    <br />
+                    <br />
+                    <h3 className="point_me" style={{ color: "gray" }}
+                        onClick={() => navigate('/register')}>don't have an account?</h3>
+                    <br />
+                    <h3 className="point_me" style={{ color: "gray" }}
+                        onClick={() => navigate('/registerManager')}>become a manager</h3>
 
-                <br />
-                <Button type="submit"
-                sx={{textTransform: "none", fontWeight: "bold", fontSize: 17, marginTop: 1}}
-                color="primary"
-                fullWidth
-                variant="contained">
-                    Log in
-                </Button>   
-                <Typography
-                marginTop={2}
-                fontFamily={"Rubik"}
-                color={"red"}>
-                    {error ? error.message : ""}
-                </Typography> 
-            </Form>
+                    <br />
+                    <Button type="submit"
+                        sx={{ textTransform: "none", fontWeight: "bold", fontSize: 17, marginTop: 1 }}
+                        color="primary"
+                        fullWidth
+                        variant="contained">
+                        Log in
+                    </Button>
+                    <Typography
+                        marginTop={2}
+                        fontFamily={"Rubik"}
+                        color={"red"}>
+                        {error ? error.message : ""}
+                    </Typography>
+                </Form>
             )}
         </Formik>
     )

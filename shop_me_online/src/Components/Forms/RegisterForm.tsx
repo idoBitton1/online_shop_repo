@@ -17,11 +17,11 @@ import { actionsCreators } from '../../state';
 //material- ui
 import { TextField, Button, Typography } from '@mui/material';
 
-interface MyProps{
+interface MyProps {
     is_manager: boolean
 }
 
-interface MyFormValues{
+interface MyFormValues {
     first_name: string,
     last_name: string,
     password: string,
@@ -29,14 +29,14 @@ interface MyFormValues{
     email: string
 }
 
-export const RegisterForm: React.FC<MyProps> = ({is_manager}) => {
+export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
 
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
-    const { connect } = bindActionCreators(actionsCreators, dispatch);  
+    const { connect } = bindActionCreators(actionsCreators, dispatch);
 
-    const [createUser, {error}] = useMutation(CREATE_USER, {
+    const [createUser, { error }] = useMutation(CREATE_USER, {
         onCompleted: (data) => connect() //after registering, connect the user
     });
 
@@ -53,10 +53,10 @@ export const RegisterForm: React.FC<MyProps> = ({is_manager}) => {
         email: Yup.string().email().required("Required")
     });
 
-    const onSubmit = async(values: MyFormValues) => {
+    const onSubmit = async (values: MyFormValues) => {
 
         try {
-            const {first_name, last_name, password, address, email} = values;
+            const { first_name, last_name, password, address, email } = values;
 
             await createUser({
                 variables: {
@@ -77,91 +77,91 @@ export const RegisterForm: React.FC<MyProps> = ({is_manager}) => {
         navigate('/');
     }
 
-    return(
+    return (
         <Formik
             initialValues={initial_values}
             validationSchema={validation_schema}
             onSubmit={onSubmit}
-            >
+        >
             {(props) => (
-            <Form>
-                <Field as={TextField} name="first_name"
-                label="first name"
-                variant="outlined"
-                value={props.values.first_name}
-                onChange={props.handleChange}
-                margin="normal"
-                sx={{marginRight: 1}}
-                />
-                <Field as={TextField} name="last_name"
-                label="last name"
-                variant="outlined"
-                value={props.values.last_name}
-                onChange={props.handleChange}
-                margin="normal"
-                />
-
-                <br />
-                <Field as={TextField} name="password"
-                label="password"
-                variant="outlined"
-                type="password"
-                value={props.values.password}
-                onChange={props.handleChange}
-                margin="normal"
-                fullWidth
-                />
-
-                <br />
-                <Field as={TextField} name="email"
-                label="email"
-                variant="outlined"
-                type="email"
-                value={props.values.email}
-                onChange={props.handleChange}
-                margin="normal"
-                fullWidth
-                helperText={<ErrorMessage name="email" />}
-                />
-
-                <br />
-                {
-                    is_manager 
-                    ?
-                    <></>
-                    :
-                    (
-                        <Field as={TextField} name="address"
-                        label="address"
+                <Form>
+                    <Field as={TextField} name="first_name"
+                        label="first name"
                         variant="outlined"
-                        value={props.values.address}
+                        value={props.values.first_name}
+                        onChange={props.handleChange}
+                        margin="normal"
+                        sx={{ marginRight: 1 }}
+                    />
+                    <Field as={TextField} name="last_name"
+                        label="last name"
+                        variant="outlined"
+                        value={props.values.last_name}
+                        onChange={props.handleChange}
+                        margin="normal"
+                    />
+
+                    <br />
+                    <Field as={TextField} name="password"
+                        label="password"
+                        variant="outlined"
+                        type="password"
+                        value={props.values.password}
                         onChange={props.handleChange}
                         margin="normal"
                         fullWidth
-                        /> 
-                    )
-                }   
+                    />
 
-                {is_manager ? <></> : <br />}
-                <br />
-                <h3 className="point_me" style={{color: "gray"}}
-                onClick={() => navigate('/login')}>already have an account?</h3>
+                    <br />
+                    <Field as={TextField} name="email"
+                        label="email"
+                        variant="outlined"
+                        type="email"
+                        value={props.values.email}
+                        onChange={props.handleChange}
+                        margin="normal"
+                        fullWidth
+                        helperText={<ErrorMessage name="email" />}
+                    />
 
-                <br />
-                <Button type="submit"
-                sx={{textTransform: "none", fontWeight: "bold", fontSize: 17, marginTop: 1}}
-                color="primary"
-                fullWidth
-                variant="contained">
-                    Register
-                </Button>   
-                <Typography
-                marginTop={2}
-                fontFamily={"Rubik"}
-                color={"red"}>
-                    {error ? error.message : ""}
-                </Typography>  
-            </Form>
+                    <br />
+                    {
+                        is_manager
+                            ?
+                            <></>
+                            :
+                            (
+                                <Field as={TextField} name="address"
+                                    label="address"
+                                    variant="outlined"
+                                    value={props.values.address}
+                                    onChange={props.handleChange}
+                                    margin="normal"
+                                    fullWidth
+                                />
+                            )
+                    }
+
+                    {is_manager ? <></> : <br />}
+                    <br />
+                    <h3 className="point_me" style={{ color: "gray" }}
+                        onClick={() => navigate('/login')}>already have an account?</h3>
+
+                    <br />
+                    <Button type="submit"
+                        sx={{ textTransform: "none", fontWeight: "bold", fontSize: 17, marginTop: 1 }}
+                        color="primary"
+                        fullWidth
+                        variant="contained">
+                        Register
+                    </Button>
+                    <Typography
+                        marginTop={2}
+                        fontFamily={"Rubik"}
+                        color={"red"}>
+                        {error ? error.message : ""}
+                    </Typography>
+                </Form>
             )}
         </Formik>
 

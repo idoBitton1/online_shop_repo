@@ -1,4 +1,4 @@
-.products_grid{
+.products_grid {
     display: grid;
     gap: 2rem;
     grid-template-columns: repeat(6, minmax(15rem, 1fr));
@@ -6,12 +6,12 @@
     margin: 0px 100px 0px 100px;
 }
 
-.Product_container{
+.Product_container {
     font-family: "Rubik";
     letter-spacing: -0.5px;
 }
 
-.img{
+.img {
     width: 100%;
     border-radius: 15px;
     aspect-ratio: 1.3 / 1;
@@ -19,32 +19,32 @@
     transition-duration: 0.4s;
 }
 
-.product_img:hover{
+.product_img:hover {
     transform: scale(1.1);
 }
 
-.product_details{
+.product_details {
     display: flex;
     justify-content: space-between;
     padding: 0px 5px 0px 5px;
 }
 
-.product_price{
+.product_price {
     padding-left: 5px;
     margin-top: -5px;
 }
 
-.buying_container{
+.buying_container {
     display: flex;
 }
 
-.buying_img{
+.buying_img {
     width: 290px;
     height: 250px;
     margin-right: 20px;
 }
 
-.buying_info{
+.buying_info {
     display: flex;
     flex-direction: column;
     font-family: "Rubik";

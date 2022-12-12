@@ -7,7 +7,7 @@ import { Profile } from "./Profile";
 
 export const Header = () => {
 
-    return(
+    return (
         <header className="header_container">
             <p className="site_name">shop me online</p>
             <Profile />
