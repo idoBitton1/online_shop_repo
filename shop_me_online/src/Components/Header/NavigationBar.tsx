@@ -261,8 +261,11 @@ export const NavigationBar: React.FC<MyProps> = ({ products }) => {
                             </Select>
                         </FormControl>
                     </div>
-                    <Button onClick={handleFilterClick}>
-                        Filter!
+                    <br />
+                    <Button variant="contained"
+                    onClick={handleFilterClick}
+                    sx={{ textTransform: "none", fontWeight: "bold" }}>
+                        Filter
                     </Button>
                 </DialogContent>
             </Dialog>
