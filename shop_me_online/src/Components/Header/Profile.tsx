@@ -11,6 +11,7 @@ import { actionsCreators } from '../../state';
 //icons
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { BsCart2 } from 'react-icons/bs';
 import { AiOutlineUser } from 'react-icons/ai';
 import { AiOutlineHome } from 'react-icons/ai';
 import { CiLogin } from 'react-icons/ci';
@@ -53,6 +54,10 @@ export const Profile = () => {
                   <li className="dropdown_item">
                     <AiOutlineUser className="dropdown_item_icon" />
                     <h3>profile</h3>
+                  </li>
+                  <li className="dropdown_item">
+                    <BsCart2 className="dropdown_item_icon" />
+                    <h3>cart</h3>
                   </li>
                   <li className='dropdown_item'>
                     <CiLogout className="dropdown_item_icon" />
