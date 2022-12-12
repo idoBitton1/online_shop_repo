@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { actionsCreators } from '../../state';
 
-//material- ui
+//material-ui
 import { TextField, Button, Typography } from '@mui/material';
 
 interface MyFormValues {

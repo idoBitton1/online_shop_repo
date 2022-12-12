@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { actionsCreators } from '../../state';
 
-//material- ui
+//material-ui
 import { TextField, Button, Typography } from '@mui/material';
 
 interface MyProps {
@@ -150,7 +150,6 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
                     <br />
                     <Button type="submit"
                         sx={{ textTransform: "none", fontWeight: "bold", fontSize: 17, marginTop: 1 }}
-                        color="primary"
                         fullWidth
                         variant="contained">
                         Register
