@@ -31,7 +31,7 @@ interface MyProps extends Product {
 export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, categories, setProducts }) => {
 
     const filtered_products = useSelector((redux_state: ReduxState) => redux_state.filtered_products);
-    const is_connected = useSelector((redux_state: ReduxState) => redux_state.is_connected);
+    const user = useSelector((redux_state: ReduxState) => redux_state.user);
 
     const [size, setSize] = useState<string>("");
     const [amount, setAmount] = useState<number>(1);
@@ -59,7 +59,7 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
 
     const handleAddToCard = () => {
         //if no user is connected, cant buy
-        if (!is_connected) {
+        if (!user.token) {
             setErrText("log in to buy");
             return;
         }
@@ -82,6 +82,7 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
             amount: amount
         });
 
+        //update the amount of the product that was bought
         setProducts((prev_products) => {
             prev_products.map((product) => {
                 if (product.id === id)
@@ -89,9 +90,10 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
                 return product;
             });
             return prev_products;
-        })
+        });
 
-        //update db, amount and cart
+        //format today
+        const formatted_now = formatDate();
 
         //adds the product to the cart
         addProductToCart({
@@ -100,10 +102,25 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
             amount: amount,
             address: "ddd",
             paid: false,
-            ordering_time: "now"
+            ordering_time: formatted_now
         })
 
         toggleDialog();
+    }
+
+    const formatDate = ():string => {
+        const today:Date = new Date();
+        const yyyy:number = today.getFullYear();
+        let mm:number = today.getMonth() + 1; // Months start at 0
+        let dd:number = today.getDate();
+    
+        let ddd:string = `${dd}`;
+        let mmm:string = `${mm}`;
+        if (dd < 10) ddd = '0' + dd;
+        if (mm < 10) mmm = '0' + mm;
+    
+        const formatted_today:string = yyyy + '/' + mmm + '/' + ddd;
+        return formatted_today;
     }
 
     return (
