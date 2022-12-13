@@ -11,7 +11,7 @@ export enum CartActionType {
     REMOVE = "remove"
 }
 
-export enum IsConnectedActionType {
-    CONNECT = "connect",
-    DISCONNECT = "disconnect"
+export enum UserActionType {
+    LOGIN = "login",
+    LOGOUT = "logout"
 }

@@ -12,9 +12,9 @@ import { CartProduct } from "../../Pages/Home";
 import { CartActions } from "../actions";
 import { CartActionType } from "../action_types";
 
-//is_connected
-import { IsConnectedActions } from "../actions";
-import { IsConnectedActionType } from "../action_types";
+//user
+import { UserActions } from "../actions";
+import { UserActionType } from "../action_types";
 
 //filtered_products functions
 export const resetFilterProducts = (products: Product[]) => {
@@ -81,19 +81,20 @@ export const removeFromCart = (product_id: string) => {
     }
 }
 
-//is_connected functions
-export const connect = () => {
-    return (dispatch: Dispatch<IsConnectedActions>) => {
+//user
+export const login = (token: string) => {
+    return (dispatch: Dispatch<UserActions>) => {
         dispatch({
-            type: IsConnectedActionType.CONNECT
+            type: UserActionType.LOGIN,
+            payload: token
         });
     }
 }
 
-export const disconnect = () => {
-    return (dispatch: Dispatch<IsConnectedActions>) => {
+export const logout = () => {
+    return (dispatch: Dispatch<UserActions>) => {
         dispatch({
-            type: IsConnectedActionType.DISCONNECT
+            type: UserActionType.LOGOUT
         });
     }
 }

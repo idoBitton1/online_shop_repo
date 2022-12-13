@@ -5,8 +5,8 @@ import { FilterProductsActionType } from "../action_types";
 //cart
 import { CartActionType } from "../action_types";
 import { CartProduct } from "../../Pages/Home";
-//is_connected
-import { IsConnectedActionType } from "../action_types"
+//user
+import { UserActionType } from "../action_types"
 
 interface ResetAction {
     type: FilterProductsActionType.RESET,
@@ -52,11 +52,13 @@ interface RemoveFromCartAction {
 
 export type CartActions = AddProductAction | RemoveFromCartAction | SetPaidAction | SetNotPaidAction;
 
-interface ConnectAction {
-    type: IsConnectedActionType.CONNECT
-}
-interface DisconnectAction {
-    type: IsConnectedActionType.DISCONNECT
+interface LoginUserAction {
+    type: UserActionType.LOGIN,
+    payload: string
 }
 
-export type IsConnectedActions = ConnectAction | DisconnectAction;
+interface LogoutUserAction {
+    type: UserActionType.LOGOUT
+}
+
+export type UserActions = LoginUserAction | LogoutUserAction;
