@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom"
 
 //form
@@ -27,10 +27,13 @@ export const LogInForm = () => {
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
-    const { connect } = bindActionCreators(actionsCreators, dispatch);
+    const { login } = bindActionCreators(actionsCreators, dispatch);
 
     const [loginUser, { error }] = useMutation(LOGIN_USER, {
-        onCompleted: (data) => connect() //after logging, connect the user
+        onCompleted: (data) => {
+            localStorage.setItem("token", data.loginUser.token);
+            login(data.loginUser.token);
+        } //after logging, connect the user
     });
 
     //the initial values of the form

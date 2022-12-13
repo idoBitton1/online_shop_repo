@@ -34,10 +34,13 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
-    const { connect } = bindActionCreators(actionsCreators, dispatch);
+    const { login } = bindActionCreators(actionsCreators, dispatch);
 
     const [createUser, { error }] = useMutation(CREATE_USER, {
-        onCompleted: (data) => connect() //after registering, connect the user
+        onCompleted: (data) => {
+            localStorage.setItem("token", data.createUser.token);
+            login(data.createUser.token);
+        } //after registering, connect the user
     });
 
     //the initial values of the form
