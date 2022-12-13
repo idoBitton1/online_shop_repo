@@ -20,10 +20,10 @@ import { FiUserPlus } from 'react-icons/fi';
 
 export const Profile = () => {
 
-  const is_connected = useSelector((redux_state: ReduxState) => redux_state.is_connected);
+  const user = useSelector((redux_state: ReduxState) => redux_state.user);
 
   const dispatch = useDispatch();
-  const { disconnect } = bindActionCreators(actionsCreators, dispatch);
+  const { logout } = bindActionCreators(actionsCreators, dispatch);
 
   const [open, setOpen] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ export const Profile = () => {
             <h3 onClick={() => navigate('/')}> home </h3>
           </li>
           {
-            is_connected
+            user.token
               ?
               //things that connected users see
               (
@@ -62,7 +62,8 @@ export const Profile = () => {
                   <li className='dropdown_item'>
                     <CiLogout className="dropdown_item_icon" />
                     <h3 onClick={() => {
-                      disconnect(); //disconnect the user
+                      logout(); //disconnect the user
+                      handleClick()// close the dropdown
                       navigate('/'); //nvigate back to home
                     }}>
                       log out
