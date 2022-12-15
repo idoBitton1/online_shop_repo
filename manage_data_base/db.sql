@@ -15,10 +15,10 @@ CREATE TABLE users (
 
 CREATE TABLE products (
     id UUID DEFAULT uuid_generate_v4(),
-    name VARCHAR(20) NOT NULL,
+    name VARCHAR(60) NOT NULL,
     quantity INTEGER NOT NULL,
     price REAL NOT NULL,
-    category VARCHAR(20) NOT NULL,
+    category VARCHAR(100) NOT NULL,
     img_location VARCHAR(100) NOT NULL,
     PRIMARY KEY (id)
 );
