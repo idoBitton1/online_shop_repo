@@ -44,12 +44,12 @@ const checkRegisterInformation = (first_name: string, last_name: string, passwor
 
 const resolvers = {
     Query: {
-        getAll: async (_: any, args: any) => {
+        getAllProducts: async (_: any, args: any) => {
             try {
-                const all_jobs = await pool.query(
-                    "SELECT * FROM users"
+                const all_products = await pool.query(
+                "SELECT * FROM products"
                 );
-                return all_jobs.rows;
+                return all_products.rows;
             } catch (err: any) {
                 console.error(err.message);
             }
@@ -97,9 +97,10 @@ const resolvers = {
 
             //generate JWT
             const token = jwt.sign(
-                {user_id: id, email},
+                {user_id: id, email, address},
                 "TEMP_STRING",
                 {
+                    //the token will expire in 2 hours
                     expiresIn: "2h"
                 }
             );
@@ -146,6 +147,18 @@ const resolvers = {
                 throw new UserInputError("incorrect password");
             }
 
+            let user_address;
+            try {
+                user_address = await pool.query(
+                "SELECT address FROM users WHERE email=$1",
+                [email]);
+            } catch (err: any) {
+                console.error(err.message);
+            }
+
+            if(user_address === undefined)
+                throw new UserInputError("couldnt find address");
+
             //if everything is good, login
             try {
                 const user = await pool.query(
@@ -153,16 +166,47 @@ const resolvers = {
                 [email, password]);
 
                 const token = jwt.sign(
-                    {user_id: user.rows[0].id, email},
+                    {user_id: user.rows[0].id, email, address: user_address.rows[0].address},
                     "TEMP_STRING",
                     {
+                        //the token will expire in 2 hours
                         expiresIn: "2h"
                     }
                 );
 
+                //assign the new token
                 user.rows[0].token = token;
 
                 return user.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //update product quantity by id
+        updateProductQuantity: async(_: any, args: any) => {
+            const {id, new_quantity} = args;
+
+            try {
+                const update = await pool.query(
+                "UPDATE products SET quantity=$1 WHERE id=$2",
+                [new_quantity, id]);
+
+                return update.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //add a product to the user's cart
+        addProductToCart: async(_: any, args: any) => {
+            const { user_id, product_id, size, amount,
+                    address, paid, ordering_time } = args;
+            
+            try {
+                const new_product = await pool.query(
+                "INSERT INTO users_products (user_id,product_id,address,paid,amount,size,ordering_time) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING * ",
+                [user_id, product_id, address, paid, amount, size, ordering_time]);
+                    
+                return new_product.rows[0];
             } catch (err: any) {
                 console.error(err.message);
             }
@@ -209,7 +253,7 @@ const typeDefs = gql`
     }
 
     type Query {
-        getAll: [User]
+        getAllProducts: [Product]
     }
 
     type Mutation{
@@ -222,6 +266,14 @@ const typeDefs = gql`
                    is_manager: Boolean!): User,
 
         loginUser(email: String!, password: String!): User,
+        updateProductQuantity(id: String!, new_quantity: Int!): Product,
+        addProductToCart(user_id: String!,
+                         product_id:String!,
+                         size: String!,
+                         amount: Int!,
+                         address: String!,
+                         paid: Boolean!,
+                         ordering_time: String!): Users_products
     }
 `;
 
