@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 //import './App.css';
 
+//Apollo and graphql
+import { useQuery } from "@apollo/client"
+import { GET_ALL_PRODUCTS } from "../Queries/Queries";
+
 //redux
 import { useDispatch } from 'react-redux';
+import { actionsCreators } from "../state";
 import { bindActionCreators } from 'redux';
-import { actionsCreators } from '../state';
 
 //components
 import { Header } from '../Components/Header/Header';
@@ -16,10 +20,12 @@ export interface Product {
   name: string,
   price: number,
   quantity: number,
-  categories: string,
+  category: string,
+  img_location: string
 }
 
 export interface CartProduct { //users_products table
+  user_id: string,
   product_id: string,
   address: string,
   amount: number,
@@ -30,30 +36,21 @@ export interface CartProduct { //users_products table
 
 function Home() {
 
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: "1",
-      name: "Air jordan 1 lucky green",
-      price: 150,
-      quantity: 150,
-      categories: "#shoes#green"
-    },
-    {
-      id: "2",
-      name: "Air jordan travis scott",
-      price: 300,
-      quantity: 100,
-      categories: "#shoes#black"
-    }
-  ]);
+  const [products, setProducts] = useState<Product[]>([]);
 
+  const { data: products_data } = useQuery(GET_ALL_PRODUCTS);
+  
   const dispatch = useDispatch();
   const { resetFilterProducts } = bindActionCreators(actionsCreators, dispatch);
 
   useEffect(() => {
-    resetFilterProducts(products);
+    if(products_data)
+    {
+      setProducts(products_data.getAllProducts);
+      resetFilterProducts(products_data.getAllProducts);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [products_data]);
 
   return (
     <div className="home_container">
@@ -61,7 +58,7 @@ function Home() {
       <NavigationBar
         products={products}
       />
-      <ProductsGrid setProducts={setProducts} />
+      <ProductsGrid products={products} setProducts={setProducts} />
     </div>
   );
 }
