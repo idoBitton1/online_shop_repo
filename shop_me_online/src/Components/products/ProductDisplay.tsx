@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import "./Products.css"
 
+//Apollo and graphql
+import { useMutation } from "@apollo/client"
+import { UPDATE_PRODUCT_QUANTITY, ADD_PRODUCT_TO_CART } from "../../Queries/Mutations";
+
 //redux
 import { useSelector, useDispatch } from 'react-redux';
 import { ReduxState, actionsCreators } from "../../state";
@@ -10,10 +14,8 @@ import { bindActionCreators } from 'redux';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import {
-    Button, FormControl, InputLabel, MenuItem, Select, Typography,
-    SelectChangeEvent
-} from "@mui/material";
+import {Button, FormControl, InputLabel, MenuItem, Select, Typography,
+        SelectChangeEvent} from "@mui/material";
 
 //interface
 import { Product } from "../../Pages/Home";
@@ -25,12 +27,14 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import img from "../../Images/j1.png"
 
 interface MyProps extends Product {
+    products: Product[],
     setProducts: React.Dispatch<React.SetStateAction<Product[]>>
 }
 
-export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, categories, setProducts }) => {
+export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, category, img_location, products, setProducts }) => {
 
     const filtered_products = useSelector((redux_state: ReduxState) => redux_state.filtered_products);
+
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
 
     const [size, setSize] = useState<string>("");
@@ -41,6 +45,9 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
 
     const dispatch = useDispatch();
     const { updateSupply, addProductToCart } = bindActionCreators(actionsCreators, dispatch);
+
+    const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY);
+    const [addProductToCartMutation] = useMutation(ADD_PRODUCT_TO_CART);
 
     const toggleDialog = () => {
 
@@ -57,7 +64,7 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
         setAmount(products_amount);
     }
 
-    const handleAddToCard = () => {
+    const handleAddToCart = async () => {
         //if no user is connected, cant buy
         if (!user.token) {
             setErrText("log in to buy");
@@ -82,44 +89,86 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
             amount: amount
         });
 
-        //update the amount of the product that was bought
-        setProducts((prev_products) => {
-            prev_products.map((product) => {
-                if (product.id === id)
-                    product.quantity = product.quantity - amount;
-                return product;
+        try {
+            await updateProductQuantity({
+                variables: {
+                    id: id,
+                    newQuantity: quantity - amount
+                }
             });
-            return prev_products;
-        });
+        } catch (err: any) {
+            console.error(err.message);
+        }
+
+        //update the amount of the product that was bought
+        var index_of_current_product = -1;
+
+        //find the index of the product in the array
+        index_of_current_product = products.findIndex((product) => product.id === id);
+
+        //re create the product
+        const product = {
+            __typename: 'Product',
+            id: id,
+            name: name,
+            price: price,
+            quantity: quantity - amount,
+            category: category,
+            img_location: img_location
+        }
+
+        //change him with the old one
+        const temp = [...products];
+        temp[index_of_current_product] = product;
+
+        //change the array
+        setProducts([...temp]);
 
         //format today
         const formatted_now = formatDate();
 
         //adds the product to the cart
         addProductToCart({
+            user_id: user.token.user_id,
             product_id: id,
             size: size,
             amount: amount,
-            address: "ddd",
+            address: user.token.address,
             paid: false,
             ordering_time: formatted_now
-        })
+        });
+
+        try {
+            await addProductToCartMutation({
+                variables: {
+                    userId: user.token.user_id,
+                    productId: id,
+                    size: size,
+                    amount: amount,
+                    address: user.token.address,
+                    paid: false,
+                    orderingTime: formatted_now
+                }
+            });
+        } catch (err: any) {
+            console.error(err.message);
+        }
 
         toggleDialog();
     }
 
-    const formatDate = ():string => {
-        const today:Date = new Date();
-        const yyyy:number = today.getFullYear();
-        let mm:number = today.getMonth() + 1; // Months start at 0
-        let dd:number = today.getDate();
-    
-        let ddd:string = `${dd}`;
-        let mmm:string = `${mm}`;
+    const formatDate = (): string => {
+        const today: Date = new Date();
+        const yyyy: number = today.getFullYear();
+        let mm: number = today.getMonth() + 1; // Months start at 0
+        let dd: number = today.getDate();
+
+        let ddd: string = `${dd}`;
+        let mmm: string = `${mm}`;
         if (dd < 10) ddd = '0' + dd;
         if (mm < 10) mmm = '0' + mm;
-    
-        const formatted_today:string = yyyy + '/' + mmm + '/' + ddd;
+
+        const formatted_today: string = yyyy + '/' + mmm + '/' + ddd;
         return formatted_today;
     }
 
@@ -139,7 +188,7 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
                 </div>
             </div>
 
-            <Dialog open={open_dialog} onClose={toggleDialog} fullWidth>
+            {<Dialog open={open_dialog} onClose={toggleDialog} fullWidth>
                 <DialogTitle>
                     <Typography
                         fontSize={25}
@@ -174,7 +223,7 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
                                 </FormControl>
                             </div>
 
-                            {!categories.includes("bags") ?
+                            {!category.includes("bags") ?
                                 <FormControl variant="standard" sx={{ marginBottom: 2 }}>
                                     <InputLabel>Size</InputLabel>
                                     <Select
@@ -183,19 +232,20 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
                                         value={size}
                                         onChange={(event) => setSize(event.target.value as string)}
                                     >
-                                        <MenuItem value={categories.includes("shoes") ? "41" : "XS"}>{categories.includes("shoes") ? "41" : "XS"}</MenuItem>
-                                        <MenuItem value={categories.includes("shoes") ? "42" : "S"}>{categories.includes("shoes") ? "42" : "S"}</MenuItem>
-                                        <MenuItem value={categories.includes("shoes") ? "43" : "M"}>{categories.includes("shoes") ? "43" : "M"}</MenuItem>
-                                        <MenuItem value={categories.includes("shoes") ? "44" : "L"}>{categories.includes("shoes") ? "44" : "L"}</MenuItem>
-                                        <MenuItem value={categories.includes("shoes") ? "45" : "XL"}>{categories.includes("shoes") ? "45" : "XL"}</MenuItem>
+                                        <MenuItem value={category.includes("shoes") ? "41" : "XS"}>{category.includes("shoes") ? "41" : "XS"}</MenuItem>
+                                        <MenuItem value={category.includes("shoes") ? "42" : "S"}>{category.includes("shoes") ? "42" : "S"}</MenuItem>
+                                        <MenuItem value={category.includes("shoes") ? "43" : "M"}>{category.includes("shoes") ? "43" : "M"}</MenuItem>
+                                        <MenuItem value={category.includes("shoes") ? "44" : "L"}>{category.includes("shoes") ? "44" : "L"}</MenuItem>
+                                        <MenuItem value={category.includes("shoes") ? "45" : "XL"}>{category.includes("shoes") ? "45" : "XL"}</MenuItem>
                                     </Select>
                                 </FormControl>
                                 :
-                                <></>}
+                                <></>
+                            }
 
                             <div style={{ display: "flex" }}>
                                 <Button variant="contained"
-                                    onClick={handleAddToCard}
+                                    onClick={handleAddToCart}
                                     sx={{ textTransform: "none", marginRight: 1, fontWeight: "bold" }}>
                                     Add To Cart
                                 </Button>
@@ -208,7 +258,7 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
                         </div>
                     </div>
                 </DialogContent>
-            </Dialog>
+            </Dialog>}
         </>
     )
 }
