@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom"
 
 //form
@@ -48,20 +48,21 @@ export const LogInForm = () => {
     });
 
     //after submiting the form
-    const onSubmit = (values: MyFormValues) => {
+    const onSubmit = async (values: MyFormValues) => {
 
         //login the user
         try {
             const { email, password } = values;
 
-            loginUser({
+            await loginUser({
                 variables: {
                     email: email,
                     password: password
                 }
-            })
+            });
         } catch (err: any) {
             console.error(err.message);
+            return; //dont continue
         }
 
         //if logined successfully, navigate back to the home page
