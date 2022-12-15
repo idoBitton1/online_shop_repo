@@ -2,7 +2,7 @@ import { Product } from "../../Pages/Home";
 import { FilterProductsActions } from "../actions";
 import { FilterProductsActionType } from "../action_types"
 
-const initial_state: Product[] = [];
+let initial_state: Product[] = [];
 
 const reducer = (state: Product[] = initial_state, action: FilterProductsActions) => {
     switch (action.type) {
@@ -11,9 +11,9 @@ const reducer = (state: Product[] = initial_state, action: FilterProductsActions
         case FilterProductsActionType.FILTER:
             return state.filter((product) => {
                 return (
-                    (action.payload.category === "any_category" ? true : product.categories.includes(action.payload.category)) &&
-                    (action.payload.color === "any_color" ? true : product.categories.includes(action.payload.color)) &&
-                    (action.payload.season === "any_season" ? true : product.categories.includes(action.payload.season))
+                    (action.payload.category === "any_category" ? true : product.category.includes(action.payload.category)) &&
+                    (action.payload.color === "any_color" ? true : product.category.includes(action.payload.color)) &&
+                    (action.payload.season === "any_season" ? true : product.category.includes(action.payload.season))
                 );
             });
         case FilterProductsActionType.UPDATE_SUPPLY:
@@ -27,7 +27,8 @@ const reducer = (state: Product[] = initial_state, action: FilterProductsActions
                     name: prev_product.name,
                     price: prev_product.price,
                     quantity: prev_product.quantity - action.payload.amount,
-                    categories: prev_product.categories
+                    category: prev_product.category,
+                    img_location: prev_product.img_location
                 }
 
                 const temp = [...state];
