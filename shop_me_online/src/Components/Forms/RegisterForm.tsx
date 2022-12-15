@@ -73,7 +73,7 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
             });
         } catch (err: any) {
             console.error(err.message);
-            return;
+            return; //dont continue
         }
 
         //if registered successfully, navigate back to the home page
