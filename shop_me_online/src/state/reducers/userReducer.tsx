@@ -7,7 +7,8 @@ export interface MyToken {
     exp: number,
     iat: number,
     user_id: string,
-    email: string
+    email: string,
+    address: string
 }
 
 export interface UserInfo {
