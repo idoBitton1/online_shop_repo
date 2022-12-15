@@ -12,10 +12,11 @@ import { ProductDisplay } from "./ProductDisplay";
 import { Product } from "../../Pages/Home";
 
 interface MyProps {
+    products: Product[],
     setProducts: React.Dispatch<React.SetStateAction<Product[]>>
 }
 
-export const ProductsGrid: React.FC<MyProps> = ({ setProducts }) => {
+export const ProductsGrid: React.FC<MyProps> = ({ products, setProducts }) => {
 
     const filtered_products = useSelector((redux_state: ReduxState) => redux_state.filtered_products);
 
@@ -23,6 +24,7 @@ export const ProductsGrid: React.FC<MyProps> = ({ setProducts }) => {
         <div className="products_grid">
             {
                 filtered_products.map((product) => {
+
                     return (
                         <ProductDisplay
                             key={product.id}
@@ -30,7 +32,9 @@ export const ProductsGrid: React.FC<MyProps> = ({ setProducts }) => {
                             name={product.name}
                             price={product.price}
                             quantity={product.quantity}
-                            categories={product.categories}
+                            category={product.category === undefined ? "" : product.category}
+                            img_location={product.img_location}
+                            products={products}
                             setProducts={setProducts} />
                     )
                 })
