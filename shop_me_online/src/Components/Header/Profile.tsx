@@ -1,40 +1,33 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 //redux
 import { useSelector } from 'react-redux';
 import { ReduxState } from "../../state";
-import { useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { actionsCreators } from '../../state';
+
+//components
+import { ConnectedUserDD } from "./ConnectedUserDD";
 
 //icons
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { BsCart2 } from 'react-icons/bs';
-import { AiOutlineUser } from 'react-icons/ai';
 import { AiOutlineHome } from 'react-icons/ai';
-import { CiLogin } from 'react-icons/ci';
-import { CiLogout } from 'react-icons/ci';
-import { FiUserPlus } from 'react-icons/fi';
+import { DisconnectedUserDD } from "./DisconnectedUserDD";
 
 export const Profile = () => {
 
   const user = useSelector((redux_state: ReduxState) => redux_state.user);
 
-  const dispatch = useDispatch();
-  const { logout } = bindActionCreators(actionsCreators, dispatch);
-
-  const [open, setOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [open, setOpen] = useState<boolean>(false);
 
-  const handleClick = () => {
+  const toggleDropDown = () => {
     setOpen((prev) => !prev)
   }
 
   return (
     <>
-      <button className="button profile_btn" onClick={handleClick}>
+      <button className="button profile_btn" onClick={toggleDropDown}>
         <MenuIcon sx={{ fontSize: 40 }} />
         <AccountCircleIcon sx={{ fontSize: 40 }} />
       </button>
@@ -49,46 +42,10 @@ export const Profile = () => {
             user.token
               ?
               //things that connected users see
-              (
-                <>
-                  <li className="dropdown_item">
-                    <AiOutlineUser className="dropdown_item_icon" />
-                    <h3>profile</h3>
-                  </li>
-                  <li className="dropdown_item">
-                    <BsCart2 className="dropdown_item_icon" />
-                    <h3>cart</h3>
-                  </li>
-                  <li className='dropdown_item'>
-                    <CiLogout className="dropdown_item_icon" />
-                    <h3 onClick={() => {
-                      logout(); //disconnect the user
-                      handleClick()// close the dropdown
-                      navigate('/'); //nvigate back to home
-                    }}>
-                      log out
-                    </h3>
-                  </li>
-                </>
-              )
+              <ConnectedUserDD toggleDropDown={toggleDropDown} />
               :
               //things that unconnected users see
-              (
-                <>
-                  <li className='dropdown_item'>
-                    <FiUserPlus className="dropdown_item_icon" />
-                    <h3 style={{ fontWeight: "bold" }} onClick={() => navigate('/register')}> register </h3>
-                  </li>
-                  <li className='dropdown_item'>
-                    <FiUserPlus className="dropdown_item_icon" />
-                    <h3 onClick={() => navigate('/registerManager')}> become a manager </h3>
-                  </li>
-                  <li className='dropdown_item'>
-                    <CiLogin className="dropdown_item_icon" />
-                    <h3 onClick={() => navigate('/login')}> log in </h3>
-                  </li>
-                </>
-              )
+              <DisconnectedUserDD />
           }
         </ul>
       </div>
