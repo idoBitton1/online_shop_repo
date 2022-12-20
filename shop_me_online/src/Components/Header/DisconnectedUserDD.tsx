@@ -11,17 +11,17 @@ export const DisconnectedUserDD = () => {
 
     return (
         <>
-            <li className='dropdown_item'>
+            <li className='dropdown_item' onClick={() => navigate('/register')}>
                 <FiUserPlus className="dropdown_item_icon" />
-                <h3 style={{ fontWeight: "bold" }} onClick={() => navigate('/register')}> register </h3>
+                <h3 style={{ fontWeight: "bold" }}> register </h3>
             </li>
-            <li className='dropdown_item'>
+            <li className='dropdown_item' onClick={() => navigate('/registerManager')}>
                 <FiUserPlus className="dropdown_item_icon" />
-                <h3 onClick={() => navigate('/registerManager')}> become a manager </h3>
+                <h3> become a manager </h3>
             </li>
-            <li className='dropdown_item'>
+            <li className='dropdown_item' onClick={() => navigate('/login')}>
                 <CiLogin className="dropdown_item_icon" />
-                <h3 onClick={() => navigate('/login')}> log in </h3>
+                <h3> log in </h3>
             </li>
         </>
     )
