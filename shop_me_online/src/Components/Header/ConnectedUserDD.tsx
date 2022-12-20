@@ -15,7 +15,7 @@ interface MyProps {
     toggleDropDown: () => void
 }
 
-export const ConnectedUserDD: React.FC<MyProps> = ({toggleDropDown}) => {
+export const ConnectedUserDD: React.FC<MyProps> = ({ toggleDropDown }) => {
 
     const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ export const ConnectedUserDD: React.FC<MyProps> = ({toggleDropDown}) => {
                 <AiOutlineUser className="dropdown_item_icon" />
                 <h3>profile</h3>
             </li>
-            <li className="dropdown_item">
+            <li className="dropdown_item" onClick={() => navigate('/cart')}>
                 <BsCart2 className="dropdown_item_icon" />
                 <h3>cart</h3>
             </li>
@@ -36,14 +36,12 @@ export const ConnectedUserDD: React.FC<MyProps> = ({toggleDropDown}) => {
                 <AiOutlineHeart className="dropdown_item_icon" />
                 <h3>wishlist</h3>
             </li>
-            <li className='dropdown_item'>
+            <li className='dropdown_item' onClick={() => {
+                logout(); //disconnect the user
+                toggleDropDown();
+            }}>
                 <CiLogout className="dropdown_item_icon" />
-                <h3 onClick={() => {
-                    logout(); //disconnect the user
-                    toggleDropDown();
-                }}>
-                    log out
-                </h3>
+                <h3> log out </h3>
             </li>
         </>
     )
