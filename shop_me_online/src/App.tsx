@@ -3,13 +3,14 @@ import './App.css';
 
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
+//Material-ui
+import { ThemeProvider, createTheme } from "@mui/material"
+
 //Pages
 import Home from './Pages/Home';
 import Register from './Pages/Register';
 import LogIn from './Pages/LogIn';
-
-//Material-ui
-import { ThemeProvider, createTheme } from "@mui/material"
+import Cart from './Pages/Cart';
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/register" element={<Register is_manager={false} />} />
             <Route path="/registerManager" element={<Register is_manager={true} />} />
             <Route path="/login" element={<LogIn />} />
+            <Route path="/cart" element={<Cart />} />
           </Routes>
         </Router>
       </div>
