@@ -34,9 +34,9 @@ export const Profile = () => {
 
       <div className={`dropdown_menu ${open ? 'active' : 'inactive'}`} >
         <ul>
-          <li className='dropdown_item'>
+          <li className='dropdown_item' onClick={() => navigate('/')}>
             <AiOutlineHome className="dropdown_item_icon" />
-            <h3 onClick={() => navigate('/')}> home </h3>
+            <h3> home </h3>
           </li>
           {
             user.token
