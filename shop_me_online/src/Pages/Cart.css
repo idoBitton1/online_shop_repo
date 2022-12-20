@@ -1,0 +1,28 @@
+.cart_container {
+    text-align: center;
+}
+
+.cart_context {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 200px;
+    padding-right: 400px;
+    text-align: left;
+}
+
+.cart_items {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cart_product_display {
+    display: flex;
+    justify-content: space-between;
+    width: 1000px;
+    border-bottom: 1px solid lightgray;
+}
+
+.cart_product_img {
+    width: 250px;
+}
