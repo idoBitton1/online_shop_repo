@@ -8,19 +8,12 @@ import { Header } from "../Components/Header/Header";
 import { useSelector } from 'react-redux';
 import { ReduxState } from "../state";
 
-//images
-import img from "../Images/j1.png"
 import { Button } from "@mui/material";
+import { CartProductDisplay } from "../Components/products/CartProductDisplay";
 
 const Cart = () => {
 
     const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
-
-    // address: string,
-    // amount: number,
-    // size: string,
-    // ordering_time: string,
-    // paid: boolean
 
     return (
         <div className="cart_container">
@@ -30,27 +23,20 @@ const Cart = () => {
 
             <div className="cart_context">
                 <div className="cart_items">
-                    <div className="cart_product_display">
-                        <div style={{ display: "flex" }}>
-                            <img src={img} alt="product" className="cart_product_img" />
-                            <div style={{ display: "flex", flexDirection: "column" }}>
-                                <p>Air Jordan 1 Lucky Green</p>
-                                <p>150$</p>
-                                <p>Left in stock: 149</p>
-                            </div>
-                        </div>
-
-                        <div style={{ width: 200, border: "1px solid black" }}>
-                            <p>Size</p>
-                            <p>41 US change</p>
-                            <p>Quantity</p>
-                            <p>1 change</p>
-                            <p>Ship to</p>
-                            <p>Bat yam</p>
-                        </div>
-
-                        <div>X</div>
-                    </div>
+                    {
+                        cart.map((product, i) => {
+                            return (
+                                <CartProductDisplay 
+                                product_id={product.product_id}
+                                transaction_id={product.transaction_id}
+                                address={product.address}
+                                amount={product.amount}
+                                size={product.size}
+                                key={i}
+                                />
+                            )
+                        })
+                    }
                 </div>
 
                 <div>
