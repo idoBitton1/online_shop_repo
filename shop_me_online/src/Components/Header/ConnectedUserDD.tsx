@@ -38,6 +38,7 @@ export const ConnectedUserDD: React.FC<MyProps> = ({ toggleDropDown }) => {
             </li>
             <li className='dropdown_item' onClick={() => {
                 logout(); //disconnect the user
+                navigate('/'); //return to the home page
                 toggleDropDown();
             }}>
                 <CiLogout className="dropdown_item_icon" />
