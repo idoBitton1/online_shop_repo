@@ -23,11 +23,11 @@ export const ProductsGrid: React.FC<MyProps> = ({ products, setProducts }) => {
     return (
         <div className="products_grid">
             {
-                filtered_products.map((product) => {
+                filtered_products.map((product, i) => {
 
                     return (
                         <ProductDisplay
-                            key={product.id}
+                            key={i}
                             id={product.id}
                             name={product.name}
                             price={product.price}
