@@ -27,14 +27,9 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 //images
 import img from "../../Images/j1.png"
 
-interface MyProps extends Product {
-    products: Product[],
-    setProducts: React.Dispatch<React.SetStateAction<Product[]>>
-}
+export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, category, img_location }) => {
 
-export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, category, img_location, products, setProducts }) => {
-
-    const filtered_products = useSelector((redux_state: ReduxState) => redux_state.filtered_products);
+    const products = useSelector((redux_state: ReduxState) => redux_state.products);
 
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
 
@@ -45,7 +40,7 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
 
     const dispatch = useDispatch();
-    const { updateSupply, addProductToCart } = bindActionCreators(actionsCreators, dispatch);
+    const { updateSupply, addProductToCart, setProducts } = bindActionCreators(actionsCreators, dispatch);
 
     const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY);
     const [addProductToCartMutation] = useMutation(ADD_PRODUCT_TO_CART);
@@ -72,8 +67,8 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
             return;
         }
 
-        let index_of_product = filtered_products.findIndex((product) => product.id === id);
-        if (filtered_products[index_of_product].quantity < amount) {
+        let index_of_product = products.filtered_products.findIndex((product) => product.id === id);
+        if (products.filtered_products[index_of_product].quantity < amount) {
             setErrText("not enough in stock");
             return;
         }
@@ -105,7 +100,7 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
         var index_of_current_product = -1;
 
         //find the index of the product in the array
-        index_of_current_product = products.findIndex((product) => product.id === id);
+        index_of_current_product = products.products.findIndex((product) => product.id === id);
 
         //re create the product
         const product = {
@@ -119,7 +114,7 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
         }
 
         //change him with the old one
-        const temp = [...products];
+        const temp = [...products.products];
         temp[index_of_current_product] = product;
 
         //change the array
