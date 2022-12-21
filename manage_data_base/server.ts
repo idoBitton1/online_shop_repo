@@ -49,12 +49,43 @@ const resolvers = {
                 const all_products = await pool.query(
                 "SELECT * FROM products"
                 );
+
                 return all_products.rows;
             } catch (err: any) {
                 console.error(err.message);
             }
+        },
+        //get a user's cart product
+        getUserCartProducts: async (_: any, args: any) => {
+            const { user_id } = args;
+
+            try {
+                const cart_products = await pool.query(
+                "SELECT * FROM users_products WHERE user_id=$1",
+                [user_id]);
+
+                return cart_products.rows;
+            } catch (err: any) {
+                console.log(err.message);
+            }
+        },
+        //get a product by id
+        getProduct:async (_: any, args: any) => {
+            const { id } = args;
+
+            try {
+                const product = await pool.query(
+                "SELECT * FROM products WHERE id=$1",
+                [id]);
+
+                return product.rows[0];
+            } catch (err: any) {
+                console.log(err.message);
+            }
         }
     },
+
+    //////////////////////////////////////////////////////////////////
 
     Mutation: {
         //create a new user
@@ -69,7 +100,7 @@ const resolvers = {
                 "SELECT uuid_generate_v4()"
                 );
             } catch (err: any) {
-                console.log(err.message)
+                console.log(err.message);
             }
             
             if(!generate_id) {
@@ -254,7 +285,9 @@ const typeDefs = gql`
     }
 
     type Query {
-        getAllProducts: [Product]
+        getAllProducts: [Product],
+        getUserCartProducts(user_id: String!): [Users_products],
+        getProduct(id: String!): Product
     }
 
     type Mutation{
