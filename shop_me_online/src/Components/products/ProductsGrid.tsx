@@ -8,9 +8,6 @@ import { ReduxState } from "../../state";
 //components
 import { ProductDisplay } from "./ProductDisplay";
 
-//interface
-import { Product } from "../../Pages/Home";
-
 export const ProductsGrid = () => {
 
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
