@@ -40,6 +40,7 @@ const Cart = () => {
                 }
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.token])
 
     //set the information in the cart redux state

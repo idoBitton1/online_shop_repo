@@ -36,6 +36,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
                 }
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [product_id])
 
     //set the information in the variables to display it
