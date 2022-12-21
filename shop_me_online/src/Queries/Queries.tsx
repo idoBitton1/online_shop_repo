@@ -12,3 +12,28 @@ query Query {
     }
   }
 `;
+
+export const GET_USER_CART_PRODUCTS = gql`
+query Query($userId: String!) {
+  getUserCartProducts(user_id: $userId) {
+    user_id
+    product_id
+    address
+    paid
+    amount
+    size
+    ordering_time
+    transaction_id
+  }
+}
+`;
+
+export const GET_PRODUCT = gql`
+query Query($id: String!) {
+  getProduct(id: $id) {
+    name
+    quantity
+    price
+  }
+}
+`;
