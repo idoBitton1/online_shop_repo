@@ -31,6 +31,7 @@ CREATE TABLE users_products (
     amount INTEGER NOT NULL,
     size VARCHAR(2) NOT NULL,
     ordering_time TIMESTAMP NOT NULL,
+    transaction_id UUID NOT NULL,
     CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id),
     CONSTRAINT fk_product FOREIGN KEY(product_id) REFERENCES products(id)
 );
