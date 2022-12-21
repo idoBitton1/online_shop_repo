@@ -30,8 +30,8 @@ interface UpdateSupplyAction {
 
 export type FilterProductsActions = ResetAction | FilterAction | UpdateSupplyAction;
 
-interface ResetCartAction {
-    type: CartActionType.RESET,
+interface SetCartAction {
+    type: CartActionType.SET,
     payload: CartProduct[]
 }
 
@@ -55,7 +55,7 @@ interface RemoveFromCartAction {
     payload: string
 }
 
-export type CartActions = ResetCartAction | AddProductAction | RemoveFromCartAction | SetPaidAction | SetNotPaidAction;
+export type CartActions = SetCartAction | AddProductAction | RemoveFromCartAction | SetPaidAction | SetNotPaidAction;
 
 interface LoginUserAction {
     type: UserActionType.LOGIN,
@@ -66,4 +66,8 @@ interface LogoutUserAction {
     type: UserActionType.LOGOUT
 }
 
-export type UserActions = LoginUserAction | LogoutUserAction;
+interface DontFetchAction {
+    type: UserActionType.DONT_FETCH
+}
+
+export type UserActions = DontFetchAction | LoginUserAction | LogoutUserAction;

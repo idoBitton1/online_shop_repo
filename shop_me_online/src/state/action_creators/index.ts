@@ -45,10 +45,10 @@ export const updateSupply = (data: UpdateSupplyProps) => {
 }
 
 //cart functions
-export const resetCart = (products: CartProduct[]) => {
+export const setCart = (products: CartProduct[]) => {
     return (dispatch: Dispatch<CartActions>) => {
         dispatch({
-            type: CartActionType.RESET,
+            type: CartActionType.SET,
             payload: products
         });
     }
@@ -104,6 +104,14 @@ export const logout = () => {
     return (dispatch: Dispatch<UserActions>) => {
         dispatch({
             type: UserActionType.LOGOUT
+        });
+    }
+}
+
+export const dontFetch = () => {
+    return (dispatch: Dispatch<UserActions>) => {
+        dispatch({
+            type: UserActionType.DONT_FETCH
         });
     }
 }

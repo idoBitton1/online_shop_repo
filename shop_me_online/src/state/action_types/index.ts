@@ -5,7 +5,7 @@ export enum FilterProductsActionType {
 }
 
 export enum CartActionType {
-    RESET = "reset",
+    SET = "set",
     ADD_PRODUCT = "add_product",
     SET_PAID = "set_paid",
     SET_NOT_PAID = "set_not_paid",
@@ -14,5 +14,6 @@ export enum CartActionType {
 
 export enum UserActionType {
     LOGIN = "login",
-    LOGOUT = "logout"
+    LOGOUT = "logout",
+    DONT_FETCH = "dont_fetch"
 }

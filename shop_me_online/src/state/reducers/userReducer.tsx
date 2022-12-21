@@ -12,11 +12,13 @@ export interface MyToken {
 }
 
 export interface UserInfo {
-    token: MyToken | null
+    token: MyToken | null,
+    fetch_info: boolean
 }
 
 const initial_state: UserInfo = {
-    token: null
+    token: null,
+    fetch_info: true
 }
 //localStorage.removeItem("token");
 let token = localStorage.getItem("token")
@@ -48,6 +50,11 @@ const reducer = (state: UserInfo = initial_state, action: UserActions) => {
             return {
                 ...state,
                 token: null
+            }
+        case UserActionType.DONT_FETCH:
+            return {
+                ...state,
+                fetch_info: false
             }
         default:
             return state;
