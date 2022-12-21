@@ -31,7 +31,8 @@ export interface CartProduct { //users_products table
   amount: number,
   size: string,
   ordering_time: string,
-  paid: boolean
+  paid: boolean,
+  transaction_id: string
 }
 
 function Home() {
