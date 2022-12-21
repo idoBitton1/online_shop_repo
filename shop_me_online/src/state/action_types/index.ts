@@ -5,6 +5,7 @@ export enum FilterProductsActionType {
 }
 
 export enum CartActionType {
+    RESET = "reset",
     ADD_PRODUCT = "add_product",
     SET_PAID = "set_paid",
     SET_NOT_PAID = "set_not_paid",

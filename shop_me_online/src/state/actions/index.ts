@@ -30,6 +30,11 @@ interface UpdateSupplyAction {
 
 export type FilterProductsActions = ResetAction | FilterAction | UpdateSupplyAction;
 
+interface ResetCartAction {
+    type: CartActionType.RESET,
+    payload: CartProduct[]
+}
+
 interface AddProductAction {
     type: CartActionType.ADD_PRODUCT,
     payload: CartProduct
@@ -50,7 +55,7 @@ interface RemoveFromCartAction {
     payload: string
 }
 
-export type CartActions = AddProductAction | RemoveFromCartAction | SetPaidAction | SetNotPaidAction;
+export type CartActions = ResetCartAction | AddProductAction | RemoveFromCartAction | SetPaidAction | SetNotPaidAction;
 
 interface LoginUserAction {
     type: UserActionType.LOGIN,

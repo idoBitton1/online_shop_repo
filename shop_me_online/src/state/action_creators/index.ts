@@ -45,6 +45,15 @@ export const updateSupply = (data: UpdateSupplyProps) => {
 }
 
 //cart functions
+export const resetCart = (products: CartProduct[]) => {
+    return (dispatch: Dispatch<CartActions>) => {
+        dispatch({
+            type: CartActionType.RESET,
+            payload: products
+        });
+    }
+}
+
 export const addProductToCart = (product: CartProduct) => {
     return (dispatch: Dispatch<CartActions>) => {
         dispatch({

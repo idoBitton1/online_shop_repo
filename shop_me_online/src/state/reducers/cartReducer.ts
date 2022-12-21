@@ -6,6 +6,8 @@ const initial_state: CartProduct[] = [];
 
 const reducer = (state: CartProduct[] = initial_state, action: CartActions) => {
     switch (action.type) {
+        case CartActionType.RESET:
+            return action.payload;
         case CartActionType.ADD_PRODUCT:
             return [...state, action.payload];
         case CartActionType.REMOVE:
