@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "./Products.css"
+import "./Products.css";
+import * as uuid from 'uuid';
 
 //Apollo and graphql
 import { useMutation } from "@apollo/client"
@@ -127,6 +128,8 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
         //format today
         const formatted_now = formatDate();
 
+        const my_transaction_id = uuid.v4();
+
         //adds the product to the cart
         addProductToCart({
             user_id: user.token.user_id,
@@ -135,7 +138,8 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
             amount: amount,
             address: user.token.address,
             paid: false,
-            ordering_time: formatted_now
+            ordering_time: formatted_now,
+            transaction_id: my_transaction_id
         });
 
         try {
@@ -147,7 +151,8 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
                     amount: amount,
                     address: user.token.address,
                     paid: false,
-                    orderingTime: formatted_now
+                    orderingTime: formatted_now,
+                    transactionId: my_transaction_id
                 }
             });
         } catch (err: any) {
