@@ -8,6 +8,7 @@
     padding-left: 200px;
     padding-right: 400px;
     text-align: left;
+    font-family: "Rubik";
 }
 
 .cart_items {
@@ -18,11 +19,39 @@
 
 .cart_product_display {
     display: flex;
-    justify-content: space-between;
-    width: 1000px;
+    height: 230px;
     border-bottom: 1px solid lightgray;
+}
+
+.product_info {
+    display: flex;
 }
 
 .cart_product_img {
     width: 250px;
+    margin-right: 20px;
+}
+
+.cart_product_name {
+    font-weight: bold;
+    margin-bottom: -5px;
+}
+
+.order_info {
+    width: 200px;
+    margin-left: 150px;
+}
+
+.order_info_headline {
+    font-weight: bold;
+    margin-bottom: -10px;
+}
+
+.close_btn {
+    background-color: white;
+    border: none;
+}
+
+.close_btn :hover {
+    cursor: pointer;
 }
