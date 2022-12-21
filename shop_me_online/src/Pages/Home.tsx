@@ -9,6 +9,8 @@ import { GET_ALL_PRODUCTS } from "../Queries/Queries";
 import { useDispatch } from 'react-redux';
 import { actionsCreators } from "../state";
 import { bindActionCreators } from 'redux';
+import { useSelector } from 'react-redux';
+import { ReduxState } from "../state";
 
 //components
 import { Header } from '../Components/Header/Header';
@@ -37,18 +39,18 @@ export interface CartProduct { //users_products table
 
 function Home() {
 
-  const [products, setProducts] = useState<Product[]>([]);
+  const products = useSelector((redux_state: ReduxState) => redux_state.products);
 
   const { data: products_data } = useQuery(GET_ALL_PRODUCTS);
   
   const dispatch = useDispatch();
-  const { resetFilterProducts } = bindActionCreators(actionsCreators, dispatch);
+  const { setFilterProducts, setProducts, dont_fetch_products } = bindActionCreators(actionsCreators, dispatch);
 
   useEffect(() => {
-    if(products_data)
-    {
+    if(products_data && products.fetch_info) {
+      dont_fetch_products();
       setProducts(products_data.getAllProducts);
-      resetFilterProducts(products_data.getAllProducts);
+      setFilterProducts(products_data.getAllProducts);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [products_data]);
@@ -57,9 +59,9 @@ function Home() {
     <div className="home_container">
       <Header />
       <NavigationBar
-        products={products}
+        products={products.products}
       />
-      <ProductsGrid products={products} setProducts={setProducts} />
+      <ProductsGrid />
     </div>
   );
 }
