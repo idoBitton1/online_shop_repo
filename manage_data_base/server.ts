@@ -199,12 +199,12 @@ const resolvers = {
         //add a product to the user's cart
         addProductToCart: async(_: any, args: any) => {
             const { user_id, product_id, size, amount,
-                    address, paid, ordering_time } = args;
+                    address, paid, ordering_time, transaction_id } = args;
             
             try {
                 const new_product = await pool.query(
-                "INSERT INTO users_products (user_id,product_id,address,paid,amount,size,ordering_time) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING * ",
-                [user_id, product_id, address, paid, amount, size, ordering_time]);
+                "INSERT INTO users_products (user_id,product_id,address,paid,amount,size,ordering_time,transaction_id) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING * ",
+                [user_id, product_id, address, paid, amount, size, ordering_time, transaction_id]);
                     
                 return new_product.rows[0];
             } catch (err: any) {
@@ -244,7 +244,8 @@ const typeDefs = gql`
         paid: Boolean!,
         amount: Int!,
         size: String!,
-        ordering_time: String!
+        ordering_time: String!,
+        transaction_id: String!
     }
 
     type Wishlist {
@@ -273,7 +274,8 @@ const typeDefs = gql`
                          amount: Int!,
                          address: String!,
                          paid: Boolean!,
-                         ordering_time: String!): Users_products
+                         ordering_time: String!,
+                         transaction_id: String!): Users_products
     }
 `;
 
