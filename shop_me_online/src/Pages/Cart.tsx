@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import './Cart.css';
 
 //Apollo and graphql
@@ -22,17 +22,21 @@ import { Button } from "@mui/material";
 
 const Cart = () => {
 
+    const [sum_of_products, setSumOfProducts] = useState<number>(0);
+    const [delivery, setDelivery] = useState<number>(0);
+    const [total, setTotal] = useState<number>(0);
+
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
     const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
 
-    const [ getCartProducts, { data: cart_data }]  = useLazyQuery(GET_USER_CART_PRODUCTS);
+    const [getCartProducts, { data: cart_data }] = useLazyQuery(GET_USER_CART_PRODUCTS);
 
     const dispatch = useDispatch();
     const { setCart, dontFetch } = bindActionCreators(actionsCreators, dispatch);
 
     //when the user is connecting, fetch his cart information
     useEffect(() => {
-        if(user.fetch_info && user.token){
+        if (user.fetch_info && user.token) {
             dontFetch();
             getCartProducts({
                 variables: {
@@ -58,8 +62,32 @@ const Cart = () => {
             <h1 style={{ fontFamily: "Arial" }}> Your Cart </h1>
 
             <div className="cart_context">
+                <div className="summary_container">
+                    <p style={{ fontWeight: "bold" }}>Summary</p>
+
+                    <div className="summary_field">
+                        <p>Subtotal</p>
+                        <p>{sum_of_products}</p>
+                    </div>
+                    <div className="summary_field">
+                        <p>Delivery</p>
+                        <p>{delivery}</p>
+                    </div>
+                    <div className="total_field">
+                        <p>Total</p>
+                        <p>{total}</p>
+                    </div>
+                    
+                    <Button
+                        variant="contained"
+                        fullWidth>
+                        Pay
+                    </Button>
+                </div>
+
                 <div className="cart_items">
                     {
+                        //render all the products in the cart
                         cart.map((product, i) => {
                             return (
                                 <CartProductDisplay
@@ -73,13 +101,6 @@ const Cart = () => {
                             );
                         })
                     }
-                </div>
-
-                <div>
-                    <p>Summary</p>
-                    <p>Subtotal</p>
-                    <p>Total</p>
-                    <Button>PAy</Button>
                 </div>
             </div>
         </div>

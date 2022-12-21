@@ -5,8 +5,8 @@
 .cart_context {
     display: flex;
     justify-content: space-between;
-    padding-left: 200px;
-    padding-right: 400px;
+    padding-left: 250px;
+    padding-right: 200px;
     text-align: left;
     font-family: "Rubik";
 }
@@ -20,6 +20,7 @@
 .cart_product_display {
     display: flex;
     height: 230px;
+    margin-top: 13px;
     border-bottom: 1px solid lightgray;
 }
 
@@ -54,4 +55,21 @@
 
 .close_btn :hover {
     cursor: pointer;
+}
+
+.summary_container {
+    width: 250px;
+    height: 200px;
+}
+
+.summary_field {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: -10px;
+}
+
+.total_field {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid lightgray;
 }
