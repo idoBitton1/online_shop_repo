@@ -1,34 +1,43 @@
 //filter_product
 import { Product } from "../../Pages/Home";
 import { Filters } from "../../Components/Header/NavigationBar";
-import { FilterProductsActionType } from "../action_types";
+import { ProductsActionType } from "../action_types";
 //cart
 import { CartActionType } from "../action_types";
 import { CartProduct } from "../../Pages/Home";
 //user
 import { UserActionType } from "../action_types"
 
-interface ResetAction {
-    type: FilterProductsActionType.RESET,
-    payload: Product[]
-}
-
-interface FilterAction {
-    type: FilterProductsActionType.FILTER,
-    payload: Filters
-}
-
 export interface UpdateSupplyProps {
     id: string,
     amount: number
 }
 
+interface SetFilteredProductsAction {
+    type: ProductsActionType.SET_FILTERED_PRODUCTS,
+    payload: Product[]
+}
+
+interface SetProductsAction {
+    type: ProductsActionType.SET_PRODUCTS,
+    payload: Product[]
+}
+
+interface FilterAction {
+    type: ProductsActionType.FILTER,
+    payload: Filters
+}
+
 interface UpdateSupplyAction {
-    type: FilterProductsActionType.UPDATE_SUPPLY,
+    type: ProductsActionType.UPDATE_SUPPLY,
     payload: UpdateSupplyProps
 }
 
-export type FilterProductsActions = ResetAction | FilterAction | UpdateSupplyAction;
+interface DontFetchProductsAction {
+    type: ProductsActionType.DONT_FETCH_PRODUCTS
+}
+
+export type ProductsActions = SetFilteredProductsAction | SetProductsAction | FilterAction | UpdateSupplyAction | DontFetchProductsAction;
 
 interface SetCartAction {
     type: CartActionType.SET,

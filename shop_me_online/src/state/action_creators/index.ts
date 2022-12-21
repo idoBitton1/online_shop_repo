@@ -4,8 +4,8 @@ import { Dispatch } from "redux";
 import { Product } from "../../Pages/Home";
 import { Filters } from "../../Components/Header/NavigationBar";
 import { UpdateSupplyProps } from "../actions";
-import { FilterProductsActions } from "../actions";
-import { FilterProductsActionType } from "../action_types";
+import { ProductsActions } from "../actions";
+import { ProductsActionType } from "../action_types";
 
 //cart
 import { CartProduct } from "../../Pages/Home";
@@ -17,29 +17,46 @@ import { UserActions } from "../actions";
 import { UserActionType } from "../action_types";
 
 //filtered_products functions
-export const resetFilterProducts = (products: Product[]) => {
-    return (dispatch: Dispatch<FilterProductsActions>) => {
+export const setFilterProducts = (products: Product[]) => {
+    return (dispatch: Dispatch<ProductsActions>) => {
         dispatch({
-            type: FilterProductsActionType.RESET,
+            type: ProductsActionType.SET_FILTERED_PRODUCTS,
+            payload: products
+        });
+    }
+}
+
+export const setProducts = (products: Product[]) => {
+    return (dispatch: Dispatch<ProductsActions>) => {
+        dispatch({
+            type: ProductsActionType.SET_PRODUCTS,
             payload: products
         });
     }
 }
 
 export const filterFilterProducts = (filters: Filters) => {
-    return (dispatch: Dispatch<FilterProductsActions>) => {
+    return (dispatch: Dispatch<ProductsActions>) => {
         dispatch({
-            type: FilterProductsActionType.FILTER,
+            type: ProductsActionType.FILTER,
             payload: filters
         });
     }
 }
 
 export const updateSupply = (data: UpdateSupplyProps) => {
-    return (dispatch: Dispatch<FilterProductsActions>) => {
+    return (dispatch: Dispatch<ProductsActions>) => {
         dispatch({
-            type: FilterProductsActionType.UPDATE_SUPPLY,
+            type: ProductsActionType.UPDATE_SUPPLY,
             payload: data
+        });
+    }
+}
+
+export const dont_fetch_products = () => {
+    return (dispatch: Dispatch<ProductsActions>) => {
+        dispatch({
+            type: ProductsActionType.DONT_FETCH_PRODUCTS
         });
     }
 }

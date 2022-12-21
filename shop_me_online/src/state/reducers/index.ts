@@ -1,11 +1,11 @@
 import { combineReducers } from "redux"
 
-import filterProductsReducer from "./filterProductsReducer"
+import ProductsReducer from "./ProductsReducer"
 import cartReducer from "./cartReducer"
 import userReducer from "./userReducer"
 
 const reducers = combineReducers({
-    filtered_products: filterProductsReducer,
+    products: ProductsReducer,
     cart: cartReducer,
     user: userReducer
 });

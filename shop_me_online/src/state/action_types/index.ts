@@ -1,7 +1,9 @@
-export enum FilterProductsActionType {
-    RESET = "reset",
+export enum ProductsActionType {
+    SET_FILTERED_PRODUCTS = "set_filtered_products",
+    SET_PRODUCTS = "set_products",
     FILTER = "filter",
-    UPDATE_SUPPLY = "update_supply"
+    UPDATE_SUPPLY = "update_supply",
+    DONT_FETCH_PRODUCTS = "dont_fetch_products"
 }
 
 export enum CartActionType {
