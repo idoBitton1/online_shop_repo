@@ -241,6 +241,34 @@ const resolvers = {
             } catch (err: any) {
                 console.error(err.message);
             }
+        },
+        //delete a product from the cart of a user
+        deleteProductFromCart: async(_: any, args: any) => {
+            const { transaction_id } = args;
+
+            try {
+                const delete_product = await pool.query(
+                "DELETE FROM users_products WHERE transaction_id=$1",
+                [transaction_id]);
+
+                return delete_product.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //set an item as paid
+        setProductAsPaid: async(_: any, args: any) => {
+            const { transaction_id } = args;
+
+            try {
+                const delete_product = await pool.query(
+                "UPDATE users_products SET paid=true WHERE transaction_id=$1",
+                [transaction_id]);
+
+                return delete_product.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
         }
     }
 };
@@ -308,7 +336,10 @@ const typeDefs = gql`
                          address: String!,
                          paid: Boolean!,
                          ordering_time: String!,
-                         transaction_id: String!): Users_products
+                         transaction_id: String!): Users_products,
+
+        deleteProductFromCart(transaction_id: String!): Users_products,
+        setProductAsPaid(transaction_id: String!): Users_products
     }
 `;
 
