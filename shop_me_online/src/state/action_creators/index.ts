@@ -53,7 +53,7 @@ export const updateSupply = (data: UpdateSupplyProps) => {
     }
 }
 
-export const dont_fetch_products = () => {
+export const dontFetchProducts = () => {
     return (dispatch: Dispatch<ProductsActions>) => {
         dispatch({
             type: ProductsActionType.DONT_FETCH_PRODUCTS
@@ -80,20 +80,20 @@ export const addProductToCart = (product: CartProduct) => {
     }
 }
 
-export const setPaid = (product_id: string) => {
+export const setPaid = (transaction_id: string) => {
     return (dispatch: Dispatch<CartActions>) => {
         dispatch({
             type: CartActionType.SET_PAID,
-            payload: product_id
+            payload: transaction_id
         });
     }
 }
 
-export const setNotPaid = (product_id: string) => {
+export const setNotPaid = (transaction_id: string) => {
     return (dispatch: Dispatch<CartActions>) => {
         dispatch({
             type: CartActionType.SET_NOT_PAID,
-            payload: product_id
+            payload: transaction_id
         });
     }
 }
