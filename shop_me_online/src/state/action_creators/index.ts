@@ -98,11 +98,11 @@ export const setNotPaid = (product_id: string) => {
     }
 }
 
-export const removeFromCart = (product_id: string) => {
+export const removeFromCart = (transaction_id: string) => {
     return (dispatch: Dispatch<CartActions>) => {
         dispatch({
             type: CartActionType.REMOVE,
-            payload: product_id
+            payload: transaction_id
         });
     }
 }

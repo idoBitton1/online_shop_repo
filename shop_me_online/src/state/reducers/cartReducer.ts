@@ -14,7 +14,7 @@ const reducer = (state: CartProduct[] = initial_state, action: CartActions) => {
             {
                 let index_of_current_product = -1;
 
-                index_of_current_product = state.findIndex((product) => product.product_id === action.payload);
+                index_of_current_product = state.findIndex((product) => product.transaction_id === action.payload);
 
                 return [...state.slice(0, index_of_current_product), ...state.slice(index_of_current_product + 1)];
             }
