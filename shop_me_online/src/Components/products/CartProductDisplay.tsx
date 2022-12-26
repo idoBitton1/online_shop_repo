@@ -25,9 +25,10 @@ interface MyProps {
     address: string,
     amount: number,
     size: string,
+    setSumOfProducts: React.Dispatch<React.SetStateAction<number>>
 }
 
-export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_id, address, amount, size}) => {
+export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_id, address, amount, size, setSumOfProducts}) => {
 
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
 
@@ -58,18 +59,23 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
     useEffect(() => {
         if(product_data){
             setProductName(product_data.getProduct.name);
+
             setProductPrice(product_data.getProduct.price);
+
+            //add the price of this item to the total amount
+            setSumOfProducts((prev) => prev + amount * product_data.getProduct.price);
 
             if(products.products.length !== 0) {
                 let index = products.products.findIndex((product) => product.id === product_id);
-                setProductQuantity(products.products[index].quantity);
+                setProductQuantity(products.products[index].quantity); //a more accurate quantity
             }
             else
-                setProductQuantity(product_data.getProduct.quantity);
+                setProductQuantity(product_data.getProduct.quantity);// plan B
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [product_data]);
 
+    //remove the item from the cart
     const handleDeleteClick = () => {       
         deleteProductFromCart({
             variables: {
@@ -78,6 +84,9 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
         });
 
         removeFromCart(transaction_id);
+
+        //remove the item's price from the total amount
+        setSumOfProducts((prev) => prev - amount * product_price);
     }
 
     return (
@@ -86,7 +95,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
                 <img src={img} alt="product" className="cart_product_img" />
                 <div style={{ display: "flex", flexDirection: "column" }}>
                     <p className="cart_product_name">{product_name}</p>
-                    <p>{product_price}$</p>
+                    <p>price for each: {product_price}$</p>
                     <p>Left in stock: {product_quantity}</p>
                 </div>
             </div>
