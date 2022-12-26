@@ -32,6 +32,7 @@ export const GET_PRODUCT = gql`
 query Query($id: String!) {
   getProduct(id: $id) {
     name
+    quantity
     price
   }
 }
