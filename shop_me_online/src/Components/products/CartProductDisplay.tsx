@@ -2,8 +2,16 @@ import React, { useEffect, useState } from "react";
 import '../../Pages/Cart.css';
 
 //Apollo and graphql
-import { useLazyQuery } from "@apollo/client"
+import { useLazyQuery, useMutation } from "@apollo/client"
 import { GET_PRODUCT } from "../../Queries/Queries";
+import { DELETE_PRODUCT_FROM_CART } from "../../Queries/Mutations";
+
+//redux
+import { useDispatch } from 'react-redux';
+import { actionsCreators } from "../../state";
+import { bindActionCreators } from 'redux';
+import { useSelector } from 'react-redux';
+import { ReduxState } from "../../state";
 
 //icons
 import CloseIcon from '@mui/icons-material/Close';
@@ -21,11 +29,18 @@ interface MyProps {
 
 export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_id, address, amount, size}) => {
 
+    const products = useSelector((redux_state: ReduxState) => redux_state.products);
+
+    const dispatch = useDispatch();
+    const { removeFromCart } = bindActionCreators(actionsCreators, dispatch);
+
     const [product_name, setProductName] = useState<string>("");
     const [product_price, setProductPrice] = useState<number>(0);
     const [product_quantity, setProductQuantity] = useState<number>(0);
 
     const [ getProduct, { data: product_data }]  = useLazyQuery(GET_PRODUCT);
+
+    const [deleteProductFromCart] = useMutation(DELETE_PRODUCT_FROM_CART);
 
     //fetch if the product_id is not null
     useEffect(() => {
@@ -37,16 +52,33 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [product_id])
+    }, [product_id]);
 
     //set the information in the variables to display it
     useEffect(() => {
         if(product_data){
             setProductName(product_data.getProduct.name);
             setProductPrice(product_data.getProduct.price);
-            setProductQuantity(product_data.getProduct.quantity);
+
+            if(products.products.length !== 0) {
+                let index = products.products.findIndex((product) => product.id === product_id);
+                setProductQuantity(products.products[index].quantity);
+            }
+            else
+                setProductQuantity(product_data.getProduct.quantity);
         }
-    }, [product_data])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [product_data]);
+
+    const handleDeleteClick = () => {       
+        deleteProductFromCart({
+            variables: {
+                transactionId: transaction_id
+            }
+        });
+
+        removeFromCart(transaction_id);
+    }
 
     return (
         <div className="cart_product_display">
@@ -69,7 +101,9 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
             </div>
 
             <div style={{ marginLeft: 300 }}>
-                <button className="close_btn"><CloseIcon /></button>
+                <button className="delete_btn">
+                    <CloseIcon onClick={handleDeleteClick} />
+                </button>
             </div>
         </div>
     )
