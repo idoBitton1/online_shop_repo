@@ -48,12 +48,12 @@
     margin-bottom: -10px;
 }
 
-.close_btn {
+.delete_btn {
     background-color: white;
     border: none;
 }
 
-.close_btn :hover {
+.delete_btn :hover {
     cursor: pointer;
 }
 
