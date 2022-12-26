@@ -44,11 +44,11 @@ function Home() {
   const { data: products_data } = useQuery(GET_ALL_PRODUCTS);
   
   const dispatch = useDispatch();
-  const { setFilterProducts, setProducts, dont_fetch_products } = bindActionCreators(actionsCreators, dispatch);
+  const { setFilterProducts, setProducts, dontFetchProducts } = bindActionCreators(actionsCreators, dispatch);
 
   useEffect(() => {
     if(products_data && products.fetch_info) {
-      dont_fetch_products();
+      dontFetchProducts();
       setProducts(products_data.getAllProducts);
       setFilterProducts(products_data.getAllProducts);
     }
