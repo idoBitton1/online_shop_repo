@@ -22,10 +22,16 @@ const reducer = (state: CartProduct[] = initial_state, action: CartActions) => {
             {
                 let index_of_current_product = -1;
 
-                index_of_current_product = state.findIndex((product) => product.product_id === action.payload);
+                index_of_current_product = state.findIndex((product) => product.transaction_id === action.payload);
 
-                let temp = state;
-                temp[index_of_current_product].paid = true;
+                const product = {
+                    ...state[index_of_current_product],
+                    __typename: 'Users_products',
+                    paid: true
+                }
+
+                let temp = [...state];
+                temp[index_of_current_product] = product;
 
                 return [...temp];
             }
@@ -33,7 +39,7 @@ const reducer = (state: CartProduct[] = initial_state, action: CartActions) => {
             {
                 let index_of_current_product = -1;
 
-                index_of_current_product = state.findIndex((product) => product.product_id === action.payload);
+                index_of_current_product = state.findIndex((product) => product.transaction_id === action.payload);
 
                 let temp = state;
                 temp[index_of_current_product].paid = false;
