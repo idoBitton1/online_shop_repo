@@ -48,8 +48,8 @@ const reducer = (state: UserInfo = initial_state, action: UserActions) => {
         case UserActionType.LOGOUT:
             localStorage.removeItem("token");
             return {
-                ...state,
-                token: null
+                token: null,
+                fetch_info: true
             }
         case UserActionType.DONT_FETCH:
             return {
