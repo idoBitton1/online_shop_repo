@@ -19,3 +19,8 @@ export enum UserActionType {
     LOGOUT = "logout",
     DONT_FETCH = "dont_fetch"
 }
+
+export enum WishlistActionType {
+    ADD_TO_WISHLIST = "add_to_wishlist",
+    REMOVE_FROM_WISHLIST = "remove_from_wishlist"
+}

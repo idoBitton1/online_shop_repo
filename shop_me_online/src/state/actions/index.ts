@@ -6,7 +6,10 @@ import { ProductsActionType } from "../action_types";
 import { CartActionType } from "../action_types";
 import { CartProduct } from "../../Pages/Home";
 //user
-import { UserActionType } from "../action_types"
+import { UserActionType } from "../action_types";
+//wishlist
+import { WishlistActionType } from "../action_types";
+import { Wishlist } from "../../Pages/Home";
 
 export interface UpdateSupplyProps {
     id: string,
@@ -80,3 +83,15 @@ interface DontFetchAction {
 }
 
 export type UserActions = DontFetchAction | LoginUserAction | LogoutUserAction;
+
+interface AddToWishlist {
+    type: WishlistActionType.ADD_TO_WISHLIST,
+    payload: Wishlist
+}
+
+interface RemoveFromWishlist {
+    type: WishlistActionType.REMOVE_FROM_WISHLIST,
+    payload: Wishlist
+}
+
+export type WishlistActions = AddToWishlist | RemoveFromWishlist;

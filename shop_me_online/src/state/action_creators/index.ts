@@ -16,6 +16,11 @@ import { CartActionType } from "../action_types";
 import { UserActions } from "../actions";
 import { UserActionType } from "../action_types";
 
+//wishlist
+import { Wishlist } from "../../Pages/Home";
+import { WishlistActions } from "../actions";
+import { WishlistActionType } from "../action_types";
+
 //filtered_products functions
 export const setFilterProducts = (products: Product[]) => {
     return (dispatch: Dispatch<ProductsActions>) => {
@@ -129,6 +134,25 @@ export const dontFetch = () => {
     return (dispatch: Dispatch<UserActions>) => {
         dispatch({
             type: UserActionType.DONT_FETCH
+        });
+    }
+}
+
+//wishlist
+export const addToWishlist = (product: Wishlist) => {
+    return (dispatch: Dispatch<WishlistActions>) => {
+        dispatch({
+            type: WishlistActionType.ADD_TO_WISHLIST,
+            payload: product
+        });
+    }
+}
+
+export const removeFromWishlist = (ids: Wishlist) => {
+    return (dispatch: Dispatch<WishlistActions>) => {
+        dispatch({
+            type: WishlistActionType.REMOVE_FROM_WISHLIST,
+            payload: ids
         });
     }
 }
