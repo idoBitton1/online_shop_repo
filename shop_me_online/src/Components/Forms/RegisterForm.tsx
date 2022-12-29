@@ -147,8 +147,11 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
 
                     {is_manager ? <></> : <br />}
                     <br />
-                    <h3 className="point_me" style={{ color: "gray" }}
-                        onClick={() => navigate('/login')}>already have an account?</h3>
+                    <h3 className="point_me" 
+                        style={{ color: "gray" }}
+                        onClick={() => navigate('/login')}>
+                            already have an account?
+                    </h3>
 
                     <br />
                     <Button type="submit"
