@@ -50,3 +50,11 @@ mutation Mutation($transactionId: String!) {
   }
 }
 `;
+
+export const ADD_TO_WISHLIST = gql`
+mutation Mutation($userId: String!, $productId: String!) {
+  addToWishlist(user_id: $userId, product_id: $productId) {
+    product_id
+  }
+}
+`;
