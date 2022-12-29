@@ -4,7 +4,7 @@ import * as uuid from 'uuid';
 
 //Apollo and graphql
 import { useMutation } from "@apollo/client"
-import { UPDATE_PRODUCT_QUANTITY, ADD_PRODUCT_TO_CART } from "../../Queries/Mutations";
+import { UPDATE_PRODUCT_QUANTITY, ADD_PRODUCT_TO_CART, ADD_TO_WISHLIST } from "../../Queries/Mutations";
 
 //redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -40,10 +40,11 @@ export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, c
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
 
     const dispatch = useDispatch();
-    const { updateSupply, addProductToCart, setProducts } = bindActionCreators(actionsCreators, dispatch);
+    const { updateSupply, addProductToCart, addToWishlist } = bindActionCreators(actionsCreators, dispatch);
 
     const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY);
     const [addProductToCartMutation] = useMutation(ADD_PRODUCT_TO_CART);
+    const [addProductToWishlist, { error }] = useMutation(ADD_TO_WISHLIST)
 
     const toggleDialog = () => {
 
@@ -85,6 +86,7 @@ export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, c
             amount: amount
         });
 
+        //update db
         try {
             await updateProductQuantity({
                 variables: {
@@ -95,30 +97,6 @@ export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, c
         } catch (err: any) {
             console.error(err.message);
         }
-
-        //update the amount of the product that was bought
-        var index_of_current_product = -1;
-
-        //find the index of the product in the array
-        index_of_current_product = products.products.findIndex((product) => product.id === id);
-
-        //re create the product
-        const product = {
-            __typename: 'Product',
-            id: id,
-            name: name,
-            price: price,
-            quantity: quantity - amount,
-            category: category,
-            img_location: img_location
-        }
-
-        //change him with the old one
-        const temp = [...products.products];
-        temp[index_of_current_product] = product;
-
-        //change the array
-        setProducts([...temp]);
 
         //format today
         const formatted_now = formatDate();
@@ -137,6 +115,7 @@ export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, c
             transaction_id: my_transaction_id
         });
 
+        //update db
         try {
             await addProductToCartMutation({
                 variables: {
@@ -153,6 +132,35 @@ export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, c
         } catch (err: any) {
             console.error(err.message);
         }
+
+        toggleDialog();
+    }
+
+    const handleWishlist = async() => {
+        //if no user is connected, cant add to wishlist
+        if (!user.token) {
+            setErrText("log in to add to wishlist");
+            return;
+        }
+
+        try {
+            await addProductToWishlist({
+                variables: {
+                    userId: user.token.user_id,
+                    productId: id
+                }
+            });
+        } catch (err: any) {
+            console.log(err.message);
+            setErrText(error ? error.message : "");
+            return;
+        }
+
+        //adds the product to the wishlist
+        addToWishlist({
+            user_id: user.token.user_id,
+            product_id: id
+        });
 
         toggleDialog();
     }
@@ -249,7 +257,9 @@ export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, c
                                     sx={{ textTransform: "none", marginRight: 1, fontWeight: "bold" }}>
                                     Add To Cart
                                 </Button>
-                                <Button variant="outlined" endIcon={<FavoriteIcon />}
+                                <Button variant="outlined" 
+                                    onClick={handleWishlist}
+                                    endIcon={<FavoriteIcon />}
                                     sx={{ textTransform: "none", fontWeight: "bold" }}>
                                     Wishlist
                                 </Button>
