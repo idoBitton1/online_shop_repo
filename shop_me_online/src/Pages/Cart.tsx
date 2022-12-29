@@ -20,6 +20,9 @@ import { CartProductDisplay } from "../Components/products/CartProductDisplay";
 //material - ui
 import { Button } from "@mui/material";
 
+//icons
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+
 
 const Cart = () => {
 
@@ -30,6 +33,7 @@ const Cart = () => {
     const [delivery, setDelivery] = useState<number>(0);
     const delivery_ground_price = 15;
     const [total, setTotal] = useState<number>(0);
+    const [payment_succeed, setPaymentSucceed] = useState<boolean>(false);
 
     const [getCartProducts, { data: cart_data }] = useLazyQuery(GET_USER_CART_PRODUCTS);
 
@@ -54,7 +58,12 @@ const Cart = () => {
     //set the information in the cart redux state
     useEffect(() => {
         if (cart_data) {
-            setCart(cart_data.getUserCartProducts);
+            if(cart.length === 0) { //if the cart is empty when entering the cart page
+                setCart(cart_data.getUserCartProducts);
+            }
+            else {
+                window.location.reload(); //refresh the page, in case the fetch will not bring all the info at the first time
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cart_data]);
@@ -81,13 +90,16 @@ const Cart = () => {
             })
         });
 
+        setPaymentSucceed(true);
         setSumOfProducts(0);
         setDelivery(0);
     }
 
     useEffect(() => {
-        console.log(cart);
+        console.log(cart)
     }, [cart])
+
+    
 
     return (
         <div className="cart_container">
@@ -96,27 +108,40 @@ const Cart = () => {
             <h1 style={{ fontFamily: "Arial" }}> Your Cart </h1>
 
             <div className="cart_context">
-                <div className="summary_container">
-                    <p style={{ fontWeight: "bold" }}>Summary</p>
+                <div className="payment_section">
+                    <div className="summary_container">
+                        <p style={{ fontWeight: "bold" }}>Summary</p>
 
-                    <div className="summary_field">
-                        <p>Subtotal</p>
-                        <p>{sum_of_products}$</p>
+                        <div className="summary_field">
+                            <p>Subtotal</p>
+                            <p>{sum_of_products}$</p>
+                        </div>
+                        <div className="summary_field">
+                            <p>Delivery</p>
+                            <p>{delivery}$</p>
+                        </div>
+                        <div className="total_field">
+                            <p>Total</p>
+                            <p>{total}$</p>
+                        </div>
+                        
+                        <Button onClick={handlePayClick}
+                            variant="contained"
+                            fullWidth>
+                            Pay
+                        </Button>    
                     </div>
-                    <div className="summary_field">
-                        <p>Delivery</p>
-                        <p>{delivery}$</p>
-                    </div>
-                    <div className="total_field">
-                        <p>Total</p>
-                        <p>{total}$</p>
-                    </div>
-                    
-                    <Button onClick={handlePayClick}
-                        variant="contained"
-                        fullWidth>
-                        Pay
-                    </Button>
+
+                    {
+                        payment_succeed
+                        ?
+                        <div className="payment_succeeded">
+                            <CheckCircleRoundedIcon color="success" fontSize="large" />
+                            <h2 style={{color: "green"}}>Payment Succeed</h2>
+                        </div>
+                        :
+                        <></>
+                    }
                 </div>
 
                 <div className="cart_items">
