@@ -20,7 +20,7 @@ export const ConnectedUserDD: React.FC<MyProps> = ({ toggleDropDown }) => {
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
-    const { logout } = bindActionCreators(actionsCreators, dispatch);
+    const { logout, setCart } = bindActionCreators(actionsCreators, dispatch);
 
     return (
         <>
@@ -38,8 +38,10 @@ export const ConnectedUserDD: React.FC<MyProps> = ({ toggleDropDown }) => {
             </li>
             <li className='dropdown_item' onClick={() => {
                 logout(); //disconnect the user
+                setCart([]); //refresh the cart
                 navigate('/'); //return to the home page
                 toggleDropDown();
+                window.location.reload();
             }}>
                 <CiLogout className="dropdown_item_icon" />
                 <h3> log out </h3>
