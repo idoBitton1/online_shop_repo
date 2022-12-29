@@ -269,6 +269,33 @@ const resolvers = {
             } catch (err: any) {
                 console.error(err.message);
             }
+        },
+        //add a product to the wishlist
+        addToWishlist: async(_: any, args: any) => {
+            const { user_id, product_id } = args;
+
+            let check_if_exists;
+            try {
+                check_if_exists = await pool.query(
+                "SELECT EXISTS(SELECT 1 FROM wishlist WHERE user_id=$1 AND product_id=$2)",
+                [user_id, product_id]);
+            } catch (err: any) {
+                console.error(err.message);
+            }
+
+            if (check_if_exists?.rows[0].exists) {
+                throw new UserInputError("product is already in the wishlist");
+            }
+
+            try {
+                const wishlist_product = await pool.query(
+                "INSERT INTO wishlist (user_id, product_id) VALUES($1,$2) RETURNING * ",
+                [user_id, product_id]);
+
+                return wishlist_product.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
         }
     }
 };
@@ -339,7 +366,8 @@ const typeDefs = gql`
                          transaction_id: String!): Users_products,
 
         deleteProductFromCart(transaction_id: String!): Users_products,
-        setProductAsPaid(transaction_id: String!): Users_products
+        setProductAsPaid(transaction_id: String!): Users_products,
+        addToWishlist(user_id: String!, product_id: String!): Wishlist
     }
 `;
 
