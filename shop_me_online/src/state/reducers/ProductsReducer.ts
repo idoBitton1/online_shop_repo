@@ -39,25 +39,36 @@ const reducer = (state:ProductsInfo = initial_state, action: ProductsActions) =>
             }
         case ProductsActionType.UPDATE_SUPPLY:
             {
-                let index_of_current_product = -1;
-                index_of_current_product = state.filtered_products.findIndex((product) => product.id === action.payload.id);
+                //update the filtered products
+                let index_of_current_product_filtered = -1;
+                index_of_current_product_filtered = state.filtered_products.findIndex((product) => product.id === action.payload.id);
 
-                const prev_product = state.filtered_products[index_of_current_product];
-                const product = {
-                    id: prev_product.id,
-                    name: prev_product.name,
-                    price: prev_product.price,
-                    quantity: prev_product.quantity - action.payload.amount,
-                    category: prev_product.category,
-                    img_location: prev_product.img_location
+                const prev_product_filtered = state.filtered_products[index_of_current_product_filtered];
+                const product_filtered = {
+                    ...prev_product_filtered,
+                    quantity: prev_product_filtered.quantity - action.payload.amount
                 }
 
-                const temp = [...state.filtered_products];
+                const temp_filtered = [...state.filtered_products];
+                temp_filtered[index_of_current_product_filtered] = product_filtered;
+
+                //update the regular products
+                let index_of_current_product = -1;
+                index_of_current_product = state.products.findIndex((product) => product.id === action.payload.id);
+
+                const prev_product = state.products[index_of_current_product];
+                const product = {
+                    ...prev_product,
+                    quantity: prev_product.quantity - action.payload.amount
+                }
+
+                const temp = [...state.products];
                 temp[index_of_current_product] = product;
 
                 return {
                     ...state,
-                    filtered_products: [...temp]
+                    products: [...temp],
+                    filtered_products: [...temp_filtered]
                 };
             }
         case ProductsActionType.DONT_FETCH_PRODUCTS:
