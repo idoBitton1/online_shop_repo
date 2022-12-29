@@ -11,6 +11,7 @@ import Home from './Pages/Home';
 import Register from './Pages/Register';
 import LogIn from './Pages/LogIn';
 import Cart from './Pages/Cart';
+import Wishlist from './Pages/Wishlist';
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
             <Route path="/registerManager" element={<Register is_manager={true} />} />
             <Route path="/login" element={<LogIn />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="wishlist" element={<Wishlist />} />
           </Routes>
         </Router>
       </div>
