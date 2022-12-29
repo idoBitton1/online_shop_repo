@@ -32,7 +32,7 @@ export const ConnectedUserDD: React.FC<MyProps> = ({ toggleDropDown }) => {
                 <BsCart2 className="dropdown_item_icon" />
                 <h3>cart</h3>
             </li>
-            <li className="dropdown_item">
+            <li className="dropdown_item" onClick={() => navigate('/wishlist')}>
                 <AiOutlineHeart className="dropdown_item_icon" />
                 <h3>wishlist</h3>
             </li>
