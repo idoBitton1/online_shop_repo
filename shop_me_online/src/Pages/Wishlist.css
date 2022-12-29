@@ -1,0 +1,9 @@
+.wishlist_container {
+    text-align: center;
+}
+
+.wishlist_context {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
