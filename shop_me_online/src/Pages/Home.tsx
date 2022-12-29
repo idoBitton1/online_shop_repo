@@ -37,6 +37,11 @@ export interface CartProduct { //users_products table
   transaction_id: string
 }
 
+export interface Wishlist {
+  user_id: string,
+  product_id: string
+}
+
 function Home() {
 
   const products = useSelector((redux_state: ReduxState) => redux_state.products);
