@@ -37,3 +37,12 @@ query Query($id: String!) {
   }
 }
 `;
+
+export const GET_USER_WISHLIST = gql`
+query Query($userId: String!) {
+  getUserWishlist(user_id: $userId) {
+    user_id
+    product_id
+  }
+}
+`;
