@@ -3,7 +3,7 @@ import './Cart.css';
 
 //Apollo and graphql
 import { useLazyQuery, useMutation } from "@apollo/client"
-import { GET_USER_CART_PRODUCTS } from "../Queries/Queries";
+import { GET_USER_CART_PRODUCTS, GET_USER_WISHLIST } from "../Queries/Queries";
 import { SET_PRODUCT_AS_PAID } from "../Queries/Mutations";
 
 //redux
@@ -28,6 +28,7 @@ const Cart = () => {
 
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
     const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
+    const wishlist = useSelector((redux_state: ReduxState) => redux_state.wishlist);
 
     const [sum_of_products, setSumOfProducts] = useState<number>(0);
     const [delivery, setDelivery] = useState<number>(0);
@@ -36,11 +37,12 @@ const Cart = () => {
     const [payment_succeed, setPaymentSucceed] = useState<boolean>(false);
 
     const [getCartProducts, { data: cart_data }] = useLazyQuery(GET_USER_CART_PRODUCTS);
+    const [getWishlistProducts, { data: wishlist_data }] = useLazyQuery(GET_USER_WISHLIST);
 
     const [setProductAsPaid] = useMutation(SET_PRODUCT_AS_PAID);
 
     const dispatch = useDispatch();
-    const { setCart, dontFetch, setPaid } = bindActionCreators(actionsCreators, dispatch);
+    const { setCart, dontFetch, setPaid, setWishlist } = bindActionCreators(actionsCreators, dispatch);
 
     //when the user is connecting, fetch his cart information
     useEffect(() => {
@@ -50,7 +52,12 @@ const Cart = () => {
                 variables: {
                     userId: user.token.user_id
                 }
-            })
+            });
+            getWishlistProducts({
+                variables: {
+                    userId: user.token.user_id
+                }
+            });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.token]);
@@ -67,6 +74,18 @@ const Cart = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cart_data]);
+
+    useEffect(() => {
+        if(wishlist_data) {
+            if(wishlist.length === 0) {
+                setWishlist(wishlist_data.getUserWishlist);
+            }
+            else {
+                window.location.reload();
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [wishlist_data])
 
     useEffect(() => {
         //add delivery price by distance later
@@ -94,12 +113,6 @@ const Cart = () => {
         setSumOfProducts(0);
         setDelivery(0);
     }
-
-    useEffect(() => {
-        console.log(cart)
-    }, [cart])
-
-    
 
     return (
         <div className="cart_container">
