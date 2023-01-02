@@ -139,6 +139,15 @@ export const dontFetch = () => {
 }
 
 //wishlist
+export const setWishlist = (products: Wishlist[]) => {
+    return (dispatch: Dispatch<WishlistActions>) => {
+        dispatch({
+            type: WishlistActionType.SET_WISHLIST,
+            payload: products
+        });
+    }
+}
+
 export const addToWishlist = (product: Wishlist) => {
     return (dispatch: Dispatch<WishlistActions>) => {
         dispatch({

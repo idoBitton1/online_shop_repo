@@ -84,14 +84,19 @@ interface DontFetchAction {
 
 export type UserActions = DontFetchAction | LoginUserAction | LogoutUserAction;
 
-interface AddToWishlist {
+interface SetWishlistAction {
+    type: WishlistActionType.SET_WISHLIST,
+    payload: Wishlist[]
+}
+
+interface AddToWishlistAction {
     type: WishlistActionType.ADD_TO_WISHLIST,
     payload: Wishlist
 }
 
-interface RemoveFromWishlist {
+interface RemoveFromWishlistAction {
     type: WishlistActionType.REMOVE_FROM_WISHLIST,
     payload: Wishlist
 }
 
-export type WishlistActions = AddToWishlist | RemoveFromWishlist;
+export type WishlistActions = AddToWishlistAction | RemoveFromWishlistAction | SetWishlistAction;

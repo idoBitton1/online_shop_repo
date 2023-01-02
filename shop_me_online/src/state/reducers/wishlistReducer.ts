@@ -6,6 +6,8 @@ const initial_state: Wishlist[] = [];
 
 const reducer = (state: Wishlist[] = initial_state, action: WishlistActions) => {
     switch(action.type) {
+        case WishlistActionType.SET_WISHLIST:
+            return action.payload;
         case WishlistActionType.ADD_TO_WISHLIST:
             return [...state, action.payload];
         case WishlistActionType.REMOVE_FROM_WISHLIST:

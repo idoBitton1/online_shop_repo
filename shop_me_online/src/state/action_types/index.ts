@@ -21,6 +21,7 @@ export enum UserActionType {
 }
 
 export enum WishlistActionType {
+    SET_WISHLIST = "set_wishlist",
     ADD_TO_WISHLIST = "add_to_wishlist",
     REMOVE_FROM_WISHLIST = "remove_from_wishlist"
 }
