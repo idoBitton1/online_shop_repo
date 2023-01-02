@@ -70,7 +70,7 @@ const resolvers = {
             }
         },
         //get a product by id
-        getProduct:async (_: any, args: any) => {
+        getProduct: async(_: any, args: any) => {
             const { id } = args;
 
             try {
@@ -79,6 +79,20 @@ const resolvers = {
                 [id]);
 
                 return product.rows[0];
+            } catch (err: any) {
+                console.log(err.message);
+            }
+        },
+        //get the wishlist products of a user
+        getUserWishlist: async(_: any, args: any) => {
+            const { user_id } = args;
+
+            try {
+                const wishlist_products = await pool.query(
+                "SELECT * FROM wishlist WHERE user_id=$1",
+                [user_id]);
+    
+                return wishlist_products.rows;
             } catch (err: any) {
                 console.log(err.message);
             }
@@ -296,6 +310,20 @@ const resolvers = {
             } catch (err: any) {
                 console.error(err.message);
             }
+        },
+        //delete product from the user's wishlist
+        deleteProductFromWishlist: async(_: any, args: any) => {
+            const { user_id, product_id } = args;
+
+            try {
+                const delete_product = await pool.query(
+                "DELETE FROM wishlist WHERE user_id=$1 AND product_id=$2",
+                [user_id, product_id]);
+    
+                return delete_product.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
         }
     }
 };
@@ -342,7 +370,8 @@ const typeDefs = gql`
     type Query {
         getAllProducts: [Product],
         getUserCartProducts(user_id: String!): [Users_products],
-        getProduct(id: String!): Product
+        getProduct(id: String!): Product,
+        getUserWishlist(user_id: String!): [Wishlist]
     }
 
     type Mutation{
@@ -367,7 +396,8 @@ const typeDefs = gql`
 
         deleteProductFromCart(transaction_id: String!): Users_products,
         setProductAsPaid(transaction_id: String!): Users_products,
-        addToWishlist(user_id: String!, product_id: String!): Wishlist
+        addToWishlist(user_id: String!, product_id: String!): Wishlist,
+        deleteProductFromWishlist(user_id: String!, product_id: String!): Wishlist
     }
 `;
 
