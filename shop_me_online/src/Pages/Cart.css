@@ -39,8 +39,8 @@
 }
 
 .order_info {
-    width: 200px;
-    margin-left: 150px;
+    width: 280px;
+    margin-left: 70px;
 }
 
 .order_info_headline {
@@ -86,4 +86,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.change {
+    margin-left: 10px;
+    margin-right: 10px;
+    text-decoration: underline;
+}
+
+.change:hover {
+    cursor: pointer;
 }
