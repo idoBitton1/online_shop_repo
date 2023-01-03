@@ -166,7 +166,7 @@ const Cart = () => {
                                     product_id={product.product_id}
                                     transaction_id={product.transaction_id}
                                     address={product.address}
-                                    amount={product.amount}
+                                    quantity={product.amount}
                                     size={product.size}
                                     setSumOfProducts={setSumOfProducts}
                                     key={i}
