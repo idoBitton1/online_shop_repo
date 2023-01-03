@@ -275,11 +275,11 @@ const resolvers = {
             const { transaction_id } = args;
 
             try {
-                const delete_product = await pool.query(
+                const update = await pool.query(
                 "UPDATE users_products SET paid=true WHERE transaction_id=$1",
                 [transaction_id]);
 
-                return delete_product.rows[0];
+                return update.rows[0];
             } catch (err: any) {
                 console.error(err.message);
             }
@@ -321,6 +321,34 @@ const resolvers = {
                 [user_id, product_id]);
     
                 return delete_product.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //update the quantity of the cart product
+        updateCartProductAmount: async(_: any, args: any) => {
+            const { transaction_id, new_quantity } = args;
+
+            try {
+                const update = await pool.query(
+                "UPDATE users_products SET amount=$1 WHERE transaction_id=$2",
+                [new_quantity, transaction_id]);
+
+                return update.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //update the size of the cart product
+        updateCartProductSize: async(_: any, args: any) => {
+            const { transaction_id, new_size } = args;
+
+            try {
+                const update = await pool.query(
+                "UPDATE users_products SET size=$1 WHERE transaction_id=$2",
+                [new_size, transaction_id]);
+
+                return update.rows[0];
             } catch (err: any) {
                 console.error(err.message);
             }
@@ -397,7 +425,9 @@ const typeDefs = gql`
         deleteProductFromCart(transaction_id: String!): Users_products,
         setProductAsPaid(transaction_id: String!): Users_products,
         addToWishlist(user_id: String!, product_id: String!): Wishlist,
-        deleteProductFromWishlist(user_id: String!, product_id: String!): Wishlist
+        deleteProductFromWishlist(user_id: String!, product_id: String!): Wishlist,
+        updateCartProductAmount(transaction_id: String!, new_quantity: Int!): Users_products
+        updateCartProductSize(transaction_id: String!, new_size: String!): Users_products
     }
 `;
 
