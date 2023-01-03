@@ -66,3 +66,19 @@ mutation Mutation($userId: String!, $productId: String!) {
   }
 }
 `;
+
+export const UPDATE_CART_PRODUCT_AMOUNT = gql`
+mutation Mutation($transactionId: String!, $newQuantity: Int!) {
+  updateCartProductAmount(transaction_id: $transactionId, new_quantity: $newQuantity) {
+    amount
+  }
+}
+`;
+
+export const UPDATE_CART_PRODUCT_SIZE = gql`
+mutation Mutation($transactionId: String!, $newSize: String!) {
+  updateCartProductSize(transaction_id: $transactionId, new_size: $newSize) {
+    size
+  }
+}
+`;
