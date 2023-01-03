@@ -46,6 +46,40 @@ const reducer = (state: CartProduct[] = initial_state, action: CartActions) => {
 
                 return [...temp];
             }
+        case CartActionType.CHANGE_QUANTITY:
+            {
+                let index_of_current_product = -1;
+
+                index_of_current_product = state.findIndex((product) => product.transaction_id === action.payload.transaction_id);
+
+                const product = {
+                    ...state[index_of_current_product],
+                    __typename: 'Users_products',
+                    amount: action.payload.new_value
+                }
+
+                let temp = [...state];
+                temp[index_of_current_product] = product;
+
+                return [...temp];
+            }
+        case CartActionType.CHANGE_SIZE:
+            {
+                let index_of_current_product = -1;
+
+                index_of_current_product = state.findIndex((product) => product.transaction_id === action.payload.transaction_id);
+
+                const product = {
+                    ...state[index_of_current_product],
+                    __typename: 'Users_products',
+                    size: action.payload.new_value
+                }
+
+                let temp = [...state];
+                temp[index_of_current_product] = product;
+
+                return [...temp];
+            }
         default:
             return state;
     }

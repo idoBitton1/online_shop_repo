@@ -11,7 +11,9 @@ export enum CartActionType {
     ADD_PRODUCT = "add_product",
     SET_PAID = "set_paid",
     SET_NOT_PAID = "set_not_paid",
-    REMOVE = "remove"
+    REMOVE = "remove",
+    CHANGE_QUANTITY = "change_quantity",
+    CHANGE_SIZE = "change_size"
 }
 
 export enum UserActionType {

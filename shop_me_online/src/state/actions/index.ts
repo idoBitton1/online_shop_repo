@@ -67,7 +67,27 @@ interface RemoveFromCartAction {
     payload: string
 }
 
-export type CartActions = SetCartAction | AddProductAction | RemoveFromCartAction | SetPaidAction | SetNotPaidAction;
+export interface ChangeQuantityProperties {
+    transaction_id: string,
+    new_value: number
+}
+
+interface ChangeQuantityAction {
+    type: CartActionType.CHANGE_QUANTITY,
+    payload: ChangeQuantityProperties
+}
+
+export interface ChangeSizeProperties {
+    transaction_id: string,
+    new_value: string
+}
+
+interface ChangeSizeAction {
+    type: CartActionType.CHANGE_SIZE,
+    payload: ChangeSizeProperties
+}
+
+export type CartActions = SetCartAction | AddProductAction | RemoveFromCartAction | SetPaidAction | SetNotPaidAction | ChangeQuantityAction | ChangeSizeAction;
 
 interface LoginUserAction {
     type: UserActionType.LOGIN,

@@ -3,13 +3,12 @@ import { Dispatch } from "redux";
 //filtered_products
 import { Product } from "../../Pages/Home";
 import { Filters } from "../../Components/Header/NavigationBar";
-import { UpdateSupplyProps } from "../actions";
-import { ProductsActions } from "../actions";
+import { UpdateSupplyProps, ProductsActions } from "../actions";
 import { ProductsActionType } from "../action_types";
 
 //cart
 import { CartProduct } from "../../Pages/Home";
-import { CartActions } from "../actions";
+import { CartActions, ChangeQuantityProperties, ChangeSizeProperties } from "../actions";
 import { CartActionType } from "../action_types";
 
 //user
@@ -108,6 +107,24 @@ export const removeFromCart = (transaction_id: string) => {
         dispatch({
             type: CartActionType.REMOVE,
             payload: transaction_id
+        });
+    }
+}
+
+export const changeQuantity = (change_properties: ChangeQuantityProperties) => {
+    return (dispatch: Dispatch<CartActions>) => {
+        dispatch({
+            type: CartActionType.CHANGE_QUANTITY,
+            payload: change_properties
+        });
+    }
+}
+
+export const changeSize = (change_properties: ChangeSizeProperties) => {
+    return (dispatch: Dispatch<CartActions>) => {
+        dispatch({
+            type: CartActionType.CHANGE_SIZE,
+            payload: change_properties
         });
     }
 }
