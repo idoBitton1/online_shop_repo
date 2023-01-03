@@ -327,12 +327,12 @@ const resolvers = {
         },
         //update the quantity of the cart product
         updateCartProductAmount: async(_: any, args: any) => {
-            const { transaction_id, new_quantity } = args;
+            const { transaction_id, new_amount } = args;
 
             try {
                 const update = await pool.query(
                 "UPDATE users_products SET amount=$1 WHERE transaction_id=$2",
-                [new_quantity, transaction_id]);
+                [new_amount, transaction_id]);
 
                 return update.rows[0];
             } catch (err: any) {
@@ -426,7 +426,7 @@ const typeDefs = gql`
         setProductAsPaid(transaction_id: String!): Users_products,
         addToWishlist(user_id: String!, product_id: String!): Wishlist,
         deleteProductFromWishlist(user_id: String!, product_id: String!): Wishlist,
-        updateCartProductAmount(transaction_id: String!, new_quantity: Int!): Users_products
+        updateCartProductAmount(transaction_id: String!, new_amount: Int!): Users_products
         updateCartProductSize(transaction_id: String!, new_size: String!): Users_products
     }
 `;
