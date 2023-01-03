@@ -34,6 +34,7 @@ query Query($id: String!) {
     name
     quantity
     price
+    category
   }
 }
 `;
