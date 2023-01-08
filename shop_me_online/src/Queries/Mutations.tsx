@@ -82,3 +82,11 @@ mutation Mutation($transactionId: String!, $newSize: String!) {
   }
 }
 `;
+
+export const UPDATE_USER_INFORMATION = gql`
+mutation Mutation($id: String!, $firstName: String!, $lastName: String!, $password: String!, $address: String!, $email: String!, $isManager: Boolean!) {
+  updateUserInformation(id: $id, first_name: $firstName, last_name: $lastName, password: $password, address: $address, email: $email, is_manager: $isManager) {
+    id
+  }
+}
+`;
