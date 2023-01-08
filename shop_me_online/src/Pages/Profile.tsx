@@ -1,7 +1,9 @@
 import React from "react";
+import './Profile.css';
 
 //components
 import { Header } from "../Components/Header/Header";
+import { ProfileForm } from "../Components/Forms/ProfileForm";
 
 const Profile = () => {
 
@@ -9,8 +11,10 @@ const Profile = () => {
         <div className="profile_container">
             <Header />
 
-            <div className="profile_form">
-                
+            <h1 style={{ fontFamily: "Arial" }}>Profile</h1>
+
+            <div className="profile_context">
+                <ProfileForm />
             </div>
         </div>
     );
