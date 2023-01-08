@@ -1,0 +1,9 @@
+.profile_container {
+    text-align: center;
+}
+
+.profile_context {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
