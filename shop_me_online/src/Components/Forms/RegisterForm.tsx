@@ -21,7 +21,7 @@ interface MyProps {
     is_manager: boolean
 }
 
-interface MyFormValues {
+export interface MyFormValues {
     first_name: string,
     last_name: string,
     password: string,
