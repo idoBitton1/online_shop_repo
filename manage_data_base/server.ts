@@ -19,14 +19,14 @@ function onlyLetters(str: string) {
 //check the inforamtion
 const checkRegisterInformation = (first_name: string, last_name: string, password: string, address: string, is_manager: boolean) => {
 
-    if (first_name.length < 3)
+    if (first_name.length < 2)
         throw new UserInputError("first name is too short");
     if (first_name.length > 15)
         throw new UserInputError("first name is too long");
     if (!onlyLetters(first_name))
         throw new UserInputError("first name must contain only letters");
 
-    if (last_name.length < 3)
+    if (last_name.length < 2)
         throw new UserInputError("last name is too short");
     if (last_name.length > 20)
         throw new UserInputError("last name is too long");
@@ -93,6 +93,20 @@ const resolvers = {
                 [user_id]);
     
                 return wishlist_products.rows;
+            } catch (err: any) {
+                console.log(err.message);
+            }
+        },
+        //get user information
+        getUser: async(_: any, args: any) => {
+            const { id } = args;
+
+            try {
+                const user = await pool.query(
+                "SELECT * FROM users WHERE id=$1",
+                [id]);
+
+                return user.rows[0];
             } catch (err: any) {
                 console.log(err.message);
             }
@@ -352,6 +366,38 @@ const resolvers = {
             } catch (err: any) {
                 console.error(err.message);
             }
+        },
+        //update user information
+        updateUserInformation: async(_: any, args: any) => {
+            const { id, first_name, last_name, password, address, email, is_manager } = args;
+
+            //check the new values are valid
+            checkRegisterInformation(first_name, last_name, password, address, is_manager);
+        
+            //valid email is unique
+            var check_email;
+            try {
+                check_email = await pool.query(
+                "SELECT EXISTS(SELECT 1 FROM users WHERE email=$1 AND id!=$2)",
+                [email, id]);
+            } catch (err: any) {
+                console.log(err.message)
+            }
+
+            //if email used with another user, throw user error
+            if (check_email && check_email.rows[0].exists) {
+                throw new UserInputError("email already used");
+            }
+
+            try {
+                const update = await pool.query(
+                "UPDATE users SET first_name=$1, last_name=$2, password=$3, address=$4, email=$5 WHERE id=$6",
+                [first_name, last_name, password, address, email, id]);
+
+                return update.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
         }
     }
 };
@@ -399,7 +445,8 @@ const typeDefs = gql`
         getAllProducts: [Product],
         getUserCartProducts(user_id: String!): [Users_products],
         getProduct(id: String!): Product,
-        getUserWishlist(user_id: String!): [Wishlist]
+        getUserWishlist(user_id: String!): [Wishlist],
+        getUser(id: String!): User
     }
 
     type Mutation{
@@ -421,6 +468,14 @@ const typeDefs = gql`
                          paid: Boolean!,
                          ordering_time: String!,
                          transaction_id: String!): Users_products,
+
+        updateUserInformation(id: String!,
+                              first_name: String!,
+                              last_name: String!,
+                              password: String!,
+                              address: String!,
+                              email: String!
+                              is_manager: Boolean!): User
 
         deleteProductFromCart(transaction_id: String!): Users_products,
         setProductAsPaid(transaction_id: String!): Users_products,
