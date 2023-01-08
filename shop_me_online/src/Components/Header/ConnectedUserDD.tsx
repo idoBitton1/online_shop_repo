@@ -24,7 +24,7 @@ export const ConnectedUserDD: React.FC<MyProps> = ({ toggleDropDown }) => {
 
     return (
         <>
-            <li className="dropdown_item">
+            <li className="dropdown_item" onClick={() => navigate('/profile')}>
                 <AiOutlineUser className="dropdown_item_icon" />
                 <h3>profile</h3>
             </li>
