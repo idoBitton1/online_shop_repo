@@ -47,3 +47,16 @@ query Query($userId: String!) {
   }
 }
 `;
+
+export const GET_USER = gql`
+query Query($userId: String!) {
+  getUser(id: $userId) {
+    first_name
+    last_name
+    password
+    address
+    email
+    is_manager
+  }
+}
+`;
