@@ -20,6 +20,9 @@ import { Select, FormControl, MenuItem, SelectChangeEvent } from "@mui/material"
 //icons
 import CloseIcon from '@mui/icons-material/Close';
 
+//interface
+import { PaymentProps } from "../../Pages/Cart";
+ 
 //images
 import img from "../../Images/j1.png";
 
@@ -29,7 +32,7 @@ interface MyProps {
     address: string,
     quantity: number,
     size: string,
-    setSumOfProducts: React.Dispatch<React.SetStateAction<number>>
+    setPaymentInformation: React.Dispatch<React.SetStateAction<PaymentProps>>
 }
 
 interface ProductProperties {
@@ -44,7 +47,7 @@ interface ChangeProperties {
     quantity: boolean
 }
 
-export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_id, address, quantity, size, setSumOfProducts}) => {
+export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_id, address, quantity, size, setPaymentInformation}) => {
 
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
 
@@ -94,7 +97,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
             });
 
             //add the price of this item to the total amount
-            setSumOfProducts((prev) => prev + order_quantity * product_data.getProduct.price);
+            setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_quantity * product_data.getProduct.price}));
 
             if(products.products.length !== 0) {
                 let index = products.products.findIndex((product) => product.id === product_id);
@@ -118,7 +121,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
     //update the total amount, if changed
     useEffect(() => {
         //add the price of this item to the total amount
-        setSumOfProducts((prev) => prev + order_quantity * product_info.price);
+        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_quantity * product_info.price}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [order_quantity]);
 
@@ -151,7 +154,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
         removeFromCart(transaction_id);
 
         //remove the item's price from the total amount
-        setSumOfProducts((prev) => prev - order_quantity * product_info.price);
+        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products - order_quantity * product_info.price}));
     }
 
     const handleChangeQuantity = () => {
@@ -174,7 +177,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
         }
 
         //remove the item's price from the total amount, and it will re-add the new amount in the useEffect
-        setSumOfProducts((prev) => prev - order_quantity * product_info.price);
+        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products - order_quantity * product_info.price}));
 
         //update the state
         setOrderQuantity(products_quantity);
