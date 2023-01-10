@@ -66,7 +66,7 @@ const resolvers = {
 
                 return cart_products.rows;
             } catch (err: any) {
-                console.log(err.message);
+                console.error(err.message);
             }
         },
         //get a product by id
@@ -80,7 +80,7 @@ const resolvers = {
 
                 return product.rows[0];
             } catch (err: any) {
-                console.log(err.message);
+                console.error(err.message);
             }
         },
         //get the wishlist products of a user
@@ -94,7 +94,7 @@ const resolvers = {
     
                 return wishlist_products.rows;
             } catch (err: any) {
-                console.log(err.message);
+                console.error(err.message);
             }
         },
         //get user information
@@ -108,7 +108,21 @@ const resolvers = {
 
                 return user.rows[0];
             } catch (err: any) {
-                console.log(err.message);
+                console.error(err.message);
+            }
+        },
+        //check if the user has a credit card
+        checkForCreditCard: async(_: any, args: any) => {
+            const { id } = args;
+
+            try {
+                const check = await pool.query(
+                "SELECT EXISTS(SELECT 1 FROM users WHERE id=$1 AND credit_card_number is not null)",
+                [id]);
+
+                return check.rows[0].exists;
+            } catch (err: any) {
+                console.error(err.message);
             }
         }
     },
@@ -128,7 +142,7 @@ const resolvers = {
                 "SELECT uuid_generate_v4()"
                 );
             } catch (err: any) {
-                console.log(err.message);
+                console.error(err.message);
             }
             
             if(!generate_id) {
@@ -146,7 +160,7 @@ const resolvers = {
                 "SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)",
                 [email]);
             } catch (err: any) {
-                console.log(err.message)
+                console.error(err.message);
             }
 
             //if email exists, throw user error
@@ -381,7 +395,7 @@ const resolvers = {
                 "SELECT EXISTS(SELECT 1 FROM users WHERE email=$1 AND id!=$2)",
                 [email, id]);
             } catch (err: any) {
-                console.log(err.message)
+                console.error(err.message);
             }
 
             //if email used with another user, throw user error
@@ -446,7 +460,8 @@ const typeDefs = gql`
         getUserCartProducts(user_id: String!): [Users_products],
         getProduct(id: String!): Product,
         getUserWishlist(user_id: String!): [Wishlist],
-        getUser(id: String!): User
+        getUser(id: String!): User,
+        checkForCreditCard(id: String!): Boolean
     }
 
     type Mutation{
