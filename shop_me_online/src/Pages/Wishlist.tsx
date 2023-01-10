@@ -22,8 +22,28 @@ const Wishlist = () => {
     const wishlist = useSelector((redux_state: ReduxState) => redux_state.wishlist);
     const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
 
-    const [getWishlistProducts, { data: wishlist_data }] = useLazyQuery(GET_USER_WISHLIST);
-    const [getCartProducts, { data: cart_data }] = useLazyQuery(GET_USER_CART_PRODUCTS);
+    //when the info comes back, set the information in the cart redux state
+    const [getCartProducts] = useLazyQuery(GET_USER_CART_PRODUCTS, {
+        onCompleted(data) {
+            if(cart.length === 0) { //if the cart is empty when entering the cart page
+                setCart(data.getUserCartProducts);
+            }
+            else {
+                window.location.reload(); //refresh the page, in case the fetch will not bring all the info at the first time
+            }
+        }
+    });
+    //when the info comes back, set the information in the wishlist redux state
+    const [getWishlistProducts] = useLazyQuery(GET_USER_WISHLIST, {
+        onCompleted(data) {
+            if(wishlist.length === 0) {
+                setWishlist(data.getUserWishlist);
+            }
+            else {
+                window.location.reload();
+            }
+        }
+    });
 
     const dispatch = useDispatch();
     const { dontFetch, setWishlist, setCart } = bindActionCreators(actionsCreators, dispatch);
@@ -45,31 +65,6 @@ const Wishlist = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.token]);
-
-    //set the information in the cart redux state
-    useEffect(() => {
-        if (cart_data) {
-            if(cart.length === 0) { //if the cart is empty when entering the cart page
-                setCart(cart_data.getUserCartProducts);
-            }
-            else {
-                window.location.reload(); //refresh the page, in case the fetch will not bring all the info at the first time
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cart_data]);
-
-    useEffect(() => {
-        if(wishlist_data) {
-            if(wishlist.length === 0) {
-                setWishlist(wishlist_data.getUserWishlist);
-            }
-            else {
-                window.location.reload();
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [wishlist_data]);
 
     return (
         <div className="wishlist_container">
