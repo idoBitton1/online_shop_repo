@@ -60,3 +60,9 @@ query Query($userId: String!) {
   }
 }
 `;
+
+export const CHECK_FOR_CREDIT_CARD = gql`
+query Query($id: String!) {
+  checkForCreditCard(id: $id)
+}
+`;
