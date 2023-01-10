@@ -3,7 +3,7 @@ import './Cart.css';
 
 //Apollo and graphql
 import { useLazyQuery, useMutation } from "@apollo/client"
-import { GET_USER_CART_PRODUCTS, GET_USER_WISHLIST } from "../Queries/Queries";
+import { GET_USER_CART_PRODUCTS, GET_USER_WISHLIST, CHECK_FOR_CREDIT_CARD } from "../Queries/Queries";
 import { SET_PRODUCT_AS_PAID } from "../Queries/Mutations";
 
 //redux
@@ -18,11 +18,18 @@ import { Header } from "../Components/Header/Header";
 import { CartProductDisplay } from "../Components/products/CartProductDisplay";
 
 //material - ui
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 //icons
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 
+export interface PaymentProps {
+    sum_of_products: number,
+    delivery: number,
+    total: number,
+    has_credit_card: boolean,
+    payment_succeed: boolean
+}
 
 const Cart = () => {
 
@@ -30,14 +37,43 @@ const Cart = () => {
     const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
     const wishlist = useSelector((redux_state: ReduxState) => redux_state.wishlist);
 
-    const [sum_of_products, setSumOfProducts] = useState<number>(0);
-    const [delivery, setDelivery] = useState<number>(0);
     const delivery_ground_price = 15;
-    const [total, setTotal] = useState<number>(0);
-    const [payment_succeed, setPaymentSucceed] = useState<boolean>(false);
+    const [payment_information, setPaymentInformation] = useState<PaymentProps>({
+        sum_of_products: 0,
+        delivery: 0,
+        total: 0,
+        has_credit_card: false,
+        payment_succeed: false
+    });
+    const [error, setError] = useState<string>("");
 
-    const [getCartProducts, { data: cart_data }] = useLazyQuery(GET_USER_CART_PRODUCTS);
-    const [getWishlistProducts, { data: wishlist_data }] = useLazyQuery(GET_USER_WISHLIST);
+    //when the info comes back, set the information in the cart redux state
+    const [getCartProducts] = useLazyQuery(GET_USER_CART_PRODUCTS, {
+        onCompleted(data) {
+            if(cart.length === 0) { //if the cart is empty when entering the cart page
+                setCart(data.getUserCartProducts);
+            }
+            else {
+                window.location.reload(); //refresh the page, in case the fetch will not bring all the info at the first time
+            }
+        }
+    });
+    //when the info comes back, set the information in the wishlist redux state
+    const [getWishlistProducts] = useLazyQuery(GET_USER_WISHLIST, {
+        onCompleted(data) {
+            if(wishlist.length === 0) {
+                setWishlist(data.getUserWishlist);
+            }
+            else {
+                window.location.reload();
+            }
+        }
+    });
+    const [checkForCreditCard] = useLazyQuery(CHECK_FOR_CREDIT_CARD, {
+        onCompleted(data) {
+            setPaymentInformation((prev) => ({...prev, has_credit_card: data.checkForCreditCard}));
+        }
+    })
 
     const [setProductAsPaid] = useMutation(SET_PRODUCT_AS_PAID);
 
@@ -58,46 +94,32 @@ const Cart = () => {
                     userId: user.token.user_id
                 }
             });
+            checkForCreditCard({
+                variables: {
+                    id: user.token.user_id
+                }
+            })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.token]);
 
-    //set the information in the cart redux state
-    useEffect(() => {
-        if (cart_data) {
-            if(cart.length === 0) { //if the cart is empty when entering the cart page
-                setCart(cart_data.getUserCartProducts);
-            }
-            else {
-                window.location.reload(); //refresh the page, in case the fetch will not bring all the info at the first time
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cart_data]);
-
-    useEffect(() => {
-        if(wishlist_data) {
-            if(wishlist.length === 0) {
-                setWishlist(wishlist_data.getUserWishlist);
-            }
-            else {
-                window.location.reload();
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [wishlist_data])
-
     useEffect(() => {
         //add delivery price by distance later
-        setDelivery(delivery_ground_price);
+        setPaymentInformation((prev) => ({...prev, delivery: delivery_ground_price}));
     }, [])
 
     //change the total with every change in one of the fields
     useEffect(() => {
-        setTotal(sum_of_products + delivery);
-    }, [sum_of_products, delivery]);
+        setPaymentInformation((prev) => ({...prev, total: payment_information.sum_of_products + payment_information.delivery}));
+    }, [payment_information.sum_of_products, payment_information.delivery]);
 
     const handlePayClick = () => {
+        //check if the user has a credit card
+        if(!payment_information.has_credit_card) { //if not
+            setError("you need to set a credit card before buying");
+            return;
+        }
+
         //set all the products in the cart to be paid for
         cart.forEach((cart_product) => {
             setPaid(cart_product.transaction_id);
@@ -109,10 +131,19 @@ const Cart = () => {
             })
         });
 
-        setPaymentSucceed(true);
-        setSumOfProducts(0);
-        setDelivery(0);
+        setPaymentInformation((prev) => {
+            return {
+                ...prev,
+                payment_succeed: true,
+                sum_of_products: 0,
+                delivery: 0
+            }
+        });
     }
+
+    useEffect(() => {
+        console.log(payment_information.has_credit_card)
+    }, [payment_information.has_credit_card])
 
     return (
         <div className="cart_container">
@@ -127,15 +158,15 @@ const Cart = () => {
 
                         <div className="summary_field">
                             <p>Subtotal</p>
-                            <p>{sum_of_products}$</p>
+                            <p>{payment_information.sum_of_products}$</p>
                         </div>
                         <div className="summary_field">
                             <p>Delivery</p>
-                            <p>{delivery}$</p>
+                            <p>{payment_information.delivery}$</p>
                         </div>
                         <div className="total_field">
                             <p>Total</p>
-                            <p>{total}$</p>
+                            <p>{payment_information.total}$</p>
                         </div>
                         
                         <Button onClick={handlePayClick}
@@ -143,10 +174,17 @@ const Cart = () => {
                             fullWidth>
                             Pay
                         </Button>    
+
+                        <Typography
+                        marginTop={2}
+                        fontFamily={"Rubik"}
+                        color={"red"}>
+                            {error ? error : ""}
+                        </Typography>
                     </div>
 
                     {
-                        payment_succeed
+                        payment_information.payment_succeed
                         ?
                         <div className="payment_succeeded">
                             <CheckCircleRoundedIcon color="success" fontSize="large" />
@@ -168,7 +206,7 @@ const Cart = () => {
                                     address={product.address}
                                     quantity={product.amount}
                                     size={product.size}
-                                    setSumOfProducts={setSumOfProducts}
+                                    setPaymentInformation={setPaymentInformation}
                                     key={i}
                                 />
                             );
