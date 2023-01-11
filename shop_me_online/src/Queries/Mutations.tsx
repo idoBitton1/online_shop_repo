@@ -90,3 +90,19 @@ mutation Mutation($id: String!, $firstName: String!, $lastName: String!, $passwo
   }
 }
 `;
+
+export const ADD_CREDIT_CARD = gql`
+mutation Mutation($id: String!, $creditCardNumber: String!) {
+  addCreditCard(id: $id, credit_card_number: $creditCardNumber) {
+    id
+  }
+}
+`;
+
+export const REMOVE_CREDIT_CARD = gql`
+mutation Mutation($id: String!) {
+  removeCreditCard(id: $id) {
+    id
+  }
+}
+`;
