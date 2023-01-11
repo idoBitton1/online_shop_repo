@@ -412,6 +412,34 @@ const resolvers = {
             } catch (err: any) {
                 console.error(err.message);
             }
+        },
+        //add a credit card to a user
+        addCreditCard: async(_: any, args: any) => {
+            const { id, credit_card_number } = args;
+
+            try {
+                const update = await pool.query(
+                "UPDATE users SET credit_card_number=$1 WHERE id=$2",
+                [credit_card_number, id]);
+
+                return update.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //remove a credit card of a user
+        removeCreditCard: async(_: any, args: any) => {
+            const { id } = args;
+
+            try {
+                const remove = await pool.query(
+                "UPDATE users SET credit_card_number=null WHERE id=$1",
+                [id]);
+
+                return remove.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
         }
     }
 };
@@ -498,6 +526,8 @@ const typeDefs = gql`
         deleteProductFromWishlist(user_id: String!, product_id: String!): Wishlist,
         updateCartProductAmount(transaction_id: String!, new_amount: Int!): Users_products
         updateCartProductSize(transaction_id: String!, new_size: String!): Users_products
+        addCreditCard(id: String!, credit_card_number: String!): User,
+        removeCreditCard(id: String!): User
     }
 `;
 
