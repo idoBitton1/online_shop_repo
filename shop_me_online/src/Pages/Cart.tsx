@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import './Cart.css';
 
 //Apollo and graphql
-import { useLazyQuery, useMutation } from "@apollo/client"
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { GET_USER_CART_PRODUCTS, GET_USER_WISHLIST, CHECK_FOR_CREDIT_CARD } from "../Queries/Queries";
 import { SET_PRODUCT_AS_PAID } from "../Queries/Mutations";
 
@@ -19,20 +19,22 @@ import { CartProductDisplay } from "../Components/products/CartProductDisplay";
 
 //material - ui
 import { Button, Typography } from "@mui/material";
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 
 //icons
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import { CreditCardForm } from "../Components/Forms/CreditCardForm";
 
 export interface PaymentProps {
     sum_of_products: number,
     delivery: number,
     total: number,
-    has_credit_card: boolean,
     payment_succeed: boolean
 }
 
 const Cart = () => {
-
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
     const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
     const wishlist = useSelector((redux_state: ReduxState) => redux_state.wishlist);
@@ -42,10 +44,10 @@ const Cart = () => {
         sum_of_products: 0,
         delivery: 0,
         total: 0,
-        has_credit_card: false,
         payment_succeed: false
     });
-    const [error, setError] = useState<string>("");
+    const [has_credit_card, setHasCreditCard] = useState<boolean>(false);
+    const [open_credit_card, setOpenCreditCard] = useState<boolean>(false);
 
     //when the info comes back, set the information in the cart redux state
     const [getCartProducts] = useLazyQuery(GET_USER_CART_PRODUCTS, {
@@ -69,12 +71,14 @@ const Cart = () => {
             }
         }
     });
-    const [checkForCreditCard] = useLazyQuery(CHECK_FOR_CREDIT_CARD, {
-        onCompleted(data) {
-            setPaymentInformation((prev) => ({...prev, has_credit_card: data.checkForCreditCard}));
+    //checks if the user has a credit card set
+    const { data: credit_data } = useQuery(CHECK_FOR_CREDIT_CARD, {
+        variables: {
+            id: user.token?.user_id
         }
     })
 
+    //sets the product as paid
     const [setProductAsPaid] = useMutation(SET_PRODUCT_AS_PAID);
 
     const dispatch = useDispatch();
@@ -94,11 +98,6 @@ const Cart = () => {
                     userId: user.token.user_id
                 }
             });
-            checkForCreditCard({
-                variables: {
-                    id: user.token.user_id
-                }
-            })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.token]);
@@ -115,15 +114,19 @@ const Cart = () => {
 
     const handlePayClick = () => {
         //check if the user has a credit card
-        if(!payment_information.has_credit_card) { //if not
-            setError("you need to set a credit card before buying");
+        if(!has_credit_card) { //if not
+            toggleCreditCardDialog(); //open the add credit card dialog 
             return;
         }
 
-        //set all the products in the cart to be paid for
+        console.log("kaching");
+
+        //set all the products in the cart to paid
         cart.forEach((cart_product) => {
+            //set paid locally
             setPaid(cart_product.transaction_id);
 
+            //set paid in the db
             setProductAsPaid({
                 variables: {
                     transactionId: cart_product.transaction_id
@@ -131,6 +134,7 @@ const Cart = () => {
             })
         });
 
+        //update the payment variables
         setPaymentInformation((prev) => {
             return {
                 ...prev,
@@ -142,10 +146,17 @@ const Cart = () => {
     }
 
     useEffect(() => {
-        console.log(payment_information.has_credit_card)
-    }, [payment_information.has_credit_card])
+        if(credit_data) {
+            setHasCreditCard(credit_data.checkForCreditCard);
+        }
+    }, [credit_data]);
+
+    const toggleCreditCardDialog = () => {
+        setOpenCreditCard((prev) => !prev);
+    }
 
     return (
+        <>
         <div className="cart_container">
             <Header />
 
@@ -174,13 +185,6 @@ const Cart = () => {
                             fullWidth>
                             Pay
                         </Button>    
-
-                        <Typography
-                        marginTop={2}
-                        fontFamily={"Rubik"}
-                        color={"red"}>
-                            {error ? error : ""}
-                        </Typography>
                     </div>
 
                     {
@@ -215,6 +219,32 @@ const Cart = () => {
                 </div>
             </div>
         </div>
+
+
+
+
+        <Dialog open={open_credit_card} onClose={toggleCreditCardDialog} fullWidth>
+            <DialogTitle>
+                <Typography
+                fontSize={25}
+                borderBottom={1}
+                borderColor={"lightgray"}
+                gutterBottom>
+                    Add credit card
+                </Typography>
+            </DialogTitle>
+
+            <DialogContent>
+                <p style={{fontFamily: "Rubik", marginTop: -1}}>
+                    seems like you dont have a credit card set...
+                </p>
+                <CreditCardForm 
+                toggleDialog={toggleCreditCardDialog}
+                setHasCreditCard={setHasCreditCard}
+                />
+            </DialogContent>
+        </Dialog>
+        </>
     )
 }
 
