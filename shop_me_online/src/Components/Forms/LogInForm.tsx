@@ -15,7 +15,11 @@ import { bindActionCreators } from 'redux';
 import { actionsCreators } from '../../state';
 
 //material-ui
-import { TextField, Button, Typography } from '@mui/material';
+import { TextField, Button, Typography, InputAdornment } from '@mui/material';
+
+//icons
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 
 interface MyFormValues {
     email: string,
@@ -86,6 +90,13 @@ export const LogInForm = () => {
                         margin="normal"
                         fullWidth
                         helperText={<ErrorMessage name="email" />}
+                        InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <EmailOutlinedIcon />
+                              </InputAdornment>
+                            )
+                        }}
                     />
 
                     <Field as={TextField} name="password"
@@ -96,6 +107,13 @@ export const LogInForm = () => {
                         onChange={props.handleChange}
                         margin="normal"
                         fullWidth
+                        InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <LockOutlinedIcon />
+                              </InputAdornment>
+                            )
+                        }}
                     />
 
                     <br />

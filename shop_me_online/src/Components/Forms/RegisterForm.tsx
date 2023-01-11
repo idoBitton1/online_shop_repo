@@ -15,7 +15,13 @@ import { bindActionCreators } from 'redux';
 import { actionsCreators } from '../../state';
 
 //material-ui
-import { TextField, Button, Typography } from '@mui/material';
+import { TextField, Button, Typography, InputAdornment } from '@mui/material';
+
+//icons
+import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 
 interface MyProps {
     is_manager: boolean
@@ -95,6 +101,13 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
                         onChange={props.handleChange}
                         margin="normal"
                         sx={{ marginRight: 1 }}
+                        InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <PermIdentityOutlinedIcon />
+                              </InputAdornment>
+                            )
+                        }}
                     />
                     <Field as={TextField} name="last_name"
                         label="last name"
@@ -102,6 +115,13 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
                         value={props.values.last_name}
                         onChange={props.handleChange}
                         margin="normal"
+                        InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <PermIdentityOutlinedIcon />
+                              </InputAdornment>
+                            )
+                        }}
                     />
 
                     <br />
@@ -113,6 +133,13 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
                         onChange={props.handleChange}
                         margin="normal"
                         fullWidth
+                        InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <LockOutlinedIcon />
+                              </InputAdornment>
+                            )
+                        }}
                     />
 
                     <br />
@@ -125,6 +152,13 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
                         margin="normal"
                         fullWidth
                         helperText={<ErrorMessage name="email" />}
+                        InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <EmailOutlinedIcon />
+                              </InputAdornment>
+                            )
+                        }}
                     />
 
                     <br />
@@ -141,6 +175,13 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
                                     onChange={props.handleChange}
                                     margin="normal"
                                     fullWidth
+                                    InputProps={{
+                                        startAdornment: (
+                                          <InputAdornment position="start">
+                                            <HomeOutlinedIcon />
+                                          </InputAdornment>
+                                        )
+                                    }}
                                 />
                             )
                     }

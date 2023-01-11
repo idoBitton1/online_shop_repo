@@ -47,7 +47,6 @@ export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, c
     const [addProductToWishlist, { error }] = useMutation(ADD_TO_WISHLIST)
 
     const toggleDialog = () => {
-
         setSize("");
         setAmount(1);
         setErrText("");
@@ -196,7 +195,10 @@ export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, c
                 </div>
             </div>
 
-            {<Dialog open={open_dialog} onClose={toggleDialog} fullWidth>
+
+
+
+            <Dialog open={open_dialog} onClose={toggleDialog} fullWidth>
                 <DialogTitle>
                     <Typography
                         fontSize={25}
@@ -268,7 +270,7 @@ export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, c
                         </div>
                     </div>
                 </DialogContent>
-            </Dialog>}
+            </Dialog>
         </>
     )
 }
