@@ -35,6 +35,7 @@ query Query($id: String!) {
     quantity
     price
     category
+    img_location
   }
 }
 `;
