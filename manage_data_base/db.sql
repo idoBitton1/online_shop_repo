@@ -9,6 +9,7 @@ CREATE TABLE users (
     email VARCHAR(50) NOT NULL,
     credit_card_number VARCHAR(16),
     is_manager BOOLEAN NOT NULL,
+    token VARCHAR,
     PRIMARY KEY (id),
     CONSTRAINT email_unq UNIQUE(email)
 );
