@@ -4,9 +4,9 @@
 
 .cart_context {
     display: flex;
-    justify-content: space-between;
-    padding-left: 250px;
-    padding-right: 200px;
+    
+    padding-left: 7%;
+    padding-right: 15%;
     text-align: left;
     font-family: "Rubik";
 }
@@ -21,11 +21,8 @@
     display: flex;
     height: 230px;
     margin-top: 13px;
+    margin-left: 20%;
     border-bottom: 1px solid lightgray;
-}
-
-.product_info {
-    display: flex;
 }
 
 .cart_product_img {
@@ -39,7 +36,7 @@
 }
 
 .order_info {
-    width: 280px;
+    width: 450px;
     margin-left: 70px;
 }
 
