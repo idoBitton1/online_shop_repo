@@ -300,7 +300,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
                 <p>{address}</p>
             </div>
 
-            <div style={{ marginLeft: 300 }}>
+            <div style={{ alignSelf: "flex-start" }}>
                 <button className="delete_btn">
                     <CloseIcon onClick={handleDeleteClick} />
                 </button>
