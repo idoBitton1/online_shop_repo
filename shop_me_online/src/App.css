@@ -5,3 +5,8 @@
     cursor: pointer;
     font-family: "Rubik";
 }
+
+.product_info {
+    display: flex;
+    text-align: left;
+}
