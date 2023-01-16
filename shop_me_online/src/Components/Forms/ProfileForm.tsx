@@ -34,12 +34,15 @@ import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOut
 import { MyFormValues } from "./RegisterForm";
 
 export const ProfileForm = () => {
+    //redux states
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
     
+    //states
     const [has_credit_card, setHasCreditCard] = useState<boolean>(false);
     const [is_manager, setIsManager] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
 
+    //queries
     const { data: user_data } = useQuery(GET_USER, {
         variables: {
             userId: user.token?.user_id
@@ -51,6 +54,7 @@ export const ProfileForm = () => {
         }
     });
 
+    //mutations
     const [updateUserInformation, { error }] = useMutation(UPDATE_USER_INFORMATION);
     const [removeCreditCard] = useMutation(REMOVE_CREDIT_CARD);
 
@@ -63,13 +67,16 @@ export const ProfileForm = () => {
         email: user_data ? user_data.getUser.email : ""
     }
 
+    //cvalidation schema for the form
     const validation_schema: any = Yup.object().shape({
         first_name: Yup.string().required("Required"),
         last_name: Yup.string().required("Required"),
         password: Yup.string().required("Required"),
-        address: Yup.string().required("Required"),
+        address: Yup.string(),
         email: Yup.string().email().required("Required")
     });
+
+
 
     useEffect(() => {
         if(user_data) {
@@ -78,21 +85,14 @@ export const ProfileForm = () => {
     }, [user_data]);
 
     const onSubmit = (values: MyFormValues) => {
-        //if all the information is the same, dont change the db
-        if(values.first_name === user_data.getUser.first_name &&
-            values.last_name === user_data.getUser.last_name &&
-            values.password === user_data.getUser.password &&
-            values.address === user_data.getUser.address &&
-            values.email === user_data.getUser.email)
-            return;
-        
+        //update db        
         updateUserInformation({
             variables: {
                 id: user.token?.user_id,
                 firstName: values.first_name,
                 lastName: values.last_name,
                 password: values.password,
-                address: values.address,
+                address: is_manager ? "" : values.address,
                 email: values.email,
                 isManager: is_manager
             }
