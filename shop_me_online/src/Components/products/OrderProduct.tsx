@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Products.css";
 import * as uuid from 'uuid';
 
 //Apollo and graphql
-import { useMutation } from "@apollo/client"
+import { useMutation, useLazyQuery } from "@apollo/client"
+import { GET_USER } from "../../Queries/Queries";
 import { UPDATE_PRODUCT_QUANTITY, ADD_PRODUCT_TO_CART, ADD_TO_WISHLIST } from "../../Queries/Mutations";
 
 //redux
@@ -39,13 +40,18 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
 
+    //redux actions
     const dispatch = useDispatch();
     const { updateSupply, addProductToCart, addToWishlist } = bindActionCreators(actionsCreators, dispatch);
 
     //states
+    const [user_address, setUserAddress] = useState<string>("");
     const [size, setSize] = useState<string>("");
     const [amount, setAmount] = useState<number>(1);
     const [err_text, setErrText] = useState<string>("");
+
+    //queries
+    const [ getAddress, { data: user_data }] = useLazyQuery(GET_USER);
     
     //mutations
     const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY);
@@ -53,6 +59,22 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
     const [addProductToWishlist, { error }] = useMutation(ADD_TO_WISHLIST);
 
 
+
+    useEffect(() => {
+        if(user.token) {
+            getAddress({
+                variables: {
+                    userId: user.token.user_id
+                }
+            });
+        }
+    }, [user.token]);
+
+    useEffect(() => {
+        if(user_data) {
+            setUserAddress(user_data.getUser.address);
+        }
+    }, [user_data]);
 
     const handleAmountSelect = (event: SelectChangeEvent<number>) => {
         const products_amount = event.target.value as number;
@@ -73,6 +95,7 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
             return;
         }
 
+        //check in stock
         let index_of_product = products.filtered_products.findIndex((product) => product.id === id);
         if (products.filtered_products[index_of_product].quantity < amount) {
             setErrText("not enough in stock");
@@ -108,7 +131,7 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
             product_id: id,
             size: size,
             amount: amount,
-            address: user.token.address,
+            address: user_address,
             paid: false,
             ordering_time: formatted_now,
             transaction_id: my_transaction_id
@@ -122,7 +145,7 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
                     productId: id,
                     size: size,
                     amount: amount,
-                    address: user.token.address,
+                    address: user_address,
                     paid: false,
                     orderingTime: formatted_now,
                     transactionId: my_transaction_id
