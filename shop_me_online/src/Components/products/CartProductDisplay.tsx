@@ -73,7 +73,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
 
     //mutations
     const [deleteProductFromCart] = useMutation(DELETE_PRODUCT_FROM_CART);
-    const [updateCartProductQuantity] = useMutation(UPDATE_CART_PRODUCT_AMOUNT);
+    const [updateCartProductAmount] = useMutation(UPDATE_CART_PRODUCT_AMOUNT);
     const [updateCartProductSize] = useMutation(UPDATE_CART_PRODUCT_SIZE);
     
 
@@ -191,10 +191,10 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
         changeQuantity({ transaction_id: transaction_id, new_value: products_quantity });
     
         //update the db
-        updateCartProductQuantity({
+        updateCartProductAmount({
             variables: {
                 transactionId: transaction_id,
-                newQuantity: products_quantity
+                newAmount: products_quantity
             }
         });
 
