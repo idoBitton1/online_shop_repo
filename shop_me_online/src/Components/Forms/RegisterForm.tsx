@@ -36,12 +36,14 @@ export interface MyFormValues {
 }
 
 export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
-
+    //navigation
     const navigate = useNavigate();
 
+    //redux actions
     const dispatch = useDispatch();
     const { login } = bindActionCreators(actionsCreators, dispatch);
 
+    //mutations
     const [createUser, { error }] = useMutation(CREATE_USER, {
         onCompleted: (data) => {
             localStorage.setItem("token", data.createUser.token);
@@ -58,9 +60,12 @@ export const RegisterForm: React.FC<MyProps> = ({ is_manager }) => {
         email: ""
     };
 
+    //validation schema for the form
     const validation_schema: any = Yup.object().shape({
         email: Yup.string().email().required("Required")
     });
+
+    
 
     const onSubmit = async (values: MyFormValues) => {
 

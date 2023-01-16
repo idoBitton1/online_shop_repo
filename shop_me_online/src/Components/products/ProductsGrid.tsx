@@ -9,7 +9,7 @@ import { ReduxState } from "../../state";
 import { ProductDisplay } from "./ProductDisplay";
 
 export const ProductsGrid = () => {
-
+    //redux states
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
 
     return (

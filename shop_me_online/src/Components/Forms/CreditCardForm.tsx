@@ -47,8 +47,10 @@ interface MyProps {
 }
 
 export const CreditCardForm: React.FC<MyProps> = ({toggleDialog, setHasCreditCard}) => {
+    //redux states
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
 
+    //states
     const [errors, setErrors] = useState<Errors>({
         show: true,
         color: "red",
@@ -59,8 +61,10 @@ export const CreditCardForm: React.FC<MyProps> = ({toggleDialog, setHasCreditCar
         ccvv: false
     });
 
+    //mutations
     const [addCreditCard] = useMutation(ADD_CREDIT_CARD);
 
+    //initial values of the form
     const initial_values: MyFormValues = {
         card_name: "",
         card_number: "",
@@ -68,6 +72,7 @@ export const CreditCardForm: React.FC<MyProps> = ({toggleDialog, setHasCreditCar
         card_security_code: ""
     }
 
+    //validation schema for the form
     const validation_schema: any = Yup.object().shape({
         card_name: Yup.string().required("Required"),
         card_number: Yup.string().min(16, "Must be 16 numbers").max(16, "Must be 16 numbers").required("Required"),
@@ -75,6 +80,8 @@ export const CreditCardForm: React.FC<MyProps> = ({toggleDialog, setHasCreditCar
         card_security_code: Yup.string().min(3, "Must be 3 numbers").max(3, "Must be 3 numbers").required("Required")
     });
 
+
+    
     const onSubmit = (values: MyFormValues) => {
         setErrors(validator(values));
 

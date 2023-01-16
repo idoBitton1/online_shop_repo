@@ -6,7 +6,6 @@ import { Header } from '../Components/Header/Header';
 import { LogInForm } from "../Components/Forms/LogInForm";
 
 const LogIn = () => {
-
     return (
         <div className="login_container">
             <Header />

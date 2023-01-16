@@ -17,11 +17,16 @@ import { Header } from "../Components/Header/Header";
 import { WishlistProductDisplay } from "../Components/products/WishlistProductDisplay";
 
 const Wishlist = () => {
-
+    //redux states
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
     const wishlist = useSelector((redux_state: ReduxState) => redux_state.wishlist);
     const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
 
+    //redux actions
+    const dispatch = useDispatch();
+    const { dontFetch, setWishlist, setCart } = bindActionCreators(actionsCreators, dispatch);
+
+    //queries
     //when the info comes back, set the information in the cart redux state
     const [getCartProducts] = useLazyQuery(GET_USER_CART_PRODUCTS, {
         onCompleted(data) {
@@ -44,9 +49,6 @@ const Wishlist = () => {
             }
         }
     });
-
-    const dispatch = useDispatch();
-    const { dontFetch, setWishlist, setCart } = bindActionCreators(actionsCreators, dispatch);
 
     //when the user is connecting, fetch his cart information
     useEffect(() => {

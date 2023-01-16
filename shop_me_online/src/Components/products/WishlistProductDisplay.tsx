@@ -33,6 +33,7 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id})
     //redux states
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
 
+    //redux actions
     const dispatch = useDispatch();
     const { removeFromWishlist } = bindActionCreators(actionsCreators, dispatch);
 
@@ -46,15 +47,14 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id})
         category: "",
         img_location: ""
     });
-    // const [product_name, setProductName] = useState<string>("");
-    // const [product_price, setProductPrice] = useState<number>(0);
-    // const [product_quantity, setProductQuantity] = useState<number>(0);
 
     //queries
     const [ getProduct, { data: product_data }]  = useLazyQuery(GET_PRODUCT);
 
     //mutations
     const [deleteProductFromWishlist] = useMutation(DELETE_PRODUCT_FROM_WISHLIST);
+
+
 
     //fetch if the product_id is not null
     useEffect(() => {

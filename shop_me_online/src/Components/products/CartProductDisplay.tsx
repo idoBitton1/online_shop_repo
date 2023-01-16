@@ -48,9 +48,14 @@ interface ChangeProperties {
 }
 
 export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_id, address, quantity, size, setPaymentInformation}) => {
-
+    //redux states
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
 
+    //redux actions
+    const dispatch = useDispatch();
+    const { removeFromCart, changeQuantity, changeSize, setFilterProducts, setProducts, dontFetchProducts } = bindActionCreators(actionsCreators, dispatch);
+
+    //states
     const [product_info, setOrderedProduct] = useState<ProductProperties>({
         name: "",
         price: 0,
@@ -62,16 +67,16 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
     const [change_properties, setChange] = useState<ChangeProperties>({ size: false, quantity: false });
     const [err_text, setErrText] = useState<string>("");
 
+    //queries
     const [ getProducts, { data: products_data }] = useLazyQuery(GET_ALL_PRODUCTS);
-
     const [ getProduct, { data: product_data }]  = useLazyQuery(GET_PRODUCT);
 
+    //mutations
     const [deleteProductFromCart] = useMutation(DELETE_PRODUCT_FROM_CART);
     const [updateCartProductQuantity] = useMutation(UPDATE_CART_PRODUCT_AMOUNT);
     const [updateCartProductSize] = useMutation(UPDATE_CART_PRODUCT_SIZE);
+    
 
-    const dispatch = useDispatch();
-    const { removeFromCart, changeQuantity, changeSize, setFilterProducts, setProducts, dontFetchProducts } = bindActionCreators(actionsCreators, dispatch);
 
     //fetch if the product_id is not null
     useEffect(() => {

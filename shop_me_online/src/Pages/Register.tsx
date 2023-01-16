@@ -10,7 +10,6 @@ interface MyProps {
 }
 
 const Register: React.FC<MyProps> = ({ is_manager }) => {
-
     return (
         <div className="register_container">
             <Header />

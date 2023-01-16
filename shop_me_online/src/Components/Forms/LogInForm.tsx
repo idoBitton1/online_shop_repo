@@ -27,12 +27,14 @@ interface MyFormValues {
 }
 
 export const LogInForm = () => {
-
+    //navigation
     const navigate = useNavigate();
 
+    //redux actions
     const dispatch = useDispatch();
     const { login } = bindActionCreators(actionsCreators, dispatch);
 
+    //mutations
     const [loginUser, { error }] = useMutation(LOGIN_USER, {
         onCompleted: (data) => {
             localStorage.setItem("token", data.loginUser.token);
@@ -40,6 +42,8 @@ export const LogInForm = () => {
         } //after logging, connect the user
     });
 
+
+    
     //the initial values of the form
     const initial_values: MyFormValues = {
         email: "",

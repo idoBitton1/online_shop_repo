@@ -11,6 +11,7 @@ import { Product } from "../../Pages/Home";
 import img from "../../Images/j1.png"
 
 export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, category, img_location }) => {
+    //states
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
 
     const toggleDialog = () => {

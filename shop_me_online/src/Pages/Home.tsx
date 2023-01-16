@@ -43,13 +43,15 @@ export interface Wishlist {
 }
 
 function Home() {
-
+  //redux states
   const products = useSelector((redux_state: ReduxState) => redux_state.products);
-
-  const { data: products_data } = useQuery(GET_ALL_PRODUCTS);
   
+  //redux actions
   const dispatch = useDispatch();
   const { setFilterProducts, setProducts, dontFetchProducts } = bindActionCreators(actionsCreators, dispatch);
+
+  //queries
+  const { data: products_data } = useQuery(GET_ALL_PRODUCTS);
 
   useEffect(() => {
     if(products_data && products.fetch_info) {

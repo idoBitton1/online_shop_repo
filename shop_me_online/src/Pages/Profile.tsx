@@ -6,7 +6,6 @@ import { Header } from "../Components/Header/Header";
 import { ProfileForm } from "../Components/Forms/ProfileForm";
 
 const Profile = () => {
-
     return (
         <div className="profile_container">
             <Header />

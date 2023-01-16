@@ -36,11 +36,18 @@ export interface PaymentProps {
 }
 
 const Cart = () => {
+    //redux states
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
     const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
     const wishlist = useSelector((redux_state: ReduxState) => redux_state.wishlist);
 
+    //redux actions
+    const dispatch = useDispatch();
+    const { setCart, dontFetch, setPaid, setWishlist } = bindActionCreators(actionsCreators, dispatch);
+
     const delivery_ground_price = 15;
+
+    //states
     const [payment_information, setPaymentInformation] = useState<PaymentProps>({
         sum_of_products: 0,
         delivery: 0,
@@ -51,6 +58,8 @@ const Cart = () => {
     const [open_credit_card, setOpenCreditCard] = useState<boolean>(false);
     const [open_confirm, setOpenConfirm] = useState<boolean>(false);
 
+
+    //queries
     //when the info comes back, set the information in the cart redux state
     const [getCartProducts] = useLazyQuery(GET_USER_CART_PRODUCTS, {
         onCompleted(data) {
@@ -80,11 +89,11 @@ const Cart = () => {
         }
     })
 
+    //mutations
     //sets the product as paid
     const [setProductAsPaid] = useMutation(SET_PRODUCT_AS_PAID);
 
-    const dispatch = useDispatch();
-    const { setCart, dontFetch, setPaid, setWishlist } = bindActionCreators(actionsCreators, dispatch);
+
 
     //when the user is connecting, fetch his cart information
     useEffect(() => {
