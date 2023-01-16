@@ -26,7 +26,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 //icons
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { CreditCardForm } from "../Components/Forms/CreditCardForm";
-import { display } from "@mui/system";
 
 export interface PaymentProps {
     sum_of_products: number,

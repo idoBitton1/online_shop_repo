@@ -68,12 +68,14 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
                 }
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.token]);
 
     useEffect(() => {
         if(user_data) {
             setUserAddress(user_data.getUser.address);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user_data]);
 
     const handleAmountSelect = (event: SelectChangeEvent<number>) => {
