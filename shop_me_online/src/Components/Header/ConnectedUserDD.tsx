@@ -2,9 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 //redux
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { actionsCreators, ReduxState } from "../../state";
 import { bindActionCreators } from 'redux';
-import { actionsCreators } from '../../state';
 
 //icons
 import { BsCart2 } from 'react-icons/bs';
@@ -16,6 +16,7 @@ interface MyProps {
 }
 
 export const ConnectedUserDD: React.FC<MyProps> = ({ toggleDropDown }) => {
+    const user = useSelector((redux_state: ReduxState) => redux_state.user);
 
     const navigate = useNavigate();
 
@@ -28,14 +29,25 @@ export const ConnectedUserDD: React.FC<MyProps> = ({ toggleDropDown }) => {
                 <AiOutlineUser className="dropdown_item_icon" />
                 <h3>profile</h3>
             </li>
-            <li className="dropdown_item" onClick={() => navigate('/cart')}>
+            {
+                user.token?.is_manager
+                ?
+                <li className="dropdown_item">
+                    <AiOutlineHeart className="dropdown_item_icon" />
+                    <h3>Make Shipment</h3>
+                </li>
+                :
+                <>
+                <li className="dropdown_item" onClick={() => navigate('/cart')}>
                 <BsCart2 className="dropdown_item_icon" />
                 <h3>cart</h3>
-            </li>
-            <li className="dropdown_item" onClick={() => navigate('/wishlist')}>
-                <AiOutlineHeart className="dropdown_item_icon" />
-                <h3>wishlist</h3>
-            </li>
+                </li>
+                <li className="dropdown_item" onClick={() => navigate('/wishlist')}>
+                    <AiOutlineHeart className="dropdown_item_icon" />
+                    <h3>wishlist</h3>
+                </li>
+                </>
+            }
             <li className='dropdown_item' onClick={() => {
                 logout(); //disconnect the user
                 setCart([]); //refresh the cart
