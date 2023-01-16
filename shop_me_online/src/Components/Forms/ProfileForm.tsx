@@ -43,7 +43,7 @@ export const ProfileForm = () => {
     const [open, setOpen] = useState<boolean>(false);
 
     //queries
-    const { data: user_data } = useQuery(GET_USER, {
+    const { data: user_data, refetch } = useQuery(GET_USER, {
         variables: {
             userId: user.token?.user_id
         }
@@ -97,6 +97,8 @@ export const ProfileForm = () => {
                 isManager: is_manager
             }
         });
+
+        refetch();
     }
 
     useEffect(() => {
