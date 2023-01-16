@@ -8,7 +8,7 @@ export interface MyToken {
     iat: number,
     user_id: string,
     email: string,
-    address: string
+    is_manager: boolean
 }
 
 export interface UserInfo {
