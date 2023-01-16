@@ -232,11 +232,13 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
                                     value={size}
                                     onChange={(event) => setSize(event.target.value as string)}
                                 >
-                                    <MenuItem value={category.includes("shoes") ? "41" : "XS"}>{category.includes("shoes") ? "41" : "XS"}</MenuItem>
-                                    <MenuItem value={category.includes("shoes") ? "42" : "S"}>{category.includes("shoes") ? "42" : "S"}</MenuItem>
-                                    <MenuItem value={category.includes("shoes") ? "43" : "M"}>{category.includes("shoes") ? "43" : "M"}</MenuItem>
-                                    <MenuItem value={category.includes("shoes") ? "44" : "L"}>{category.includes("shoes") ? "44" : "L"}</MenuItem>
-                                    <MenuItem value={category.includes("shoes") ? "45" : "XL"}>{category.includes("shoes") ? "45" : "XL"}</MenuItem>
+                                    <MenuItem value={category.includes("shoes") ? "37" : "XXS"}>{category.includes("shoes") ? "37" : "XXS"}</MenuItem>
+                                    <MenuItem value={category.includes("shoes") ? "38" : "XS"}>{category.includes("shoes") ? "38" : "XS"}</MenuItem>
+                                    <MenuItem value={category.includes("shoes") ? "39" : "S"}>{category.includes("shoes") ? "39" : "S"}</MenuItem>
+                                    <MenuItem value={category.includes("shoes") ? "40" : "M"}>{category.includes("shoes") ? "40" : "M"}</MenuItem>
+                                    <MenuItem value={category.includes("shoes") ? "41" : "L"}>{category.includes("shoes") ? "41" : "L"}</MenuItem>
+                                    <MenuItem value={category.includes("shoes") ? "42" : "XL"}>{category.includes("shoes") ? "42" : "XL"}</MenuItem>
+                                    <MenuItem value={category.includes("shoes") ? "43" : "XXL"}>{category.includes("shoes") ? "43" : "XXL"}</MenuItem>
                                 </Select>
                             </FormControl>
                             :

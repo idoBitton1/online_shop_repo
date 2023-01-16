@@ -261,11 +261,13 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
                             value={order_size}
                             onChange={handleSizeSelect}
                             >
-                            <MenuItem value={product_info.category.includes("shoes") ? "41" : "XS"}>{product_info.category.includes("shoes") ? "41" : "XS"}</MenuItem>
-                            <MenuItem value={product_info.category.includes("shoes") ? "42" : "S"}>{product_info.category.includes("shoes") ? "42" : "S"}</MenuItem>
-                            <MenuItem value={product_info.category.includes("shoes") ? "43" : "M"}>{product_info.category.includes("shoes") ? "43" : "M"}</MenuItem>
-                            <MenuItem value={product_info.category.includes("shoes") ? "44" : "L"}>{product_info.category.includes("shoes") ? "44" : "L"}</MenuItem>
-                            <MenuItem value={product_info.category.includes("shoes") ? "45" : "XL"}>{product_info.category.includes("shoes") ? "45" : "XL"}</MenuItem>
+                            <MenuItem value={product_info.category.includes("shoes") ? "37" : "XXS"}>{product_info.category.includes("shoes") ? "37" : "XXS"}</MenuItem>
+                            <MenuItem value={product_info.category.includes("shoes") ? "38" : "XS"}>{product_info.category.includes("shoes") ? "38" : "XS"}</MenuItem>
+                            <MenuItem value={product_info.category.includes("shoes") ? "39" : "S"}>{product_info.category.includes("shoes") ? "39" : "S"}</MenuItem>
+                            <MenuItem value={product_info.category.includes("shoes") ? "40" : "M"}>{product_info.category.includes("shoes") ? "40" : "M"}</MenuItem>
+                            <MenuItem value={product_info.category.includes("shoes") ? "41" : "L"}>{product_info.category.includes("shoes") ? "41" : "L"}</MenuItem>
+                            <MenuItem value={product_info.category.includes("shoes") ? "42" : "XL"}>{product_info.category.includes("shoes") ? "42" : "XL"}</MenuItem>
+                            <MenuItem value={product_info.category.includes("shoes") ? "43" : "XXL"}>{product_info.category.includes("shoes") ? "43" : "XXL"}</MenuItem>
                         </Select>
                         </FormControl>
                         :
