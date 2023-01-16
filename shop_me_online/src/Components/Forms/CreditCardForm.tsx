@@ -52,7 +52,7 @@ export const CreditCardForm: React.FC<MyProps> = ({toggleDialog, setHasCreditCar
     const [errors, setErrors] = useState<Errors>({
         show: true,
         color: "red",
-        message: "An unknown error occured. Please try again later",
+        message: "",
         cname: false,
         cnumber: false,
         cexp: false,
