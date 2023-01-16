@@ -170,7 +170,7 @@ const resolvers = {
 
             //generate JWT
             const token = jwt.sign(
-                {user_id: id, email, address},
+                {user_id: id, email, is_manager},
                 "TEMP_STRING",
                 {
                     //the token will expire in 2 hours
@@ -220,17 +220,17 @@ const resolvers = {
                 throw new UserInputError("incorrect password");
             }
 
-            let user_address;
+            let is_user_manager;
             try {
-                user_address = await pool.query(
-                "SELECT address FROM users WHERE email=$1",
+                is_user_manager = await pool.query(
+                "SELECT is_manager FROM users WHERE email=$1",
                 [email]);
             } catch (err: any) {
                 console.error(err.message);
             }
 
-            if(user_address === undefined)
-                throw new UserInputError("couldnt find address");
+            if(is_user_manager === undefined)
+                throw new UserInputError("unknown error");
 
             //if everything is good, login
             try {
@@ -239,7 +239,7 @@ const resolvers = {
                 [email, password]);
 
                 const token = jwt.sign(
-                    {user_id: user.rows[0].id, email, address: user_address.rows[0].address},
+                    {user_id: user.rows[0].id, email, is_manager: is_user_manager.rows[0].is_manager},
                     "TEMP_STRING",
                     {
                         //the token will expire in 2 hours
@@ -516,7 +516,7 @@ const typeDefs = gql`
                               first_name: String!,
                               last_name: String!,
                               password: String!,
-                              address: String!,
+                              address: String,
                               email: String!
                               is_manager: Boolean!): User
 
