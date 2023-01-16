@@ -68,8 +68,8 @@ mutation Mutation($userId: String!, $productId: String!) {
 `;
 
 export const UPDATE_CART_PRODUCT_AMOUNT = gql`
-mutation Mutation($transactionId: String!, $newQuantity: Int!) {
-  updateCartProductAmount(transaction_id: $transactionId, new_quantity: $newQuantity) {
+mutation Mutation($transactionId: String!, $newAmount: Int!) {
+  updateCartProductAmount(transaction_id: $transactionId, new_amount: $newAmount) {
     amount
   }
 }
