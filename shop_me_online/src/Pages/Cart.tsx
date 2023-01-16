@@ -26,6 +26,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 //icons
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { CreditCardForm } from "../Components/Forms/CreditCardForm";
+import { display } from "@mui/system";
 
 export interface PaymentProps {
     sum_of_products: number,
@@ -48,6 +49,7 @@ const Cart = () => {
     });
     const [has_credit_card, setHasCreditCard] = useState<boolean>(false);
     const [open_credit_card, setOpenCreditCard] = useState<boolean>(false);
+    const [open_confirm, setOpenConfirm] = useState<boolean>(false);
 
     //when the info comes back, set the information in the cart redux state
     const [getCartProducts] = useLazyQuery(GET_USER_CART_PRODUCTS, {
@@ -112,15 +114,7 @@ const Cart = () => {
         setPaymentInformation((prev) => ({...prev, total: payment_information.sum_of_products + payment_information.delivery}));
     }, [payment_information.sum_of_products, payment_information.delivery]);
 
-    const handlePayClick = () => {
-        //check if the user has a credit card
-        if(!has_credit_card) { //if not
-            toggleCreditCardDialog(); //open the add credit card dialog 
-            return;
-        }
-
-        console.log("kaching");
-
+    const handlePayment = () => {
         //set all the products in the cart to paid
         cart.forEach((cart_product) => {
             //set paid locally
@@ -143,6 +137,8 @@ const Cart = () => {
                 delivery: 0
             }
         });
+
+        toggleConfirmDialog();
     }
 
     useEffect(() => {
@@ -153,6 +149,10 @@ const Cart = () => {
 
     const toggleCreditCardDialog = () => {
         setOpenCreditCard((prev) => !prev);
+    }
+
+    const toggleConfirmDialog = () => {
+        setOpenConfirm((prev) => !prev);
     }
 
     return (
@@ -180,9 +180,11 @@ const Cart = () => {
                             <p>{payment_information.total}$</p>
                         </div>
                         
-                        <Button onClick={handlePayClick}
+                        {/** check if the user has a credit card */}
+                        <Button onClick={!has_credit_card ? toggleCreditCardDialog : toggleConfirmDialog}
                             variant="contained"
-                            fullWidth>
+                            fullWidth
+                            >
                             Pay
                         </Button>    
                     </div>
@@ -222,7 +224,7 @@ const Cart = () => {
 
 
 
-
+        {/* add credit card dialog */}
         <Dialog open={open_credit_card} onClose={toggleCreditCardDialog} fullWidth>
             <DialogTitle>
                 <Typography
@@ -242,6 +244,40 @@ const Cart = () => {
                 toggleDialog={toggleCreditCardDialog}
                 setHasCreditCard={setHasCreditCard}
                 />
+            </DialogContent>
+        </Dialog>
+
+
+        {/* confirm purchase */}
+        <Dialog open={open_confirm} onClose={toggleConfirmDialog}>
+            <DialogTitle>
+                <Typography
+                fontSize={25}
+                borderBottom={1}
+                borderColor={"lightgray"}
+                gutterBottom>
+                    Confirm your purchase
+                </Typography>
+            </DialogTitle>
+
+            <DialogContent>
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <Button 
+                    onClick={toggleConfirmDialog}
+                    variant="outlined"
+                    color="error"
+                    >
+                        Cancel
+                    </Button>
+
+                    <Button 
+                    onClick={handlePayment}
+                    variant="contained"
+                    color="success"
+                    >
+                        Confirm
+                    </Button>
+                </div>
             </DialogContent>
         </Dialog>
         </>
