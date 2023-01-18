@@ -4,7 +4,7 @@ import './Cart.css';
 //Apollo and graphql
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { GET_USER_CART_PRODUCTS, GET_USER_WISHLIST, CHECK_FOR_CREDIT_CARD } from "../Queries/Queries";
-import { SET_PRODUCT_AS_PAID } from "../Queries/Mutations";
+import { SET_PRODUCT_AS_PAID, UPDATE_PRODUCT_QUANTITY } from "../Queries/Mutations";
 
 //redux
 import { useDispatch } from 'react-redux';
@@ -39,10 +39,11 @@ const Cart = () => {
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
     const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
     const wishlist = useSelector((redux_state: ReduxState) => redux_state.wishlist);
+    const products = useSelector((redux_state: ReduxState) => redux_state.products);
 
     //redux actions
     const dispatch = useDispatch();
-    const { setCart, dontFetch, setPaid, setWishlist } = bindActionCreators(actionsCreators, dispatch);
+    const { setCart, dontFetch, setPaid, setWishlist, updateSupply } = bindActionCreators(actionsCreators, dispatch);
 
     const delivery_ground_price = 15;
 
@@ -56,7 +57,7 @@ const Cart = () => {
     const [has_credit_card, setHasCreditCard] = useState<boolean>(false);
     const [open_credit_card, setOpenCreditCard] = useState<boolean>(false);
     const [open_confirm, setOpenConfirm] = useState<boolean>(false);
-
+    const [err_text, setErrText] = useState<string>("");
 
     //queries
     //when the info comes back, set the information in the cart redux state
@@ -91,6 +92,8 @@ const Cart = () => {
     //mutations
     //sets the product as paid
     const [setProductAsPaid] = useMutation(SET_PRODUCT_AS_PAID);
+    //update the quantity of an item
+    const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY);
 
 
 
@@ -112,6 +115,7 @@ const Cart = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.token]);
 
+    //sets the delivery price
     useEffect(() => {
         //add delivery price by distance later
         setPaymentInformation((prev) => ({...prev, delivery: delivery_ground_price}));
@@ -122,9 +126,26 @@ const Cart = () => {
         setPaymentInformation((prev) => ({...prev, total: payment_information.sum_of_products + payment_information.delivery}));
     }, [payment_information.sum_of_products, payment_information.delivery]);
 
-    const handlePayment = () => {
+    //the function of the pay button click
+    const handlePayment = async() => {
+        //check that the selected products are in stock
+        const temp_cart = cart.filter((cart_product) => cart_product.paid === false);
+
+        for(let i = 0; i< temp_cart.length; i++) {
+            let index_of_product = products.products.findIndex((product) => product.id === temp_cart[i].product_id);
+            if (products.products[index_of_product].quantity < temp_cart[i].amount) {
+                setErrText("not enough in stock");
+                return;
+            }
+        }
+        
+        //updates the products quantities
+        for(let i = 0; i< temp_cart.length; i++) {
+            orderProduct(temp_cart[i].amount, temp_cart[i].product_id);
+        }
+
         //set all the products in the cart to paid
-        cart.forEach((cart_product) => {
+        temp_cart.forEach((cart_product) => {
             //set paid locally
             setPaid(cart_product.transaction_id);
 
@@ -149,6 +170,32 @@ const Cart = () => {
         toggleConfirmDialog();
     }
 
+    //updates the products quantities
+    const orderProduct = async(amount: number, product_id: string) => {
+        //finds the quantity of the product
+        const product_index = products.products.findIndex((product) => product.id === product_id);
+        const quantity = products.products[product_index].quantity;
+
+        //update both arrays
+        updateSupply({
+            id: product_id,
+            amount: amount
+        });
+
+        //update db
+        try {
+            await updateProductQuantity({
+                variables: {
+                    id: product_id,
+                    newQuantity: quantity - amount
+                }
+            });
+        } catch (err: any) {
+            console.error(err.message);
+        }
+    }
+
+    //checks if the user has a credit card
     useEffect(() => {
         if(credit_data) {
             setHasCreditCard(credit_data.checkForCreditCard);
@@ -194,7 +241,9 @@ const Cart = () => {
                             fullWidth
                             >
                             Pay
-                        </Button>    
+                        </Button>
+
+                        <p>{err_text ? err_text : ""}</p>   
                     </div>
 
                     {
@@ -218,7 +267,7 @@ const Cart = () => {
                                     product_id={product.product_id}
                                     transaction_id={product.transaction_id}
                                     address={product.address}
-                                    quantity={product.amount}
+                                    amount={product.amount}
                                     size={product.size}
                                     setPaymentInformation={setPaymentInformation}
                                     key={i}
