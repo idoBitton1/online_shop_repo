@@ -30,7 +30,7 @@ interface MyProps {
     product_id: string,
     transaction_id: string,
     address: string,
-    quantity: number,
+    amount: number,
     size: string,
     setPaymentInformation: React.Dispatch<React.SetStateAction<PaymentProps>>
 }
@@ -47,7 +47,7 @@ interface ChangeProperties {
     quantity: boolean
 }
 
-export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_id, address, quantity, size, setPaymentInformation}) => {
+export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_id, address, amount, size, setPaymentInformation}) => {
     //redux states
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
 
@@ -62,7 +62,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
         quantity: 0,
         category: ""
     });
-    const [order_quantity, setOrderQuantity] = useState<number>(quantity);
+    const [order_amount, setOrderAmount] = useState<number>(amount);
     const [order_size, setOrderSize] = useState<string>(size);
     const [change_properties, setChange] = useState<ChangeProperties>({ size: false, quantity: false });
     const [err_text, setErrText] = useState<string>("");
@@ -102,7 +102,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
             });
 
             //add the price of this item to the total amount
-            setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_quantity * product_data.getProduct.price}));
+            setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_amount * product_data.getProduct.price}));
 
             if(products.products.length !== 0) {
                 let index = products.products.findIndex((product) => product.id === product_id);
@@ -126,9 +126,9 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
     //update the total amount, if changed
     useEffect(() => {
         //add the price of this item to the total amount
-        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_quantity * product_info.price}));
+        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_amount * product_info.price}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [order_quantity]);
+    }, [order_amount]);
 
     //if the products array is empty, fetch it
     useEffect(() => {
@@ -159,7 +159,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
         removeFromCart(transaction_id);
 
         //remove the item's price from the total amount
-        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products - order_quantity * product_info.price}));
+        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products - order_amount * product_info.price}));
     }
 
     const handleChangeQuantity = () => {
@@ -182,10 +182,10 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
         }
 
         //remove the item's price from the total amount, and it will re-add the new amount in the useEffect
-        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products - order_quantity * product_info.price}));
+        setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products - order_amount * product_info.price}));
 
         //update the state
-        setOrderQuantity(products_quantity);
+        setOrderAmount(products_quantity);
 
         //update the cart
         changeQuantity({ transaction_id: transaction_id, new_value: products_quantity });
@@ -288,7 +288,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
                         <FormControl variant="standard" sx={{marginTop: 0.5}}>
                         <Select
                             id="amount_select"
-                            value={order_quantity}
+                            value={order_amount}
                             onChange={handleQuantitySelect}
                             >
                                 <MenuItem value={1}>1</MenuItem>
@@ -298,7 +298,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
                         </Select>
                         </FormControl>
                         :
-                        <p>{order_quantity}</p>
+                        <p>{order_amount}</p>
                     }
                     <p className="change" onClick={handleChangeQuantity}>change</p>
                     <p style={{color: "red"}}>{err_text ? err_text : ""}</p>
