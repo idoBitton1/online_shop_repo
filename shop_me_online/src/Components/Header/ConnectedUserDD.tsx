@@ -7,7 +7,7 @@ import { actionsCreators, ReduxState } from "../../state";
 import { bindActionCreators } from 'redux';
 
 //icons
-import { BsCart2 } from 'react-icons/bs';
+import { BsCart2, BsTruck } from 'react-icons/bs';
 import { AiOutlineHeart, AiOutlineUser } from 'react-icons/ai';
 import { CiLogout } from 'react-icons/ci';
 
@@ -27,24 +27,24 @@ export const ConnectedUserDD: React.FC<MyProps> = ({ toggleDropDown }) => {
         <>
             <li className="dropdown_item" onClick={() => navigate('/profile')}>
                 <AiOutlineUser className="dropdown_item_icon" />
-                <h3>profile</h3>
+                <h3>Profile</h3>
             </li>
             {
                 user.token?.is_manager
                 ?
                 <li className="dropdown_item">
-                    <AiOutlineHeart className="dropdown_item_icon" />
-                    <h3>Make Shipment</h3>
+                    <BsTruck className="dropdown_item_icon" />
+                    <h3>Ship orders</h3>
                 </li>
                 :
                 <>
                 <li className="dropdown_item" onClick={() => navigate('/cart')}>
                 <BsCart2 className="dropdown_item_icon" />
-                <h3>cart</h3>
+                <h3>Cart</h3>
                 </li>
                 <li className="dropdown_item" onClick={() => navigate('/wishlist')}>
                     <AiOutlineHeart className="dropdown_item_icon" />
-                    <h3>wishlist</h3>
+                    <h3>Wishlist</h3>
                 </li>
                 </>
             }
@@ -56,7 +56,7 @@ export const ConnectedUserDD: React.FC<MyProps> = ({ toggleDropDown }) => {
                 window.location.reload();
             }}>
                 <CiLogout className="dropdown_item_icon" />
-                <h3> log out </h3>
+                <h3>Log out</h3>
             </li>
         </>
     )
