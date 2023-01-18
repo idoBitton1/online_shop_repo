@@ -5,7 +5,7 @@ import * as uuid from 'uuid';
 //Apollo and graphql
 import { useMutation, useLazyQuery } from "@apollo/client"
 import { GET_USER } from "../../Queries/Queries";
-import { UPDATE_PRODUCT_QUANTITY, ADD_PRODUCT_TO_CART, ADD_TO_WISHLIST } from "../../Queries/Mutations";
+import { ADD_PRODUCT_TO_CART, ADD_TO_WISHLIST } from "../../Queries/Mutations";
 
 //redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -42,7 +42,7 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
 
     //redux actions
     const dispatch = useDispatch();
-    const { updateSupply, addProductToCart, addToWishlist } = bindActionCreators(actionsCreators, dispatch);
+    const { addProductToCart, addToWishlist } = bindActionCreators(actionsCreators, dispatch);
 
     //states
     const [user_address, setUserAddress] = useState<string>("");
@@ -54,12 +54,11 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
     const [ getAddress, { data: user_data }] = useLazyQuery(GET_USER);
     
     //mutations
-    const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY);
     const [addProductToCartMutation] = useMutation(ADD_PRODUCT_TO_CART);
     const [addProductToWishlist, { error }] = useMutation(ADD_TO_WISHLIST);
 
 
-
+    //if the user is connected, fetch his address
     useEffect(() => {
         if(user.token) {
             getAddress({
@@ -71,6 +70,7 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.token]);
 
+    //when the data comes in, put it in the state
     useEffect(() => {
         if(user_data) {
             setUserAddress(user_data.getUser.address);
@@ -78,12 +78,14 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user_data]);
 
+    //the function of the amount select
     const handleAmountSelect = (event: SelectChangeEvent<number>) => {
         const products_amount = event.target.value as number;
 
         setAmount(products_amount);
     }
 
+    //the function of the add the cart button click
     const handleAddToCart = async () => {
         //if no user is connected, cant buy
         if (!user.token) {
@@ -98,28 +100,10 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
         }
 
         //check in stock
-        let index_of_product = products.filtered_products.findIndex((product) => product.id === id);
-        if (products.filtered_products[index_of_product].quantity < amount) {
+        let index_of_product = products.products.findIndex((product) => product.id === id);
+        if (products.products[index_of_product].quantity < amount) {
             setErrText("not enough in stock");
             return;
-        }
-
-        //update both arrays
-        updateSupply({
-            id: id,
-            amount: amount
-        });
-
-        //update db
-        try {
-            await updateProductQuantity({
-                variables: {
-                    id: id,
-                    newQuantity: quantity - amount
-                }
-            });
-        } catch (err: any) {
-            console.error(err.message);
         }
 
         //format today
