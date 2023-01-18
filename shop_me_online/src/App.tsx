@@ -13,6 +13,7 @@ import LogIn from './Pages/LogIn';
 import Cart from './Pages/Cart';
 import Wishlist from './Pages/Wishlist';
 import Profile from './Pages/Profile';
+import ShipOrders from './Pages/ShipOrders';
 
 function App() {
 
@@ -35,8 +36,9 @@ function App() {
             <Route path="/registerManager" element={<Register is_manager={true} />} />
             <Route path="/login" element={<LogIn />} />
             <Route path="/cart" element={<Cart />} />
-            <Route path="wishlist" element={<Wishlist />} />
-            <Route path="profile" element={<Profile />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/shipOrders" element={<ShipOrders />} />
           </Routes>
         </Router>
       </div>
