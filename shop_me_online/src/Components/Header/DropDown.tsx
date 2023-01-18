@@ -36,7 +36,7 @@ export const DropDown = () => {
         <ul>
           <li className='dropdown_item' onClick={() => navigate('/')}>
             <AiOutlineHome className="dropdown_item_icon" />
-            <h3> home </h3>
+            <h3>Home</h3>
           </li>
           {
             user.token
