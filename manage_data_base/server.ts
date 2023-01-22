@@ -9,7 +9,7 @@ const pool = new pg.Pool({
     password: "mpmpiv100",
     host: "localhost",
     port: 5432,
-    database: "shop_me_online"
+    database: "temp"
 });
 
 function onlyLetters(str: string) {
@@ -55,13 +55,13 @@ const resolvers = {
                 console.error(err.message);
             }
         },
-        //get a user's cart product
+        //get a user's cart products
         getUserCartProducts: async (_: any, args: any) => {
             const { user_id } = args;
 
             try {
                 const cart_products = await pool.query(
-                "SELECT * FROM users_products WHERE user_id=$1",
+                "SELECT * FROM transactions, cart WHERE transactions.user_id=$1 AND transactions.id=cart.transaction_id",
                 [user_id]);
 
                 return cart_products.rows;
@@ -269,31 +269,58 @@ const resolvers = {
                 console.error(err.message);
             }
         },
-        //add a product to the user's cart
-        addProductToCart: async(_: any, args: any) => {
-            const { user_id, product_id, size, amount,
-                    address, paid, ordering_time, transaction_id } = args;
+        //create a new transaction for a user
+        createTransaction: async(_: any, args: any) => {
+            const { user_id, address, paid, ordering_time } = args;
             
             try {
-                const new_product = await pool.query(
-                "INSERT INTO users_products (user_id,product_id,address,paid,amount,size,ordering_time,transaction_id) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING * ",
-                [user_id, product_id, address, paid, amount, size, ordering_time, transaction_id]);
+                const new_transaction = await pool.query(
+                "INSERT INTO transactions(address,paid,ordering_time,user_id) VALUES($1,$2,$3,$4) RETURNING * ",
+                [address, paid, ordering_time, user_id]);
                     
+                return new_transaction.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //delete a transaction
+        deleteTransaction: async(_: any, args: any) => {
+            const { transaction_id } = args;
+
+            try {
+                const delete_transaction = await pool.query(
+                "DELETE FROM transactions WHERE id=$1",
+                [transaction_id]);
+
+                return delete_transaction.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //add a product to the transaction (to the cart)
+        addProductToCart:async (_: any, args: any) => {
+            const { transaction_id, product_id, amount, size } = args;
+
+            try {
+                const new_product = await pool.query(
+                "INSERT INTO cart(transaction_id,product_id,amount,size) VALUES($1,$2,$3,$4)",
+                [transaction_id, product_id, amount, size]);
+
                 return new_product.rows[0];
             } catch (err: any) {
                 console.error(err.message);
             }
         },
-        //delete a product from the cart of a user
-        deleteProductFromCart: async(_: any, args: any) => {
-            const { transaction_id } = args;
+        //deletes a product from a transaction (from the cart)
+        removeProductFromCart:async (_: any, args: any) => {
+            const { item_id } = args;
 
             try {
-                const delete_product = await pool.query(
-                "DELETE FROM users_products WHERE transaction_id=$1",
-                [transaction_id]);
+                const new_product = await pool.query(
+                "DELETE FROM cart WHERE item_id=$1",
+                [item_id]);
 
-                return delete_product.rows[0];
+                return new_product.rows[0];
             } catch (err: any) {
                 console.error(err.message);
             }
@@ -304,7 +331,7 @@ const resolvers = {
 
             try {
                 const update = await pool.query(
-                "UPDATE users_products SET paid=true WHERE transaction_id=$1",
+                "UPDATE transactions SET paid=true WHERE id=$1",
                 [transaction_id]);
 
                 return update.rows[0];
@@ -355,12 +382,12 @@ const resolvers = {
         },
         //update the quantity of the cart product
         updateCartProductAmount: async(_: any, args: any) => {
-            const { transaction_id, new_amount } = args;
+            const { item_id, new_amount } = args;
 
             try {
                 const update = await pool.query(
-                "UPDATE users_products SET amount=$1 WHERE transaction_id=$2",
-                [new_amount, transaction_id]);
+                "UPDATE cart SET amount=$1 WHERE item_id=$2",
+                [new_amount, item_id]);
 
                 return update.rows[0];
             } catch (err: any) {
@@ -369,12 +396,12 @@ const resolvers = {
         },
         //update the size of the cart product
         updateCartProductSize: async(_: any, args: any) => {
-            const { transaction_id, new_size } = args;
+            const { item_id, new_size } = args;
 
             try {
                 const update = await pool.query(
-                "UPDATE users_products SET size=$1 WHERE transaction_id=$2",
-                [new_size, transaction_id]);
+                "UPDATE cart SET size=$1 WHERE item_id=$2",
+                [new_size, item_id]);
 
                 return update.rows[0];
             } catch (err: any) {
@@ -467,15 +494,20 @@ const typeDefs = gql`
         img_location: String!
     }
 
-    type Users_products {
+    type Transactions {
+        id: String!,
         user_id: String!,
-        product_id: String!,
         address: String!,
         paid: Boolean!,
+        ordering_time: String!
+    }
+
+    type Cart {
+        item_id: String!,
+        product_id: String!,
+        transaction_id: String!,
         amount: Int!,
-        size: String!,
-        ordering_time: String!,
-        transaction_id: String!
+        size: String!
     }
 
     type Wishlist {
@@ -485,7 +517,7 @@ const typeDefs = gql`
 
     type Query {
         getAllProducts: [Product],
-        getUserCartProducts(user_id: String!): [Users_products],
+        getUserCartProducts(user_id: String!): [Cart],
         getProduct(id: String!): Product,
         getUserWishlist(user_id: String!): [Wishlist],
         getUser(id: String!): User,
@@ -503,14 +535,10 @@ const typeDefs = gql`
 
         loginUser(email: String!, password: String!): User,
         updateProductQuantity(id: String!, new_quantity: Int!): Product,
-        addProductToCart(user_id: String!,
-                         product_id:String!,
-                         size: String!,
-                         amount: Int!,
+        createTransaction(user_id: String!,
                          address: String!,
                          paid: Boolean!,
-                         ordering_time: String!,
-                         transaction_id: String!): Users_products,
+                         ordering_time: String!): Transactions,
 
         updateUserInformation(id: String!,
                               first_name: String!,
@@ -520,14 +548,19 @@ const typeDefs = gql`
                               email: String!
                               is_manager: Boolean!): User
 
-        deleteProductFromCart(transaction_id: String!): Users_products,
-        setProductAsPaid(transaction_id: String!): Users_products,
+        deleteTransaction(transaction_id: String!): Transactions,
+        setProductAsPaid(transaction_id: String!): Transactions,
         addToWishlist(user_id: String!, product_id: String!): Wishlist,
         deleteProductFromWishlist(user_id: String!, product_id: String!): Wishlist,
-        updateCartProductAmount(transaction_id: String!, new_amount: Int!): Users_products
-        updateCartProductSize(transaction_id: String!, new_size: String!): Users_products
+        updateCartProductAmount(item_id: String!, new_amount: Int!): Cart,
+        updateCartProductSize(item_id: String!, new_size: String!): Cart,
         addCreditCard(id: String!, credit_card_number: String!): User,
-        removeCreditCard(id: String!): User
+        removeCreditCard(id: String!): User,
+        removeProductFromCart(item_id: String!): Cart,
+        addProductToCart(transaction_id: String!,
+                         product_id: String!,
+                         amount: Int!,
+                         size: String!): Cart
     }
 `;
 
