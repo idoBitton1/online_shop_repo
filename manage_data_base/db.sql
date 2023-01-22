@@ -11,6 +11,8 @@ CREATE TABLE users (
     is_manager BOOLEAN NOT NULL,
     token VARCHAR,
     PRIMARY KEY (id),
+    CONSTRAINT chk_credit CHECK (char_length(credit_card_number) = 16),
+    CONSTRAINT chk_password CHECK (char_length(password) >= 8),
     CONSTRAINT email_unq UNIQUE(email)
 );
 
@@ -21,20 +23,31 @@ CREATE TABLE products (
     price REAL NOT NULL,
     category VARCHAR(100) NOT NULL,
     img_location VARCHAR(100) NOT NULL,
+    CONSTRAINT chk_quantity CHECK (quantity >= 0),
+    CONSTRAINT chk_price CHECK (price > 0),
     PRIMARY KEY (id)
 );
 
-CREATE TABLE users_products (
-    user_id UUID NOT NULL,
-    product_id UUID NOT NULL,
+CREATE TABLE transactions (
+    id UUID DEFAULT uuid_generate_v4(),
     address VARCHAR(100) NOT NULL,
-    paid BOOLEAN NOT NUll,
+    paid BOOLEAN NOT NUll, 
+    ordering_time TIMESTAMP NOT NULL,
+    user_id UUID NOT NULL,
+    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE cart (
+    item_id UUID DEFAULT uuid_generate_v4(),
+    transaction_id UUID NOT NULL,
+    product_id UUID NOT NULL,
     amount INTEGER NOT NULL,
     size VARCHAR(2) NOT NULL,
-    ordering_time TIMESTAMP NOT NULL,
-    transaction_id UUID NOT NULL,
-    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id),
-    CONSTRAINT fk_product FOREIGN KEY(product_id) REFERENCES products(id)
+    CONSTRAINT chk_amount CHECK (amount > 0),
+    CONSTRAINT fk_transaction FOREIGN KEY(transaction_id) REFERENCES transactions(id),
+    CONSTRAINT fk_product FOREIGN KEY(product_id) REFERENCES products(id),
+    PRIMARY KEY (item_id)
 );
 
 CREATE TABLE wishlist (
