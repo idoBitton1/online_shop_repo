@@ -1,6 +1,6 @@
 import { CartProduct } from "../../Pages/Home";
 import { CartActions } from "../actions";
-import { CartActionType } from "../action_types"
+import { CartActionType } from "../action_types";
 
 const initial_state: CartProduct[] = [];
 
@@ -14,47 +14,19 @@ const reducer = (state: CartProduct[] = initial_state, action: CartActions) => {
             {
                 let index_of_current_product = -1;
 
-                index_of_current_product = state.findIndex((product) => product.transaction_id === action.payload);
+                index_of_current_product = state.findIndex((product) => product.item_id === action.payload);
 
                 return [...state.slice(0, index_of_current_product), ...state.slice(index_of_current_product + 1)];
             }
-        case CartActionType.SET_PAID:
+        case CartActionType.CHANGE_AMOUNT:
             {
                 let index_of_current_product = -1;
 
-                index_of_current_product = state.findIndex((product) => product.transaction_id === action.payload);
+                index_of_current_product = state.findIndex((product) => product.item_id === action.payload.item_id);
 
                 const product = {
                     ...state[index_of_current_product],
-                    __typename: 'Users_products',
-                    paid: true
-                }
-
-                let temp = [...state];
-                temp[index_of_current_product] = product;
-
-                return [...temp];
-            }
-        case CartActionType.SET_NOT_PAID:
-            {
-                let index_of_current_product = -1;
-
-                index_of_current_product = state.findIndex((product) => product.transaction_id === action.payload);
-
-                let temp = state;
-                temp[index_of_current_product].paid = false;
-
-                return [...temp];
-            }
-        case CartActionType.CHANGE_QUANTITY:
-            {
-                let index_of_current_product = -1;
-
-                index_of_current_product = state.findIndex((product) => product.transaction_id === action.payload.transaction_id);
-
-                const product = {
-                    ...state[index_of_current_product],
-                    __typename: 'Users_products',
+                    __typename: 'Cart',
                     amount: action.payload.new_value
                 }
 
@@ -67,11 +39,11 @@ const reducer = (state: CartProduct[] = initial_state, action: CartActions) => {
             {
                 let index_of_current_product = -1;
 
-                index_of_current_product = state.findIndex((product) => product.transaction_id === action.payload.transaction_id);
+                index_of_current_product = state.findIndex((product) => product.item_id === action.payload.item_id);
 
                 const product = {
                     ...state[index_of_current_product],
-                    __typename: 'Users_products',
+                    __typename: 'Cart',
                     size: action.payload.new_value
                 }
 
