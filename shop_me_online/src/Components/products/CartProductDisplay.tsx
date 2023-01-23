@@ -4,7 +4,7 @@ import '../../Pages/Cart.css';
 //Apollo and graphql
 import { useLazyQuery, useMutation } from "@apollo/client"
 import { GET_PRODUCT, GET_ALL_PRODUCTS } from "../../Queries/Queries";
-import { DELETE_PRODUCT_FROM_CART, UPDATE_CART_PRODUCT_AMOUNT,
+import { REMOVE_PRODUCT_FROM_CART, UPDATE_CART_PRODUCT_AMOUNT,
          UPDATE_CART_PRODUCT_SIZE } from "../../Queries/Mutations";
 
 //redux
@@ -27,9 +27,8 @@ import { PaymentProps } from "../../Pages/Cart";
 import img from "../../Images/j1.png";
 
 interface MyProps {
+    item_id: string,
     product_id: string,
-    transaction_id: string,
-    address: string,
     amount: number,
     size: string,
     setPaymentInformation: React.Dispatch<React.SetStateAction<PaymentProps>>
@@ -47,7 +46,7 @@ interface ChangeProperties {
     quantity: boolean
 }
 
-export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_id, address, amount, size, setPaymentInformation}) => {
+export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amount, size, setPaymentInformation}) => {
     //redux states
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
 
@@ -72,7 +71,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
     const [ getProduct, { data: product_data }]  = useLazyQuery(GET_PRODUCT);
 
     //mutations
-    const [deleteProductFromCart] = useMutation(DELETE_PRODUCT_FROM_CART);
+    const [removeProductFromCart] = useMutation(REMOVE_PRODUCT_FROM_CART);
     const [updateCartProductAmount] = useMutation(UPDATE_CART_PRODUCT_AMOUNT);
     const [updateCartProductSize] = useMutation(UPDATE_CART_PRODUCT_SIZE);
     
@@ -150,13 +149,13 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
 
     //remove the item from the cart
     const handleDeleteClick = () => {       
-        deleteProductFromCart({
+        removeProductFromCart({
             variables: {
-                transactionId: transaction_id
+                item_id: item_id
             }
         });
 
-        removeFromCart(transaction_id);
+        removeFromCart(item_id);
 
         //remove the item's price from the total amount
         setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products - order_amount * product_info.price}));
@@ -188,13 +187,13 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
         setOrderAmount(products_quantity);
 
         //update the cart
-        changeQuantity({ transaction_id: transaction_id, new_value: products_quantity });
+        changeQuantity({ item_id: item_id, new_value: products_quantity });
     
         //update the db
         updateCartProductAmount({
             variables: {
-                transactionId: transaction_id,
-                newAmount: products_quantity
+                item_id: item_id,
+                new_amount: products_quantity
             }
         });
 
@@ -223,13 +222,13 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
         setOrderSize(new_size);
 
         //update the cart
-        changeSize({ transaction_id: transaction_id, new_value: new_size });
+        changeSize({ item_id: item_id, new_value: new_size });
 
         //update db
         updateCartProductSize({
             variables: {
-                transactionId: transaction_id,
-                newSize: new_size
+                item_id: item_id,
+                new_size: new_size
             }
         });
 
@@ -303,8 +302,6 @@ export const CartProductDisplay: React.FC<MyProps> = ({product_id, transaction_i
                     <p className="change" onClick={handleChangeQuantity}>change</p>
                     <p style={{color: "red"}}>{err_text ? err_text : ""}</p>
                 </div>
-                <p className="order_info_headline">Ship to</p>
-                <p>{address}</p>
             </div>
 
             <div style={{ alignSelf: "flex-start" }}>

@@ -39,6 +39,7 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
     //redux states
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
+    const transaction_id = useSelector((redux_state: ReduxState) => redux_state.transaction_id);
 
     //redux actions
     const dispatch = useDispatch();
@@ -86,7 +87,7 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
     }
 
     //the function of the add the cart button click
-    const handleAddToCart = async () => {
+    const handleAddToCart = () => {
         //if no user is connected, cant buy
         if (!user.token) {
             setErrText("log in to buy");
@@ -106,35 +107,27 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
             return;
         }
 
-        //format today
-        const formatted_now = formatDate();
-
-        const my_transaction_id = uuid.v4();
+        //create a uuid for the item id
+        const my_item_id = uuid.v4();
 
         //adds the product to the cart
         addProductToCart({
-            user_id: user.token.user_id,
+            item_id: my_item_id,
+            transaction_id: transaction_id,
             product_id: id,
             size: size,
-            amount: amount,
-            address: user_address,
-            paid: false,
-            ordering_time: formatted_now,
-            transaction_id: my_transaction_id
+            amount: amount        
         });
 
         //update db
         try {
-            await addProductToCartMutation({
+            addProductToCartMutation({
                 variables: {
-                    userId: user.token.user_id,
-                    productId: id,
+                    item_id: my_item_id,
+                    transaction_id: transaction_id,
+                    product_id: id,
                     size: size,
-                    amount: amount,
-                    address: user_address,
-                    paid: false,
-                    orderingTime: formatted_now,
-                    transactionId: my_transaction_id
+                    amount: amount             
                 }
             });
         } catch (err: any) {
@@ -171,21 +164,6 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
         });
 
         toggleDialog();
-    }
-
-    const formatDate = (): string => {
-        const today: Date = new Date();
-        const yyyy: number = today.getFullYear();
-        let mm: number = today.getMonth() + 1; // Months start at 0
-        let dd: number = today.getDate();
-
-        let ddd: string = `${dd}`;
-        let mmm: string = `${mm}`;
-        if (dd < 10) ddd = '0' + dd;
-        if (mm < 10) mmm = '0' + mm;
-
-        const formatted_today: string = yyyy + '/' + mmm + '/' + ddd;
-        return formatted_today;
     }
 
     const beforeToggleDialog = () => {

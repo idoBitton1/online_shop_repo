@@ -3,8 +3,8 @@ import './Cart.css';
 
 //Apollo and graphql
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
-import { GET_USER_CART_PRODUCTS, GET_USER_WISHLIST, CHECK_FOR_CREDIT_CARD } from "../Queries/Queries";
-import { SET_PRODUCT_AS_PAID, UPDATE_PRODUCT_QUANTITY } from "../Queries/Mutations";
+import { GET_USER_CART_PRODUCTS, GET_USER_WISHLIST, CHECK_FOR_CREDIT_CARD, GET_TRANSACTION, GET_USER, GET_TRANSACTION_ID } from "../Queries/Queries";
+import { CREATE_TRANSACTION, SET_TRANSACTION_AS_PAID, UPDATE_PRODUCT_QUANTITY } from "../Queries/Mutations";
 
 //redux
 import { useDispatch } from 'react-redux';
@@ -27,6 +27,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { CreditCardForm } from "../Components/Forms/CreditCardForm";
 
+//function
+import { formatDate } from "./Home";
+
 export interface PaymentProps {
     sum_of_products: number,
     delivery: number,
@@ -40,11 +43,13 @@ const Cart = () => {
     const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
     const wishlist = useSelector((redux_state: ReduxState) => redux_state.wishlist);
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
+    const transaction_id = useSelector((redux_state: ReduxState) => redux_state.transaction_id);
 
     //redux actions
     const dispatch = useDispatch();
-    const { setCart, dontFetch, setPaid, setWishlist, updateSupply } = bindActionCreators(actionsCreators, dispatch);
+    const { setCart, dontFetch, setWishlist, updateSupply, setTransactionId } = bindActionCreators(actionsCreators, dispatch);
 
+    //const value
     const delivery_ground_price = 15;
 
     //states
@@ -60,6 +65,8 @@ const Cart = () => {
     const [err_text, setErrText] = useState<string>("");
 
     //queries
+    const [getTransactionId, { data: transaction_data }] = useLazyQuery(GET_TRANSACTION_ID);
+    const [getAddress, { data: address_data }] = useLazyQuery(GET_USER);
     //when the info comes back, set the information in the cart redux state
     const [getCartProducts] = useLazyQuery(GET_USER_CART_PRODUCTS, {
         onCompleted(data) {
@@ -87,23 +94,36 @@ const Cart = () => {
         variables: {
             id: user.token?.user_id
         }
-    })
+    });
+    //check if the transaction was paid
+    const [getTransaction] = useLazyQuery(GET_TRANSACTION, {
+        onCompleted(data) {
+            setPaymentInformation((prev) => ({...prev, payment_succeed: data.getTransaction.paid}));
+        }
+    });
 
     //mutations
-    //sets the product as paid
-    const [setProductAsPaid] = useMutation(SET_PRODUCT_AS_PAID);
+    //sets the transaction as paid
+    const [setTransactionAsPaid] = useMutation(SET_TRANSACTION_AS_PAID);
     //update the quantity of an item
     const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY);
+    const [createTransaction] = useMutation(CREATE_TRANSACTION, {
+        onCompleted(data) { 
+          //if created a new one, set the new transaction id to the redux state
+          setTransactionId(data.createTransaction.id);
+        }
+    });
 
-
+    
 
     //when the user is connecting, fetch his cart information
     useEffect(() => {
-        if (user.fetch_info && user.token) {
+        if (user.fetch_info && user.token && transaction_id) {
             dontFetch();
             getCartProducts({
                 variables: {
-                    userId: user.token.user_id
+                    user_id: user.token.user_id,
+                    transaction_id: transaction_id
                 }
             });
             getWishlistProducts({
@@ -113,7 +133,60 @@ const Cart = () => {
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user.token]);
+    }, [user.token, transaction_id]);
+
+    useEffect(() => {
+        if(transaction_id) {
+            getTransaction({
+                variables: {
+                    id: transaction_id
+                }
+            });
+        }
+    }, [transaction_id]);
+
+    //wait for the user to connect
+    useEffect(() => {
+        if (user.token && !transaction_id) {
+            //get the address of the user
+            getAddress({
+                variables: {
+                    userId: user.token.user_id
+                }
+            });
+
+            //get the transaction of the user when he is connecting
+            getTransactionId({
+                variables: {
+                    user_id: user.token.user_id
+                }
+            });
+        }
+    }, [user.token, transaction_id]);
+
+    //when all the information that is needed is here, check if the user has an open transaction
+    useEffect(() => {
+        if (transaction_data && address_data) {
+            if (transaction_data.getTransactionId) { //if the user already has an open transaction, get it
+                setTransactionId(transaction_data.getTransactionId);
+            }
+            else { //if not, create a new one
+                //format today
+                const formatted_now = formatDate();
+
+                createTransaction({
+                    variables: {
+                        user_id: user.token?.user_id,
+                        address: address_data.getUser.address,
+                        paid: false,
+                        ordering_time: formatted_now
+                    }
+                });
+
+                window.location.reload(); //refresh
+            }
+        }
+    }, [transaction_data, address_data]);
 
     //sets the delivery price
     useEffect(() => {
@@ -129,7 +202,7 @@ const Cart = () => {
     //the function of the pay button click
     const handlePayment = async() => {
         //check that the selected products are in stock
-        const temp_cart = cart.filter((cart_product) => cart_product.paid === false);
+        const temp_cart = cart;
 
         for(let i = 0; i< temp_cart.length; i++) {
             let index_of_product = products.products.findIndex((product) => product.id === temp_cart[i].product_id);
@@ -139,22 +212,16 @@ const Cart = () => {
             }
         }
         
-        //updates the products quantities
+        //updates the products arrays quantities
         for(let i = 0; i< temp_cart.length; i++) {
             orderProduct(temp_cart[i].amount, temp_cart[i].product_id);
         }
 
-        //set all the products in the cart to paid
-        temp_cart.forEach((cart_product) => {
-            //set paid locally
-            setPaid(cart_product.transaction_id);
-
-            //set paid in the db
-            setProductAsPaid({
-                variables: {
-                    transactionId: cart_product.transaction_id
-                }
-            })
+        //set the transaction as paid
+        setTransactionAsPaid({
+            variables: {
+                transaction_id: transaction_id
+            }
         });
 
         //update the payment variables
@@ -170,7 +237,7 @@ const Cart = () => {
         toggleConfirmDialog();
     }
 
-    //updates the products quantities
+    //updates the products arrays quantities
     const orderProduct = async(amount: number, product_id: string) => {
         //finds the quantity of the product
         const product_index = products.products.findIndex((product) => product.id === product_id);
@@ -260,13 +327,16 @@ const Cart = () => {
 
                 <div className="cart_items">
                     {
+                        payment_information.payment_succeed
+                        ?
+                        <></>
+                        :
                         //render all the products in the cart
-                        cart.filter((cart_product) => cart_product.paid === false).map((product, i) => {
+                        cart.map((product, i) => {
                             return (
                                 <CartProductDisplay
+                                    item_id={product.item_id}
                                     product_id={product.product_id}
-                                    transaction_id={product.transaction_id}
-                                    address={product.address}
                                     amount={product.amount}
                                     size={product.size}
                                     setPaymentInformation={setPaymentInformation}
