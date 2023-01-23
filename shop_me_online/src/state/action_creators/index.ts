@@ -20,6 +20,10 @@ import { Wishlist } from "../../Pages/Home";
 import { WishlistActions } from "../actions";
 import { WishlistActionType } from "../action_types";
 
+//transactions
+import { TransactionsActions } from "../actions";
+import { TransactionActionType } from "../action_types";
+
 //filtered_products functions
 export const setFilterProducts = (products: Product[]) => {
     return (dispatch: Dispatch<ProductsActions>) => {
@@ -84,29 +88,11 @@ export const addProductToCart = (product: CartProduct) => {
     }
 }
 
-export const setPaid = (transaction_id: string) => {
-    return (dispatch: Dispatch<CartActions>) => {
-        dispatch({
-            type: CartActionType.SET_PAID,
-            payload: transaction_id
-        });
-    }
-}
-
-export const setNotPaid = (transaction_id: string) => {
-    return (dispatch: Dispatch<CartActions>) => {
-        dispatch({
-            type: CartActionType.SET_NOT_PAID,
-            payload: transaction_id
-        });
-    }
-}
-
-export const removeFromCart = (transaction_id: string) => {
+export const removeFromCart = (item_id: string) => {
     return (dispatch: Dispatch<CartActions>) => {
         dispatch({
             type: CartActionType.REMOVE,
-            payload: transaction_id
+            payload: item_id
         });
     }
 }
@@ -114,7 +100,7 @@ export const removeFromCart = (transaction_id: string) => {
 export const changeQuantity = (change_properties: ChangeQuantityProperties) => {
     return (dispatch: Dispatch<CartActions>) => {
         dispatch({
-            type: CartActionType.CHANGE_QUANTITY,
+            type: CartActionType.CHANGE_AMOUNT,
             payload: change_properties
         });
     }
@@ -179,6 +165,16 @@ export const removeFromWishlist = (ids: Wishlist) => {
         dispatch({
             type: WishlistActionType.REMOVE_FROM_WISHLIST,
             payload: ids
+        });
+    }
+}
+
+//transactions
+export const setTransactionId = (id: string) => {
+    return (dispatch: Dispatch<TransactionsActions>) => {
+        dispatch({
+            type: TransactionActionType.SET_TRANSACTION_ID,
+            payload: id
         });
     }
 }

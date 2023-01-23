@@ -9,10 +9,8 @@ export enum ProductsActionType {
 export enum CartActionType {
     SET = "set",
     ADD_PRODUCT = "add_product",
-    SET_PAID = "set_paid",
-    SET_NOT_PAID = "set_not_paid",
     REMOVE = "remove",
-    CHANGE_QUANTITY = "change_quantity",
+    CHANGE_AMOUNT = "change_amount",
     CHANGE_SIZE = "change_size"
 }
 
@@ -26,4 +24,8 @@ export enum WishlistActionType {
     SET_WISHLIST = "set_wishlist",
     ADD_TO_WISHLIST = "add_to_wishlist",
     REMOVE_FROM_WISHLIST = "remove_from_wishlist"
+}
+
+export enum TransactionActionType {
+    SET_TRANSACTION_ID = "set_transaction_id"
 }

@@ -10,6 +10,8 @@ import { UserActionType } from "../action_types";
 //wishlist
 import { WishlistActionType } from "../action_types";
 import { Wishlist } from "../../Pages/Home";
+//transactions
+import { TransactionActionType } from "../action_types";
 
 export interface UpdateSupplyProps {
     id: string,
@@ -52,15 +54,15 @@ interface AddProductAction {
     payload: CartProduct
 }
 
-interface SetPaidAction {
-    type: CartActionType.SET_PAID,
-    payload: string
-}
+// interface SetPaidAction {
+//     type: CartActionType.SET_PAID,
+//     payload: string
+// }
 
-interface SetNotPaidAction {
-    type: CartActionType.SET_NOT_PAID,
-    payload: string
-}
+// interface SetNotPaidAction {
+//     type: CartActionType.SET_NOT_PAID,
+//     payload: string
+// }
 
 interface RemoveFromCartAction {
     type: CartActionType.REMOVE,
@@ -68,17 +70,17 @@ interface RemoveFromCartAction {
 }
 
 export interface ChangeQuantityProperties {
-    transaction_id: string,
+    item_id: string,
     new_value: number
 }
 
-interface ChangeQuantityAction {
-    type: CartActionType.CHANGE_QUANTITY,
+interface ChangeAmountAction {
+    type: CartActionType.CHANGE_AMOUNT,
     payload: ChangeQuantityProperties
 }
 
 export interface ChangeSizeProperties {
-    transaction_id: string,
+    item_id: string,
     new_value: string
 }
 
@@ -87,7 +89,7 @@ interface ChangeSizeAction {
     payload: ChangeSizeProperties
 }
 
-export type CartActions = SetCartAction | AddProductAction | RemoveFromCartAction | SetPaidAction | SetNotPaidAction | ChangeQuantityAction | ChangeSizeAction;
+export type CartActions = SetCartAction | AddProductAction | RemoveFromCartAction | ChangeAmountAction | ChangeSizeAction;
 
 interface LoginUserAction {
     type: UserActionType.LOGIN,
@@ -120,3 +122,11 @@ interface RemoveFromWishlistAction {
 }
 
 export type WishlistActions = AddToWishlistAction | RemoveFromWishlistAction | SetWishlistAction;
+
+//Transactions
+interface SetTransactionIdAction {
+    type: TransactionActionType.SET_TRANSACTION_ID,
+    payload: string
+}
+
+export type TransactionsActions = SetTransactionIdAction;
