@@ -14,16 +14,13 @@ query Query {
 `;
 
 export const GET_USER_CART_PRODUCTS = gql`
-query Query($userId: String!) {
-  getUserCartProducts(user_id: $userId) {
-    user_id
+query Query($user_id: String!, $transaction_id: String!) {
+  getUserCartProducts(user_id: $user_id, transaction_id: $transaction_id) {
+    item_id
     product_id
-    address
-    paid
+    transaction_id
     amount
     size
-    ordering_time
-    transaction_id
   }
 }
 `;
@@ -65,5 +62,19 @@ query Query($userId: String!) {
 export const CHECK_FOR_CREDIT_CARD = gql`
 query Query($id: String!) {
   checkForCreditCard(id: $id)
+}
+`;
+
+export const GET_TRANSACTION_ID = gql`
+query Query($user_id: String!) {
+  getTransactionId(user_id: $user_id)
+}
+`;
+
+export const GET_TRANSACTION = gql`
+query Query($id: String!) {
+  getTransaction(id: $id) {
+    paid
+  }
 }
 `;

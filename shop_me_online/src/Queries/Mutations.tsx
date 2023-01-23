@@ -27,26 +27,25 @@ mutation Mutation($id: String!, $newQuantity: Int!) {
 `;
 
 export const ADD_PRODUCT_TO_CART = gql`
-mutation Mutation($userId: String!, $productId: String!, $size: String!, $amount: Int!, $address: String!, $paid: Boolean!, $orderingTime: String!, $transactionId: String!) {
-  addProductToCart(user_id: $userId, product_id: $productId, size: $size, amount: $amount, address: $address, paid: $paid, ordering_time: $orderingTime, transaction_id: $transactionId) {
-    user_id
-    product_id
+mutation Mutation($item_id: String!, $transaction_id: String!, $product_id: String!, $amount: Int!, $size: String!) {
+  addProductToCart(item_id: $item_id, transaction_id: $transaction_id, product_id: $product_id, amount: $amount, size: $size) {
+    item_id
   }
 }
 `;
 
-export const DELETE_PRODUCT_FROM_CART = gql`
-mutation Mutation($transactionId: String!) {
-  deleteProductFromCart(transaction_id: $transactionId) {
-    transaction_id
+export const REMOVE_PRODUCT_FROM_CART = gql`
+mutation Mutation($item_id: String!) {
+  removeProductFromCart(item_id: $item_id) {
+    item_id
   }
 }
 `;
 
-export const SET_PRODUCT_AS_PAID = gql`
-mutation Mutation($transactionId: String!) {
-  setProductAsPaid(transaction_id: $transactionId) {
-    paid
+export const SET_TRANSACTION_AS_PAID = gql`
+mutation Mutation($transaction_id: String!) {
+  setTransactionAsPaid(transaction_id: $transaction_id) {
+    id
   }
 }
 `;
@@ -68,17 +67,17 @@ mutation Mutation($userId: String!, $productId: String!) {
 `;
 
 export const UPDATE_CART_PRODUCT_AMOUNT = gql`
-mutation Mutation($transactionId: String!, $newAmount: Int!) {
-  updateCartProductAmount(transaction_id: $transactionId, new_amount: $newAmount) {
-    amount
+mutation Mutation($item_id: String!, $new_amount: Int!) {
+  updateCartProductAmount(item_id: $item_id, new_amount: $new_amount) {
+    item_id
   }
 }
 `;
 
 export const UPDATE_CART_PRODUCT_SIZE = gql`
-mutation Mutation($transactionId: String!, $newSize: String!) {
-  updateCartProductSize(transaction_id: $transactionId, new_size: $newSize) {
-    size
+mutation Mutation($item_id: String!, $new_size: String!) {
+  updateCartProductSize(item_id: $item_id, new_size: $new_size) {
+    item_id
   }
 }
 `;
@@ -102,6 +101,22 @@ mutation Mutation($id: String!, $creditCardNumber: String!) {
 export const REMOVE_CREDIT_CARD = gql`
 mutation Mutation($id: String!) {
   removeCreditCard(id: $id) {
+    id
+  }
+}
+`;
+
+export const CREATE_TRANSACTION = gql`
+mutation Mutation($user_id: String!, $address: String!, $paid: Boolean!, $ordering_time: String!) {
+  createTransaction(user_id: $user_id, address: $address, paid: $paid, ordering_time: $ordering_time) {
+    id
+  }
+}
+`;
+
+export const DELETE_TRANSACTION = gql`
+mutation Mutation($transaction_id: String!) {
+  deleteTransaction(transaction_id: $transaction_id) {
     id
   }
 }
