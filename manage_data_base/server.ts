@@ -57,12 +57,12 @@ const resolvers = {
         },
         //get a user's cart products
         getUserCartProducts: async (_: any, args: any) => {
-            const { user_id } = args;
+            const { user_id, transaction_id } = args;
 
             try {
                 const cart_products = await pool.query(
-                "SELECT * FROM transactions, cart WHERE transactions.user_id=$1 AND transactions.id=cart.transaction_id",
-                [user_id]);
+                "SELECT cart.item_id FROM transactions, cart WHERE transactions.user_id=$1 AND transactions.id=$2 AND transactions.id=cart.transaction_id;",
+                [user_id, transaction_id]);
 
                 return cart_products.rows;
             } catch (err: any) {
@@ -121,6 +121,34 @@ const resolvers = {
                 [id]);
 
                 return check.rows[0].exists;
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //get the id of a transaction that is not paid (of that user)
+        getTransactionId:async (_: any, args: any) => {
+            const { user_id } = args;
+
+            try {
+                const id = await pool.query(
+                "SELECT id FROM transactions WHERE user_id=$1 AND paid=false",
+                [user_id]);
+
+                return id.rows[0].id;
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
+        //get a transaction by id
+        getTransaction:async (_: any, args: any) => {
+            const { id } = args;
+
+            try {
+                const transaction = await pool.query(
+                "SELECT * FROM transactions WHERE id=$1",
+                [id]);
+
+                return transaction.rows[0];
             } catch (err: any) {
                 console.error(err.message);
             }
@@ -299,12 +327,12 @@ const resolvers = {
         },
         //add a product to the transaction (to the cart)
         addProductToCart:async (_: any, args: any) => {
-            const { transaction_id, product_id, amount, size } = args;
+            const { item_id, transaction_id, product_id, amount, size } = args;
 
             try {
                 const new_product = await pool.query(
-                "INSERT INTO cart(transaction_id,product_id,amount,size) VALUES($1,$2,$3,$4)",
-                [transaction_id, product_id, amount, size]);
+                "INSERT INTO cart(item_id,transaction_id,product_id,amount,size) VALUES($1,$2,$3,$4,$5)",
+                [item_id, transaction_id, product_id, amount, size]);
 
                 return new_product.rows[0];
             } catch (err: any) {
@@ -326,7 +354,7 @@ const resolvers = {
             }
         },
         //set an item as paid
-        setProductAsPaid: async(_: any, args: any) => {
+        setTransactionAsPaid: async(_: any, args: any) => {
             const { transaction_id } = args;
 
             try {
@@ -517,11 +545,13 @@ const typeDefs = gql`
 
     type Query {
         getAllProducts: [Product],
-        getUserCartProducts(user_id: String!): [Cart],
+        getUserCartProducts(user_id: String!, transaction_id: String!): [Cart],
         getProduct(id: String!): Product,
         getUserWishlist(user_id: String!): [Wishlist],
         getUser(id: String!): User,
-        checkForCreditCard(id: String!): Boolean
+        checkForCreditCard(id: String!): Boolean,
+        getTransactionId(user_id: String!): String,
+        getTransaction(id: String!): Transactions
     }
 
     type Mutation{
@@ -549,7 +579,7 @@ const typeDefs = gql`
                               is_manager: Boolean!): User
 
         deleteTransaction(transaction_id: String!): Transactions,
-        setProductAsPaid(transaction_id: String!): Transactions,
+        setTransactionAsPaid(transaction_id: String!): Transactions,
         addToWishlist(user_id: String!, product_id: String!): Wishlist,
         deleteProductFromWishlist(user_id: String!, product_id: String!): Wishlist,
         updateCartProductAmount(item_id: String!, new_amount: Int!): Cart,
@@ -557,7 +587,8 @@ const typeDefs = gql`
         addCreditCard(id: String!, credit_card_number: String!): User,
         removeCreditCard(id: String!): User,
         removeProductFromCart(item_id: String!): Cart,
-        addProductToCart(transaction_id: String!,
+        addProductToCart(item_id: String!,
+                         transaction_id: String!,
                          product_id: String!,
                          amount: Int!,
                          size: String!): Cart
