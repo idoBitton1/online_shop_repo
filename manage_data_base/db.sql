@@ -39,7 +39,7 @@ CREATE TABLE transactions (
 );
 
 CREATE TABLE cart (
-    item_id UUID DEFAULT uuid_generate_v4(),
+    item_id UUID,
     transaction_id UUID NOT NULL,
     product_id UUID NOT NULL,
     amount INTEGER NOT NULL,
