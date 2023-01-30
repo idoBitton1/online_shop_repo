@@ -1,5 +1,9 @@
 CREATE DATABASE shop_me_online;
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+INSERT INTO products(name,quantity,price,category,img_location) VALUES('Air Jordan 1 Lucky Green', 100, 150, '#shoes#green', '');
+
 CREATE TABLE users (
     id UUID DEFAULT uuid_generate_v4(),
     first_name VARCHAR(20) NOT NULL,
