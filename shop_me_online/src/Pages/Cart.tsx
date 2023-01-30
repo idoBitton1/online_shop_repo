@@ -143,6 +143,7 @@ const Cart = () => {
                 }
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [transaction_id]);
 
     //wait for the user to connect
@@ -162,6 +163,7 @@ const Cart = () => {
                 }
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.token, transaction_id]);
 
     //when all the information that is needed is here, check if the user has an open transaction
@@ -186,6 +188,7 @@ const Cart = () => {
                 window.location.reload(); //refresh
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [transaction_data, address_data]);
 
     //sets the delivery price
@@ -235,6 +238,7 @@ const Cart = () => {
         });
 
         toggleConfirmDialog();
+        window.location.reload(); //refresh
     }
 
     //updates the products arrays quantities

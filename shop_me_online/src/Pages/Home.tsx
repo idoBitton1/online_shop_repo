@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 //import './App.css';
 
 //Apollo and graphql
@@ -98,11 +98,12 @@ function Home() {
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.token, transaction_id]);
 
   //when all the information that is needed is here, check if the user has an open transaction
   useEffect(() => {
-    if(transaction_data && address_data) {
+    if(!user.token?.is_manager && transaction_data && address_data) {
       if(transaction_data.getTransactionId) { //if the user already has an open transaction, get it
         setTransactionId(transaction_data.getTransactionId);
       }
@@ -122,6 +123,7 @@ function Home() {
         window.location.reload(); //refresh
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transaction_data, address_data]);
 
   return (
