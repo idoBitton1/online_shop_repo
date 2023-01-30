@@ -9,7 +9,7 @@ const pool = new pg.Pool({
     password: "mpmpiv100",
     host: "localhost",
     port: 5432,
-    database: "temp"
+    database: "shop_me_online"
 });
 
 function onlyLetters(str: string) {
@@ -61,7 +61,7 @@ const resolvers = {
 
             try {
                 const cart_products = await pool.query(
-                "SELECT cart.item_id FROM transactions, cart WHERE transactions.user_id=$1 AND transactions.id=$2 AND transactions.id=cart.transaction_id;",
+                "SELECT * FROM transactions, cart WHERE transactions.user_id=$1 AND transactions.id=$2 AND transactions.id=cart.transaction_id;",
                 [user_id, transaction_id]);
 
                 return cart_products.rows;
@@ -209,8 +209,8 @@ const resolvers = {
             //if not, create the user
             try {
                 const user = await pool.query(
-                    "INSERT INTO users (id,first_name,last_name,password,address,email,credit_card_number,is_manager,token) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING * ",
-                    [id, first_name, last_name, password, address, email, credit_card_number, is_manager, token]);
+                "INSERT INTO users (id,first_name,last_name,password,address,email,credit_card_number,is_manager,token) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING * ",
+                [id, first_name, last_name, password, address, email, credit_card_number, is_manager, token]);
                 return user.rows[0];
             } catch (err: any) {
                 console.error(err.message);
