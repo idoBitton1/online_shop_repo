@@ -286,7 +286,7 @@ const Cart = () => {
         <div className="cart_container">
             <Header />
 
-            <h1 style={{ fontFamily: "Arial" }}> Your Cart </h1>
+            <h1 className="headline"> Your Cart </h1>
 
             <div className="cart_context">
                 <div className="payment_section">

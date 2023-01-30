@@ -15,7 +15,7 @@ const Register: React.FC<MyProps> = ({ is_manager }) => {
             <Header />
 
             <div className="register_form">
-                <h1 style={{ fontFamily: "Arial" }}>{is_manager ? "Become a manager" : "Create an account"}</h1>
+                <h1 className="headline">{is_manager ? "Become a manager" : "Create an account"}</h1>
                 <RegisterForm is_manager={is_manager} />
             </div>
         </div>

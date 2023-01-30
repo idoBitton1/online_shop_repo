@@ -1,4 +1,7 @@
 import React from "react";
+import './ShipOrders.css';
+
+//components
 import { Header } from "../Components/Header/Header";
 
 const ShipOrders = () => {
@@ -7,7 +10,11 @@ const ShipOrders = () => {
         <div className="ship_orders_container">
             <Header />
 
-            ship
+            <h1 className="headline"> Ship Orders </h1>
+
+            <div className="ship_orders_context">
+                <h2 style={{ fontFamily: "Rubik" }}>Select transactions to ship:</h2>
+            </div>
         </div>
     );
 }

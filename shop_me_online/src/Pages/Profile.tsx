@@ -10,7 +10,7 @@ const Profile = () => {
         <div className="profile_container">
             <Header />
 
-            <h1 style={{ fontFamily: "Arial" }}>Profile</h1>
+            <h1 className="headline">Profile</h1>
 
             <div className="profile_context">
                 <ProfileForm />

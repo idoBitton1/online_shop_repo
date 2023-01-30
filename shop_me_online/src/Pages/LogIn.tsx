@@ -11,7 +11,7 @@ const LogIn = () => {
             <Header />
 
             <div className="login_form">
-                <h1 style={{ fontFamily: "Arial" }}> Welcome back </h1>
+                <h1 className="headline"> Welcome back </h1>
                 <LogInForm />
             </div>
         </div>

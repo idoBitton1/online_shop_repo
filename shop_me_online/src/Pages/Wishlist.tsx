@@ -130,7 +130,7 @@ const Wishlist = () => {
         <div className="wishlist_container">
             <Header />
 
-            <h1 style={{ fontFamily: "Arial" }}> Wishlist </h1>
+            <h1 className="headline"> Wishlist </h1>
 
             <div className="wishlist_context">
                 {
