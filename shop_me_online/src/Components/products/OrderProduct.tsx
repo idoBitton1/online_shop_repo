@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Products.css";
 import * as uuid from 'uuid';
 
 //Apollo and graphql
-import { useMutation, useLazyQuery } from "@apollo/client"
-import { GET_USER } from "../../Queries/Queries";
+import { useMutation } from "@apollo/client"
 import { ADD_PRODUCT_TO_CART, ADD_TO_WISHLIST } from "../../Queries/Mutations";
 
 //redux
@@ -46,38 +45,15 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
     const { addProductToCart, addToWishlist } = bindActionCreators(actionsCreators, dispatch);
 
     //states
-    const [user_address, setUserAddress] = useState<string>("");
+    //const [user_address, setUserAddress] = useState<string>("");
     const [size, setSize] = useState<string>("");
     const [amount, setAmount] = useState<number>(1);
     const [err_text, setErrText] = useState<string>("");
-
-    //queries
-    const [ getAddress, { data: user_data }] = useLazyQuery(GET_USER);
     
     //mutations
     const [addProductToCartMutation] = useMutation(ADD_PRODUCT_TO_CART);
     const [addProductToWishlist, { error }] = useMutation(ADD_TO_WISHLIST);
 
-
-    //if the user is connected, fetch his address
-    useEffect(() => {
-        if(user.token) {
-            getAddress({
-                variables: {
-                    userId: user.token.user_id
-                }
-            });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user.token]);
-
-    //when the data comes in, put it in the state
-    useEffect(() => {
-        if(user_data) {
-            setUserAddress(user_data.getUser.address);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user_data]);
 
     //the function of the amount select
     const handleAmountSelect = (event: SelectChangeEvent<number>) => {
@@ -166,6 +142,8 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
         toggleDialog();
     }
 
+    const doNothing = () => {};
+
     const beforeToggleDialog = () => {
         setSize("");
         setAmount(1);
@@ -234,12 +212,12 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
 
                         <div style={{ display: "flex" }}>
                             <Button variant="contained"
-                                onClick={handleAddToCart}
+                                onClick={user.token?.is_manager ? doNothing : handleAddToCart}
                                 sx={{ textTransform: "none", marginRight: 1, fontWeight: "bold" }}>
                                 Add To Cart
                             </Button>
                             <Button variant="outlined"
-                                onClick={handleWishlist}
+                                onClick={user.token?.is_manager ? doNothing : handleWishlist}
                                 endIcon={<FavoriteIcon />}
                                 sx={{ textTransform: "none", fontWeight: "bold" }}>
                                 Wishlist
