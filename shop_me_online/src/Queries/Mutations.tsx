@@ -43,8 +43,8 @@ mutation Mutation($item_id: String!) {
 `;
 
 export const SET_TRANSACTION_AS_PAID = gql`
-mutation Mutation($transaction_id: String!) {
-  setTransactionAsPaid(transaction_id: $transaction_id) {
+mutation Mutation($transaction_id: String!, $new_time: String!) {
+  setTransactionAsPaid(transaction_id: $transaction_id, new_time: $new_time) {
     id
   }
 }
