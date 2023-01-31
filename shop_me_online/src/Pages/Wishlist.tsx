@@ -100,6 +100,7 @@ const Wishlist = () => {
                 }
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.token, transaction_id]);
 
     //when all the information that is needed is here, check if the user has an open transaction
@@ -124,6 +125,7 @@ const Wishlist = () => {
                 window.location.reload(); //refresh
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [transaction_data, address_data]);
 
     return (
