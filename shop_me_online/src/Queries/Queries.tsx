@@ -78,3 +78,14 @@ query Query($id: String!) {
   }
 }
 `;
+
+export const GET_TRANSACTIONS = gql`
+query Query {
+  getTransactions {
+    id
+    address
+    paid
+    ordering_time
+  }
+}
+`;
