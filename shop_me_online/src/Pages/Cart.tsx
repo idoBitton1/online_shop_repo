@@ -29,6 +29,7 @@ import { CreditCardForm } from "../Components/Forms/CreditCardForm";
 
 //function
 import { formatDate } from "./Home";
+import { string } from "yup";
 
 export interface PaymentProps {
     sum_of_products: number,
@@ -205,14 +206,33 @@ const Cart = () => {
     //the function of the pay button click
     const handlePayment = async() => {
         //check that the selected products are in stock
-        const temp_cart = cart;
 
-        for(let i = 0; i< temp_cart.length; i++) {
-            let index_of_product = products.products.findIndex((product) => product.id === temp_cart[i].product_id);
-            if (products.products[index_of_product].quantity < temp_cart[i].amount) {
+        for(let i = 0; i < cart.length; i++) {
+            let index_of_product = products.products.findIndex((product) => product.id === cart[i].product_id);
+            if (products.products[index_of_product].quantity < cart[i].amount) {
                 setErrText("not enough in stock");
                 return;
             }
+        }
+
+        //type declare
+        type type = {
+            product_id: string,
+            amount: number
+        }
+
+        //sums for each product in the cart his amount
+        let temp_cart: type[] = [];
+        for(let i = 0; i < cart.length; i++) {
+            //if already sumed his amount, skip him
+            if(temp_cart.findIndex((item) => item.product_id === cart[i].product_id) !== -1)
+                continue;
+            let sum = 0;
+            //sum only the amount of the current item
+            cart.filter((item) => item.product_id === cart[i].product_id).map((item) => {
+                sum += item.amount;
+            });
+            temp_cart.push({product_id: cart[i].product_id, amount: sum});
         }
         
         //updates the products arrays quantities
