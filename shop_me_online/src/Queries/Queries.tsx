@@ -89,3 +89,9 @@ query Query {
   }
 }
 `;
+
+export const howManyProductsOrdered = gql`
+query Query($id: String!) {
+  howManyProductsOrdered(id: $id)
+}
+`;
