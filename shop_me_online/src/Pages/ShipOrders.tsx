@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './ShipOrders.css';
 
 //components
@@ -10,7 +10,7 @@ import { ChooseWarehouse } from "../Components/Tables/ChooseWarehouse";
 import { Button } from "@mui/material"
 
 //interface
-import { Transaction } from "./Home";
+import { TransactionSecondType } from "./Home";
 
 export interface Warehouse {
     name: string,
@@ -19,11 +19,31 @@ export interface Warehouse {
 
 const ShipOrders = () => {
     //states
-    const [selected_transactions, setSelectedTransactions] = useState<Transaction[]>([]);
+    const [selected_transactions, setSelectedTransactions] = useState<TransactionSecondType[]>([]);
     const [selected_warehouses, setSelectedWarehouses] = useState<Warehouse[]>([]);
 
     const handleShowResultsClick = () => {
+        //get all the demands
+        let all_demand: number[] = [];
+
+        //push into the array
+        selected_transactions.map((transaction) => {
+            all_demand.push(transaction.sum);
+        });
+
+        //get all the right amount to supply
+        let all_supply: number[] = [];
+        let sum = 0;
+
+        //get the sum 
+        all_demand.map((item) => sum+=item);
+
+        //spread evenly
+        for(let i = 0; i < selected_warehouses.length; i++) {
+            all_supply.push(Math.floor(sum / selected_warehouses.length));
+        }
         
+
     }
 
     return (
@@ -47,7 +67,7 @@ const ShipOrders = () => {
                 <Button
                 variant="contained"
                 onClick={handleShowResultsClick}
-                sx={{width: "fit-content", alignSelf: "center", marginTop: 15}}>
+                sx={{width: "fit-content", alignSelf: "center", marginTop: 12}}>
                     Show results
                 </Button>
             </div>
