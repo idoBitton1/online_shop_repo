@@ -84,7 +84,6 @@ query Query {
   getTransactions {
     id
     address
-    paid
     ordering_time
     sum
   }
