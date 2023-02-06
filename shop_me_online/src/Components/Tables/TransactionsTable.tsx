@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import '../../Pages/ShipOrders.css';
 
 //apollo and graphql
@@ -9,21 +9,15 @@ import { GET_TRANSACTIONS } from "../../Queries/Queries";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 //interface
-import { Transaction } from "../../Pages/Home";
+import { TransactionSecondType } from "../../Pages/Home";
 
 interface MyProps {
-    setSelectedTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>
+    setSelectedTransactions: React.Dispatch<React.SetStateAction<TransactionSecondType[]>>
 }
 
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'address', headerName: 'Address', width: 130 },
-    {
-      field: 'paid',
-      headerName: 'Paid',
-      type: 'boolean',
-      width: 90
-    },
     {
       field: 'ordering_time',
       headerName: 'Ordering time',
@@ -38,12 +32,12 @@ const columns: GridColDef[] = [
 
 export const TransactionsTable: React.FC<MyProps> = ({setSelectedTransactions}) => {
     //states
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [transactions, setTransactions] = useState<TransactionSecondType[]>([]);
     
     //queries
     useQuery(GET_TRANSACTIONS, {
         onCompleted(data) {
-            let temp: Transaction[] = data.getTransactions;
+            let temp: TransactionSecondType[] = data.getTransactions;
             temp = temp.map((item) => {
                 let fixed_time = (Number)(item.ordering_time.slice(0, -3));
                 const timestamp_to_date = new Date(fixed_time * 1000);
@@ -61,7 +55,7 @@ export const TransactionsTable: React.FC<MyProps> = ({setSelectedTransactions}) 
         <div className="transaction_table_container">
             <p className="secondary_headlines">Select transactions to ship:</p>
             
-            <div style={{ height: 400, width: 820, margin: 'auto' }}>
+            <div style={{ height: 371, width: 730, margin: 'auto' }}>
             <DataGrid
             rows={transactions}
             columns={columns}
