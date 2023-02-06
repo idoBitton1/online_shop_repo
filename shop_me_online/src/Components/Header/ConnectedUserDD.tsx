@@ -32,10 +32,16 @@ export const ConnectedUserDD: React.FC<MyProps> = ({ toggleDropDown }) => {
             {
                 user.token?.is_manager
                 ?
+                <>
                 <li className="dropdown_item" onClick={() => navigate('/shipOrders')}>
                     <BsTruck className="dropdown_item_icon" />
                     <h3>Ship orders</h3>
                 </li>
+                <li className="dropdown_item" onClick={() => navigate('/shipOrders')}>
+                    <BsTruck className="dropdown_item_icon" />
+                    <h3>Update stock</h3>
+                </li>
+                </>
                 :
                 <>
                 <li className="dropdown_item" onClick={() => navigate('/cart')}>
