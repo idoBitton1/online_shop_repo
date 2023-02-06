@@ -69,11 +69,11 @@ const resolvers = {
                 console.error(err.message);
             }
         },
-        //get all paid transactions
+        //get all paid transactions, and the amount of products they ordered
         getTransactions:async (_: any, args: any) => {
             try {
                 const paid_transactions = await pool.query(
-                "SELECT * FROM transactions WHERE paid=true"
+                "SELECT id,address,ordering_time, SUM(cart.amount) FROM cart, transactions WHERE paid=true AND cart.transaction_id=transactions.id GROUP BY transactions.id"
                 );
 
                 return paid_transactions.rows;
@@ -542,6 +542,13 @@ const typeDefs = gql`
         ordering_time: String!
     }
 
+    type TransactionsSecondType {
+        id: String!,
+        address: String!,
+        ordering_time: String!,
+        sum: Int!
+    }
+
     type Cart {
         item_id: String!,
         product_id: String!,
@@ -558,7 +565,7 @@ const typeDefs = gql`
     type Query {
         getAllProducts: [Product],
         getUserCartProducts(user_id: String!, transaction_id: String!): [Cart],
-        getTransactions: [Transactions],
+        getTransactions: [TransactionsSecondType],
         getProduct(id: String!): Product,
         getUserWishlist(user_id: String!): [Wishlist],
         getUser(id: String!): User,
