@@ -28,6 +28,11 @@ const columns: GridColDef[] = [
       field: 'ordering_time',
       headerName: 'Ordering time',
       width: 110
+    },
+    {
+        field: 'sum',
+        headerName: 'ordered_items',
+        width: 120
     }
 ];
 
@@ -56,7 +61,7 @@ export const TransactionsTable: React.FC<MyProps> = ({setSelectedTransactions}) 
         <div className="transaction_table_container">
             <p className="secondary_headlines">Select transactions to ship:</p>
             
-            <div style={{ height: 400, width: 700, margin: 'auto' }}>
+            <div style={{ height: 400, width: 820, margin: 'auto' }}>
             <DataGrid
             rows={transactions}
             columns={columns}
