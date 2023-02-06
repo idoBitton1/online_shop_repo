@@ -9,7 +9,6 @@
 
 .tables {
     display: flex;
-    justify-content: center;
 }
 
 .secondary_headlines {
@@ -19,5 +18,6 @@
 
 .transaction_table_container {
     height: 400px;
+    margin-left: 10%;
     margin-right: 100px;
 }
