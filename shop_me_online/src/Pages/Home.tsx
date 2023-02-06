@@ -35,6 +35,14 @@ export interface Transaction {
   paid: boolean
 }
 
+export interface TransactionSecondType { 
+  id: string
+  address: string,
+  ordering_time: string,
+  paid: boolean,
+  sum: number
+}
+
 export interface CartProduct { 
   item_id: string,
   transaction_id: string,
