@@ -221,9 +221,11 @@ const Cart = () => {
         }
 
         //set the transaction as paid
+        const formatted_now = formatDate();
         setTransactionAsPaid({
             variables: {
-                transaction_id: transaction_id
+                transaction_id: transaction_id,
+                new_time: formatted_now
             }
         });
 
