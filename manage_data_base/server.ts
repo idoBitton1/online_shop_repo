@@ -69,6 +69,18 @@ const resolvers = {
                 console.error(err.message);
             }
         },
+        //get all paid transactions
+        getTransactions:async (_: any, args: any) => {
+            try {
+                const paid_transactions = await pool.query(
+                "SELECT * FROM transactions WHERE paid=true"
+                );
+
+                return paid_transactions.rows;
+            } catch (err: any) {
+                console.error(err.message);
+            }
+        },
         //get a product by id
         getProduct: async(_: any, args: any) => {
             const { id } = args;
@@ -355,12 +367,12 @@ const resolvers = {
         },
         //set an item as paid
         setTransactionAsPaid: async(_: any, args: any) => {
-            const { transaction_id } = args;
+            const { transaction_id, new_time } = args;
 
             try {
                 const update = await pool.query(
-                "UPDATE transactions SET paid=true WHERE id=$1",
-                [transaction_id]);
+                "UPDATE transactions SET paid=true, ordering_time=$2 WHERE id=$1",
+                [transaction_id, new_time]);
 
                 return update.rows[0];
             } catch (err: any) {
@@ -546,6 +558,7 @@ const typeDefs = gql`
     type Query {
         getAllProducts: [Product],
         getUserCartProducts(user_id: String!, transaction_id: String!): [Cart],
+        getTransactions: [Transactions],
         getProduct(id: String!): Product,
         getUserWishlist(user_id: String!): [Wishlist],
         getUser(id: String!): User,
@@ -579,7 +592,7 @@ const typeDefs = gql`
                               is_manager: Boolean!): User
 
         deleteTransaction(transaction_id: String!): Transactions,
-        setTransactionAsPaid(transaction_id: String!): Transactions,
+        setTransactionAsPaid(transaction_id: String!, new_time: String!): Transactions,
         addToWishlist(user_id: String!, product_id: String!): Wishlist,
         deleteProductFromWishlist(user_id: String!, product_id: String!): Wishlist,
         updateCartProductAmount(item_id: String!, new_amount: Int!): Cart,
