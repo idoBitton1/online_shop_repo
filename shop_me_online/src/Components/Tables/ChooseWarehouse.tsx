@@ -14,7 +14,7 @@ interface MyProps {
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 50 },
     { field: 'name', headerName: 'Name', width: 150 },
-    { field: 'address', headerName: 'Address', width: 130 }
+    { field: 'address', headerName: 'Address', width: 200 }
 ];
 
 const rows = [
@@ -29,7 +29,7 @@ export const ChooseWarehouse: React.FC<MyProps> = ({setSelectedWarehouses}) => {
         <div className="warehouse_table_container">
             <p className="secondary_headlines">Select a warehouse to ship from:</p>
 
-            <div style={{ height: 267, width: 400, margin: 'auto' }}>
+            <div style={{ height: 267, width: 480, margin: 'auto' }}>
             <DataGrid
             rows={rows}
             columns={columns}
