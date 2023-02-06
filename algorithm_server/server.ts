@@ -1,16 +1,6 @@
 import { ApolloServer } from "apollo-server";
 import { gql } from "apollo-server";
 import { UserInputError } from "apollo-server";
-import pg from "pg";
-
-//postgres connection
-const pool = new pg.Pool({
-    user: "postgres",
-    password: "mpmpiv100",
-    host: "localhost",
-    port: 5432,
-    database: "shift_manager"
-});
 
 //variables decleration
 let demand: number[];
