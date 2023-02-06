@@ -1,0 +1,23 @@
+.ship_orders_container {
+    text-align: center;
+}
+
+.ship_orders_context {
+    display: flex;
+    flex-direction: column;
+}
+
+.tables {
+    display: flex;
+    justify-content: center;
+}
+
+.secondary_headlines {
+    font-family: "Rubik";
+    font-size: larger;
+}
+
+.transaction_table_container {
+    height: 400px;
+    margin-right: 100px;
+}
