@@ -86,6 +86,7 @@ query Query {
     address
     paid
     ordering_time
+    sum
   }
 }
 `;
