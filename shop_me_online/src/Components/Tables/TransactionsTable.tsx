@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import '../../Pages/ShipOrders.css';
 
 //apollo and graphql
@@ -39,8 +39,10 @@ export const TransactionsTable: React.FC<MyProps> = ({setSelectedTransactions}) 
         onCompleted(data) {
             let temp: TransactionSecondType[] = data.getTransactions;
             temp = temp.map((item) => {
+                //show the date
                 let fixed_time = (Number)(item.ordering_time.slice(0, -3));
                 const timestamp_to_date = new Date(fixed_time * 1000);
+
                 return {
                     ...item,
                     ordering_time: `${timestamp_to_date.getFullYear()}-${(timestamp_to_date.getMonth() + 1) >= 10 ? timestamp_to_date.getMonth() + 1 : `0${timestamp_to_date.getMonth() + 1}`}-${timestamp_to_date.getDate() >= 10 ? timestamp_to_date.getDate() : `0${timestamp_to_date.getDate()}`}`
@@ -55,7 +57,7 @@ export const TransactionsTable: React.FC<MyProps> = ({setSelectedTransactions}) 
         <div className="transaction_table_container">
             <p className="secondary_headlines">Select transactions to ship:</p>
             
-            <div style={{ height: 371, width: 730, margin: 'auto' }}>
+            <div style={{ height: 371, width: 720, margin: 'auto' }}>
             <DataGrid
             rows={transactions}
             columns={columns}
