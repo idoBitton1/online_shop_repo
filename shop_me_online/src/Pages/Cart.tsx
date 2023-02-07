@@ -29,7 +29,6 @@ import { CreditCardForm } from "../Components/Forms/CreditCardForm";
 
 //function
 import { formatDate } from "./Home";
-import { string } from "yup";
 
 export interface PaymentProps {
     sum_of_products: number,
