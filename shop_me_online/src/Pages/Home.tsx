@@ -32,6 +32,7 @@ export interface Transaction {
   user_id: string,
   address: string,
   ordering_time: string,
+  delivery_fee: number,
   paid: boolean
 }
 
@@ -40,6 +41,7 @@ export interface TransactionSecondType {
   address: string,
   ordering_time: string,
   paid: boolean,
+  delivery_fee: number,
   sum: number
 }
 
@@ -78,7 +80,6 @@ function Home() {
       setTransactionId(data.createTransaction.id);
     }
   });
-
 
   useEffect(() => {
     if(products_data && products.fetch_info) {
