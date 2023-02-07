@@ -37,7 +37,6 @@ CREATE TABLE transactions (
     address VARCHAR(100) NOT NULL,
     paid BOOLEAN NOT NUll, 
     ordering_time TIMESTAMP NOT NULL,
-    delivery_fee INTEGER DEFAULT 0,
     user_id UUID NOT NULL,
     CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id),
     PRIMARY KEY (id)
