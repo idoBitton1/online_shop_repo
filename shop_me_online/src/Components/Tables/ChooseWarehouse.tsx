@@ -18,10 +18,10 @@ const columns: GridColDef[] = [
 ];
 
 const rows = [
-    { id: 1, name: "First warehouse", address: "Tel-Aviv" },
-    { id: 2, name: "Second warehouse", address: "Heifa" },
-    { id: 3, name: "Third warehouse", address: "Beer-Sheva" }
-  ];
+    { id: 1, name: "First warehouse", address: "Dizengoff, Tel-Aviv, Israel" },
+    { id: 2, name: "Second warehouse", address: "Agmon, Haifa, Israel" },
+    { id: 3, name: "Third warehouse", address: "Mendelson, Be'er sheva, Israel" }
+];
 
 export const ChooseWarehouse: React.FC<MyProps> = ({setSelectedWarehouses}) => {
 
@@ -29,7 +29,7 @@ export const ChooseWarehouse: React.FC<MyProps> = ({setSelectedWarehouses}) => {
         <div className="warehouse_table_container">
             <p className="secondary_headlines">Select a warehouse to ship from:</p>
 
-            <div style={{ height: 267, width: 480, margin: 'auto' }}>
+            <div style={{ height: 267, width: 460, margin: 'auto' }}>
             <DataGrid
             rows={rows}
             columns={columns}
