@@ -14,6 +14,7 @@ import Cart from './Pages/Cart';
 import Wishlist from './Pages/Wishlist';
 import Profile from './Pages/Profile';
 import ShipOrders from './Pages/ShipOrders';
+import ManageProducts from './Pages/ManageProducts';
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/shipOrders" element={<ShipOrders />} />
+            <Route path="/manageProducts" element={<ManageProducts />} />
           </Routes>
         </Router>
       </div>
