@@ -8,7 +8,11 @@ import { ReduxState } from "../../state";
 //components
 import { ProductDisplay } from "./ProductDisplay";
 
-export const ProductsGrid = () => {
+interface MyProps {
+    to_manage_product: boolean
+}
+
+export const ProductsGrid: React.FC<MyProps> = ({to_manage_product}) => {
     //redux states
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
 
@@ -19,13 +23,15 @@ export const ProductsGrid = () => {
 
                     return (
                         <ProductDisplay
-                            key={i}
-                            id={product.id}
-                            name={product.name}
-                            price={product.price}
-                            quantity={product.quantity}
-                            category={product.category === undefined ? "" : product.category}
-                            img_location={product.img_location} />
+                        key={i}
+                        id={product.id}
+                        name={product.name}
+                        price={product.price}
+                        quantity={product.quantity}
+                        category={product.category === undefined ? "" : product.category}
+                        img_location={product.img_location}
+                        to_manage_product={to_manage_product}
+                        />
                     )
                 })
             }
