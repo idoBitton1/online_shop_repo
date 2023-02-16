@@ -295,7 +295,7 @@ const resolvers = {
 
 const server = new ApolloServer({typeDefs, resolvers});
 
-server.listen().then(({ url }) => {
+server.listen({port: 8080}).then(({ url }) => {
     console.log(`API is running at: ${url}`);
 })
 //to run the server: ts-node-esm server.ts
