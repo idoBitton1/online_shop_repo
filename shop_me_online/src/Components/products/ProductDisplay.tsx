@@ -2,11 +2,7 @@ import React, { useState } from "react";
 import "./Products.css";
 
 //components
-import { OrderProduct } from "./OrderProduct";
-
-//redux
-import { useSelector } from 'react-redux';
-import { ReduxState } from "../../state";
+import { OrderProduct } from "./OrderProductDialog";
 
 //interface
 import { Product } from "../../Pages/Home";
@@ -14,12 +10,13 @@ import { Product } from "../../Pages/Home";
 //images
 import img from "../../Images/j1.png"
 
-export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, category, img_location }) => {
+interface MyProps extends Product {
+    to_manage_product: boolean
+}
+
+export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, category, img_location, to_manage_product }) => {
     //states
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
-
-    //redux states
-    const user = useSelector((redux_state: ReduxState) => redux_state.user);
 
     const toggleDialog = () => {
         setOpenDialog((prev) => !prev);
@@ -43,7 +40,7 @@ export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, c
 
             {/* the dialog */}
             {
-                user.token?.is_manager
+                to_manage_product
                 ?
                 <></>
                 :
