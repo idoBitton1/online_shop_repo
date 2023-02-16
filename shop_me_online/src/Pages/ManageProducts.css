@@ -1,3 +1,25 @@
 .manage_products_container {
     text-align: center;
 }
+
+.add_button_container {
+    text-align: right;
+    margin-right: 14.8%;
+    margin-top: 18px;
+}
+
+.add_button {
+    font-size: 17px;
+    font-family: "Rubik";
+    height: fit-content;
+    padding: 10px;
+    background-color: #fff;
+    transition-duration: 0.4s;
+
+    position: absolute;
+}
+
+.add_button:hover {
+    cursor: pointer;
+    background-color: rgb(225, 225, 225);
+}
