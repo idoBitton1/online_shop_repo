@@ -142,8 +142,6 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
         toggleDialog();
     }
 
-    const doNothing = () => {};
-
     const beforeToggleDialog = () => {
         setSize("");
         setAmount(1);
@@ -212,12 +210,12 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
 
                         <div style={{ display: "flex" }}>
                             <Button variant="contained"
-                                onClick={user.token?.is_manager ? doNothing : handleAddToCart}
+                                onClick={handleAddToCart}
                                 sx={{ textTransform: "none", marginRight: 1, fontWeight: "bold" }}>
                                 Add To Cart
                             </Button>
                             <Button variant="outlined"
-                                onClick={user.token?.is_manager ? doNothing : handleWishlist}
+                                onClick={handleWishlist}
                                 endIcon={<FavoriteIcon />}
                                 sx={{ textTransform: "none", fontWeight: "bold" }}>
                                 Wishlist
