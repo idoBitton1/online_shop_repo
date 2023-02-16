@@ -141,7 +141,7 @@ function Home() {
       <NavigationBar
         products={products.products}
       />
-      <ProductsGrid />
+      <ProductsGrid to_manage_product={false} />
     </div>
   );
 }
