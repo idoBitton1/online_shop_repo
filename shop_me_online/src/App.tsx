@@ -4,7 +4,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 //Material-ui
-import { ThemeProvider, createTheme } from "@mui/material"
+import { ThemeProvider, createTheme } from "@mui/material";
 
 //Pages
 import Home from './Pages/Home';
