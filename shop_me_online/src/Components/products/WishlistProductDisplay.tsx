@@ -18,7 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 //images
 import img from "../../Images/j1.png";
-import { OrderProduct } from "./OrderProduct";
+import { OrderProduct } from "./OrderProductDialog";
 
 //interface
 import { Product } from "../../Pages/Home";
