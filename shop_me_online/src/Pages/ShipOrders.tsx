@@ -74,12 +74,11 @@ const ShipOrders = () => {
         }     
 
         console.log(costs)
-        //checkDistance(selected_warehouses[0].address, reduced_transactions[0].address)
     }
 
     const checkDistance = async(origin_address: string, destination_address: string) => {
         //setup
-        const key: string = "zczO3yloZWZAFQ9eN9zRdjqr1vVx8";
+        const key: string = "";
         let http_address = `https://api.distancematrix.ai/maps/api/distancematrix/json?origins=${origin_address}&destinations=${destination_address}&key=${key}`;
 
         let delivery_fee: number = 0;
