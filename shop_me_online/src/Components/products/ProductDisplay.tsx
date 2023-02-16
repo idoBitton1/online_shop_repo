@@ -4,6 +4,10 @@ import "./Products.css";
 //components
 import { OrderProduct } from "./OrderProduct";
 
+//redux
+import { useSelector } from 'react-redux';
+import { ReduxState } from "../../state";
+
 //interface
 import { Product } from "../../Pages/Home";
 
@@ -13,6 +17,9 @@ import img from "../../Images/j1.png"
 export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, category, img_location }) => {
     //states
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
+
+    //redux states
+    const user = useSelector((redux_state: ReduxState) => redux_state.user);
 
     const toggleDialog = () => {
         setOpenDialog((prev) => !prev);
@@ -35,16 +42,22 @@ export const ProductDisplay: React.FC<Product> = ({ id, name, price, quantity, c
             </div>
 
             {/* the dialog */}
-            <OrderProduct 
-            is_open={open_dialog}
-            toggleDialog={toggleDialog}
-            id={id}
-            name={name}
-            price={price}
-            quantity={quantity}
-            category={category}
-            img_location={img_location}
-            />
+            {
+                user.token?.is_manager
+                ?
+                <></>
+                :
+                <OrderProduct 
+                is_open={open_dialog}
+                toggleDialog={toggleDialog}
+                id={id}
+                name={name}
+                price={price}
+                quantity={quantity}
+                category={category}
+                img_location={img_location}
+                />
+            }
         </>
     )
 }
