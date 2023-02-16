@@ -11,7 +11,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0px 110px 0px 110px;
+    padding: 0px 7.5% 0px 7.5%;
     border-bottom: 1px solid lightgray;
 }
 
@@ -58,7 +58,7 @@
     display: flex;
     justify-content: space-between;
     font-family: "Rubik";
-    margin: 15px 100px 15px 100px;
+    margin: 15px 7% 15px 7%;
 }
 
 .category_style {
