@@ -121,3 +121,11 @@ mutation Mutation($transaction_id: String!) {
   }
 }
 `;
+
+export const UPDATE_PRODUCT_DETAILS = gql`
+mutation Mutation($id: String!, $price: Int!, $quantity: Int!, $category: String!) {
+  updateProductDetails(id: $id, price: $price, quantity: $quantity, category: $category) {
+    id
+  }
+}
+`;
