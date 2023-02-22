@@ -507,6 +507,20 @@ const resolvers = {
             } catch (err: any) {
                 console.error(err.message);
             }
+        },
+        //update product details
+        updateProductDetails: async(_: any, args: any) => {
+            const { id, price, quantity, category } = args;
+
+            try {
+                const update = await pool.query(
+                "UPDATE products SET price=$1, quantity=$2, category=$3 WHERE id=$4",
+                [price, quantity, category, id]);
+
+                return update.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
         }
     }
 };
@@ -596,7 +610,7 @@ const typeDefs = gql`
                               password: String!,
                               address: String,
                               email: String!
-                              is_manager: Boolean!): User
+                              is_manager: Boolean!): User,
 
         deleteTransaction(transaction_id: String!): Transactions,
         setTransactionAsPaid(transaction_id: String!, new_time: String!): Transactions,
@@ -611,7 +625,12 @@ const typeDefs = gql`
                          transaction_id: String!,
                          product_id: String!,
                          amount: Int!,
-                         size: String!): Cart
+                         size: String!): Cart,
+
+        updateProductDetails(id: String!,
+                             price: Int!,
+                             quantity: Int!,
+                             category: String!): Product
     }
 `;
 
