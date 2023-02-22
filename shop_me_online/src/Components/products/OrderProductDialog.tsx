@@ -82,6 +82,7 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
             setErrText("not enough in stock");
             return;
         }
+        
 
         //create a uuid for the item id
         const my_item_id = uuid.v4();
@@ -110,9 +111,12 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
             console.error(err.message);
         }
 
+
+        //close the dialog
         toggleDialog();
     }
 
+    //add to wishlist click
     const handleWishlist = async() => {
         //if no user is connected, cant add to wishlist
         if (!user.token) {
