@@ -9,6 +9,7 @@ import { Product } from "../../Pages/Home";
 
 //images
 import img from "../../Images/j1.png"
+import { ManageProductDialog } from "./ManageProductDialog";
 
 interface MyProps extends Product {
     to_manage_product: boolean
@@ -42,7 +43,15 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
             {
                 to_manage_product
                 ?
-                <></>
+                <ManageProductDialog
+                is_open={open_dialog}
+                toggleDialog={toggleDialog}
+                id={id}
+                name={name}
+                price={price}
+                quantity={quantity}
+                category={category}
+                />
                 :
                 <OrderProduct 
                 is_open={open_dialog}
