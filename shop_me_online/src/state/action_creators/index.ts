@@ -3,7 +3,7 @@ import { Dispatch } from "redux";
 //filtered_products
 import { Product } from "../../Pages/Home";
 import { Filters } from "../../Components/Header/NavigationBar";
-import { UpdateSupplyProps, ProductsActions } from "../actions";
+import { UpdateSupplyProps, ProductsActions, UpdateProductProps } from "../actions";
 import { ProductsActionType } from "../action_types";
 
 //cart
@@ -56,6 +56,15 @@ export const updateSupply = (data: UpdateSupplyProps) => {
     return (dispatch: Dispatch<ProductsActions>) => {
         dispatch({
             type: ProductsActionType.UPDATE_SUPPLY,
+            payload: data
+        });
+    }
+}
+
+export const updatePrice = (data: UpdateProductProps) => {
+    return (dispatch: Dispatch<ProductsActions>) => {
+        dispatch({
+            type: ProductsActionType.UPDATE_PRODUCT,
             payload: data
         });
     }

@@ -3,6 +3,7 @@ export enum ProductsActionType {
     SET_PRODUCTS = "set_products",
     FILTER = "filter",
     UPDATE_SUPPLY = "update_supply",
+    UPDATE_PRODUCT = "update_product",
     DONT_FETCH_PRODUCTS = "dont_fetch_products"
 }
 

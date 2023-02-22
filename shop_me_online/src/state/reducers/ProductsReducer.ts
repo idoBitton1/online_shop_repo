@@ -71,6 +71,44 @@ const reducer = (state:ProductsInfo = initial_state, action: ProductsActions) =>
                     filtered_products: [...temp_filtered]
                 };
             }
+        case ProductsActionType.UPDATE_PRODUCT:
+            {
+                //update the filtered products
+                let index_of_current_product_filtered = -1;
+                index_of_current_product_filtered = state.filtered_products.findIndex((product) => product.id === action.payload.id);
+    
+                const prev_product_filtered = state.filtered_products[index_of_current_product_filtered];
+                const product_filtered = {
+                    ...prev_product_filtered,
+                    price: action.payload.new_price,
+                    quantity: action.payload.new_quantity,
+                    category: action.payload.new_categories
+                }
+    
+                const temp_filtered = [...state.filtered_products];
+                temp_filtered[index_of_current_product_filtered] = product_filtered;
+    
+                //update the regular products
+                let index_of_current_product = -1;
+                index_of_current_product = state.products.findIndex((product) => product.id === action.payload.id);
+    
+                const prev_product = state.products[index_of_current_product];
+                const product = {
+                    ...prev_product,
+                    price: action.payload.new_price,
+                    quantity: action.payload.new_quantity,
+                    category: action.payload.new_categories
+                }
+    
+                const temp = [...state.products];
+                temp[index_of_current_product] = product;
+    
+                return {
+                    ...state,
+                    products: [...temp],
+                    filtered_products: [...temp_filtered]
+                };
+            }
         case ProductsActionType.DONT_FETCH_PRODUCTS:
             return {
                 ...state,

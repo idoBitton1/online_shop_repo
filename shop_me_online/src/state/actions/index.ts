@@ -18,6 +18,13 @@ export interface UpdateSupplyProps {
     amount: number
 }
 
+export interface UpdateProductProps {
+    id: string,
+    new_price: number,
+    new_quantity: number,
+    new_categories: string
+}
+
 interface SetFilteredProductsAction {
     type: ProductsActionType.SET_FILTERED_PRODUCTS,
     payload: Product[]
@@ -38,11 +45,16 @@ interface UpdateSupplyAction {
     payload: UpdateSupplyProps
 }
 
+interface UpdateProductAction {
+    type: ProductsActionType.UPDATE_PRODUCT,
+    payload: UpdateProductProps
+}
+
 interface DontFetchProductsAction {
     type: ProductsActionType.DONT_FETCH_PRODUCTS
 }
 
-export type ProductsActions = SetFilteredProductsAction | SetProductsAction | FilterAction | UpdateSupplyAction | DontFetchProductsAction;
+export type ProductsActions = SetFilteredProductsAction | SetProductsAction | FilterAction | UpdateSupplyAction | UpdateProductAction | DontFetchProductsAction;
 
 interface SetCartAction {
     type: CartActionType.SET,
@@ -53,16 +65,6 @@ interface AddProductAction {
     type: CartActionType.ADD_PRODUCT,
     payload: CartProduct
 }
-
-// interface SetPaidAction {
-//     type: CartActionType.SET_PAID,
-//     payload: string
-// }
-
-// interface SetNotPaidAction {
-//     type: CartActionType.SET_NOT_PAID,
-//     payload: string
-// }
 
 interface RemoveFromCartAction {
     type: CartActionType.REMOVE,
