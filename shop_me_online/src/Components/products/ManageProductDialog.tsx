@@ -78,6 +78,7 @@ const categories: string[] = [
 export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, id, name, quantity, price, category}) => {
     //states
     const [category_array, setCategoryArray] = useState<string[]>(category.split("#"));
+    const [err_text, setErrText] = useState<string>("");
 
     //redux actions
     const dispatch = useDispatch();
@@ -108,6 +109,11 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
     });
 
     const onSubmit = (values: MyFormValues) => {
+        if(category_array.length === 0) { //if no categories has been chosen
+            setErrText("select categories");
+            return;
+        }
+
         const full_category: string = formatCategories();
 
         //update price localy
@@ -128,6 +134,15 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
             }
         });
 
+        //close the dialog
+        closeDialog();
+    }
+
+    const closeDialog = () => {
+        //clear the error text
+        setErrText("");
+
+        //close the dialog
         toggleDialog();
     }
 
@@ -141,7 +156,7 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
     }
 
     return (
-        <Dialog open={is_open} onClose={toggleDialog} fullWidth>
+        <Dialog open={is_open} onClose={closeDialog} fullWidth>
             <DialogTitle>
                 <Typography
                     fontSize={25}
@@ -211,6 +226,7 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
                         >
                         Update
                         </Button>
+                        <p className="error_text">{err_text ? err_text : ""}</p>
                     </Form>
                     )}
                 </Formik>
