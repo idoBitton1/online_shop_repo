@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState } from "react";
 import "./Products.css";
 
 //form
@@ -81,7 +81,7 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
 
     //redux actions
     const dispatch = useDispatch();
-    const { updatePrice, updateSupply } = bindActionCreators(actionsCreators, dispatch);
+    const { updatePrice } = bindActionCreators(actionsCreators, dispatch);
 
     //mutations
     const [updateProductDetails] = useMutation(UPDATE_PRODUCT_DETAILS);
@@ -127,6 +127,8 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
                 category: full_category           
             }
         });
+
+        toggleDialog();
     }
 
     const formatCategories = (): string => {
