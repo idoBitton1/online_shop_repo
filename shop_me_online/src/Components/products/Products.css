@@ -54,3 +54,12 @@
     flex-direction: column;
     font-family: "Rubik";
 }
+
+.add_product_contex{
+    display: flex;
+    align-items: center;
+}
+
+.error_text {
+    color: red;
+}
