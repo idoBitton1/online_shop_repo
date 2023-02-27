@@ -129,3 +129,16 @@ mutation Mutation($id: String!, $price: Int!, $quantity: Int!, $category: String
   }
 }
 `;
+
+export const ADD_PRODUCT_TO_PRODUCTS = gql`
+mutation Mutation($name: String!, $price: Int!, $quantity: Int!, $category: String!, $img_location: String!) {
+  addProductToProducts(name: $name, price: $price, quantity: $quantity, category: $category, img_location: $img_location) {
+    id
+    name
+    quantity
+    price
+    category
+    img_location
+  }
+}
+`;
