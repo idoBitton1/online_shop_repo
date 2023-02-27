@@ -70,6 +70,15 @@ export const updatePrice = (data: UpdateProductProps) => {
     }
 }
 
+export const addToProducts = (product: Product) => {
+    return (dispatch: Dispatch<ProductsActions>) => {
+        dispatch({
+            type: ProductsActionType.ADD_TO_PRODUCTS,
+            payload: product
+        });
+    }
+}
+
 export const dontFetchProducts = () => {
     return (dispatch: Dispatch<ProductsActions>) => {
         dispatch({

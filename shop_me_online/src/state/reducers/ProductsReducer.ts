@@ -109,6 +109,12 @@ const reducer = (state:ProductsInfo = initial_state, action: ProductsActions) =>
                     filtered_products: [...temp_filtered]
                 };
             }
+        case ProductsActionType.ADD_TO_PRODUCTS:
+            return {
+                ...state,
+                products: [...state.products, action.payload],
+                filtered_products: [...state.filtered_products, action.payload]
+            }
         case ProductsActionType.DONT_FETCH_PRODUCTS:
             return {
                 ...state,

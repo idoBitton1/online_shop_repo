@@ -50,11 +50,16 @@ interface UpdateProductAction {
     payload: UpdateProductProps
 }
 
+interface AddToProductsAction {
+    type: ProductsActionType.ADD_TO_PRODUCTS,
+    payload: Product
+}
+
 interface DontFetchProductsAction {
     type: ProductsActionType.DONT_FETCH_PRODUCTS
 }
 
-export type ProductsActions = SetFilteredProductsAction | SetProductsAction | FilterAction | UpdateSupplyAction | UpdateProductAction | DontFetchProductsAction;
+export type ProductsActions = SetFilteredProductsAction | SetProductsAction | FilterAction | UpdateSupplyAction | UpdateProductAction | AddToProductsAction | DontFetchProductsAction;
 
 interface SetCartAction {
     type: CartActionType.SET,
