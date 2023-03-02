@@ -521,6 +521,20 @@ const resolvers = {
             } catch (err: any) {
                 console.error(err.message);
             }
+        },
+        //add a product to the products
+        addProductToProducts: async(_: any, args: any) => {
+            const { name, price, quantity, category, img_location } = args;
+
+            try {
+                const new_product = await pool.query(
+                "INSERT INTO products (name,quantity,price,category,img_location) VALUES($1,$2,$3,$4,$5) RETURNING *",
+                [name, price, quantity, category, img_location]);
+
+                return new_product.rows[0];
+            } catch (err: any) {
+                console.error(err.message);
+            }
         }
     }
 };
@@ -630,7 +644,13 @@ const typeDefs = gql`
         updateProductDetails(id: String!,
                              price: Int!,
                              quantity: Int!,
-                             category: String!): Product
+                             category: String!): Product,
+
+        addProductToProducts(name: String!,
+                             price: Int!,
+                             quantity: Int!,
+                             category: String!,
+                             img_location: String!): Product
     }
 `;
 
