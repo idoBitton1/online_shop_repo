@@ -60,6 +60,11 @@
     align-items: center;
 }
 
+.image_selection {
+    display: flex;
+    flex-direction: column;
+}
+
 .error_text {
     color: red;
 }
