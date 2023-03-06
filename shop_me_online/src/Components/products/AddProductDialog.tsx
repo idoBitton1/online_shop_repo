@@ -35,7 +35,8 @@ interface MyProps {
 interface MyFormValues {
     name: string,
     price: number,
-    quantity: number
+    quantity: number,
+    product_image: string
 }
 
 const ITEM_HEIGHT = 48;
@@ -69,28 +70,15 @@ const categories: string[] = [
 export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => {
     //states
     const [category_array, setCategoryArray] = useState<string[]>([]);
+    const [image, setImage] = useState<string>("");
     const [err_text, setErrText] = useState<string>("");
-
+    
     //redux actions
     const dispatch = useDispatch();
     const { addToProducts } = bindActionCreators(actionsCreators, dispatch);
 
     //mutations
-    const [addProductToProducts] = useMutation(ADD_PRODUCT_TO_PRODUCTS, {
-        onCompleted(data) {
-            const product: Product = {
-                id: data.addProductToProducts.id,
-                name: data.addProductToProducts.name,
-                price: data.addProductToProducts.price,
-                quantity: data.addProductToProducts.quantity,
-                category: data.addProductToProducts.category,
-                img_location: data.addProductToProducts.img_location
-            }
-
-            //add the product to the products after the mutation succeeds
-            addToProducts(product);
-        },
-    });
+    const [addProductToProducts] = useMutation(ADD_PRODUCT_TO_PRODUCTS);
     
     const handleChange = (event: SelectChangeEvent<typeof category_array>) => {
         const { target: { value } } = event;
@@ -105,7 +93,8 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
     const initial_values: MyFormValues = {
         name: "",
         price: 0,
-        quantity: 0
+        quantity: 0,
+        product_image: ""
     };
 
     //the validation schema 
@@ -115,7 +104,29 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
         quantity: Yup.number().min(0, "Must be bigger than 0").required("Required")
     });
 
-    const onSubmit = (values: MyFormValues) => {
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if(event.target.files === null) {
+            setErrText("choose an image");
+            return;
+        }
+        
+        if(event.target.files === undefined) {
+            setErrText("choose an image");
+            return;
+        }
+
+        //displays the image on the side
+        const fileRef = event.target.files[0];
+        const fileType: string= fileRef.type || "";
+        const reader = new FileReader();
+        reader.readAsBinaryString(fileRef)
+        reader.onload=(ev: any) => {
+            // convert it to base64
+            setImage(`data:${fileType};base64,${btoa(ev.target.result)}`);
+        };
+    }
+
+    const onSubmit = async(values: MyFormValues) => {
         if(category_array.length === 0) { //if no categories has been chosen
             setErrText("select categories");
             return;
@@ -123,7 +134,7 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
 
         const full_category: string = formatCategories();
 
-        const img_location: string = "";
+        const img_location = ""
 
         //update the db
         addProductToProducts({
@@ -134,7 +145,22 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
                 category: full_category,
                 img_location: img_location
             }
+        }).then((res) => {
+            //create the new product
+            const product: Product = {
+                id: res.data.addProductToProducts.id,
+                name: res.data.addProductToProducts.name,
+                price: res.data.addProductToProducts.price,
+                quantity: res.data.addProductToProducts.quantity,
+                category: res.data.addProductToProducts.category,
+                img_location: res.data.addProductToProducts.img_location
+            }
+
+            //add the product to the products after the mutation succeeds
+            addToProducts(product);
         });
+
+        closeDialog();
     }
 
     const formatCategories = (): string => {
@@ -171,7 +197,10 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
 
             <DialogContent>
                 <div className="add_product_contex">
-                    <img src={img} alt={"procducts img"} className="buying_img" />
+                    <div className="image_selection">
+                        <img src={image} alt={"procducts img"} className="buying_img" />
+                        <input type="file" name="file" onChange={handleImageChange} accept="image/png, image/jpg" />
+                    </div>
                     <div className="buying_info">
                     <Formik 
                     initialValues={initial_values}
