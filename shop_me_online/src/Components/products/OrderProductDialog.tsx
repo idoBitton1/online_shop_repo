@@ -31,10 +31,11 @@ interface MyProps {
     quantity: number,
     price: number,
     category: string,
-    img_location: string
+    img_location: string,
+    img_uploaded: boolean
 }
 
-export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name, quantity, price, category, img_location}) => {
+export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name, quantity, price, category, img_location, img_uploaded}) => {
     //redux states
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
