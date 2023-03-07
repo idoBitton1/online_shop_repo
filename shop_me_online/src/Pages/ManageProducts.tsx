@@ -27,14 +27,14 @@ const ManageProducts = () => {
         <div className="manage_products_container">
             <Header />
 
-            <div className="add_button_container">
-                <button className="add_button" 
-                onClick={toggleAddProductDialog}>
-                    Add Product
-                </button>
-            </div> 
+            <div>
+            <h1 className="headline"> Manage products </h1>     
 
-            <h1 className="headline"> Manage products </h1>                
+            <button className="add_button" 
+            onClick={toggleAddProductDialog}>
+                Add Product
+            </button>    
+            </div>       
 
             <div className="manage_products_context">
                 <NavigationBar
