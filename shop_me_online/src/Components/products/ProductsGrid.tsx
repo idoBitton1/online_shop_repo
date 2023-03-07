@@ -30,6 +30,7 @@ export const ProductsGrid: React.FC<MyProps> = ({to_manage_product}) => {
                         quantity={product.quantity}
                         category={product.category === undefined ? "" : product.category}
                         img_location={product.img_location}
+                        img_uploaded={product.img_uploaded}
                         to_manage_product={to_manage_product}
                         />
                     )
