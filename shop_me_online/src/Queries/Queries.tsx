@@ -9,6 +9,7 @@ query Query {
       price
       category
       img_location
+      img_uploaded
     }
   }
 `;
