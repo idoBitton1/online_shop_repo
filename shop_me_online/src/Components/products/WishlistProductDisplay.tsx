@@ -45,7 +45,8 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id})
         price: 0,
         quantity: 0,
         category: "",
-        img_location: ""
+        img_location: "",
+        img_uploaded: false
     });
 
     //queries
@@ -78,7 +79,8 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id})
                     price: product_data.getProduct.price,
                     quantity: product_data.getProduct.quantity,
                     category: product_data.getProduct.category,
-                    img_location: product_data.getProduct.img_location
+                    img_location: product_data.getProduct.img_location,
+                    img_uploaded: product_data.getProduct.img_uploaded
                 }
             })
 
@@ -144,6 +146,7 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id})
         quantity={product_info.quantity}
         category={product_info.category}
         img_location={product_info.img_location}
+        img_uploaded={product_info.img_uploaded}
         />
         </>
     )
