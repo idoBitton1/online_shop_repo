@@ -510,12 +510,12 @@ const resolvers = {
         },
         //update product details
         updateProductDetails: async(_: any, args: any) => {
-            const { id, price, quantity, category } = args;
+            const { id, price, quantity, category, img_uploaded } = args;
 
             try {
                 const update = await pool.query(
-                "UPDATE products SET price=$1, quantity=$2, category=$3 WHERE id=$4",
-                [price, quantity, category, id]);
+                "UPDATE products SET price=$1, quantity=$2, category=$3, img_uploaded=$4 WHERE id=$5",
+                [price, quantity, category, img_uploaded, id]);
 
                 return update.rows[0];
             } catch (err: any) {
@@ -559,7 +559,8 @@ const typeDefs = gql`
         quantity: Int!,
         price: Float!,
         category: String!,
-        img_location: String!
+        img_location: String!,
+        img_uploaded: Boolean!
     }
 
     type Transactions {
@@ -644,7 +645,8 @@ const typeDefs = gql`
         updateProductDetails(id: String!,
                              price: Int!,
                              quantity: Int!,
-                             category: String!): Product,
+                             category: String!,
+                             img_uploaded: Boolean!): Product,
 
         addProductToProducts(name: String!,
                              price: Int!,
