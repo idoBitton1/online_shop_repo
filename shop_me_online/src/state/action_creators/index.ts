@@ -61,7 +61,7 @@ export const updateSupply = (data: UpdateSupplyProps) => {
     }
 }
 
-export const updatePrice = (data: UpdateProductProps) => {
+export const updateProductDetails = (data: UpdateProductProps) => {
     return (dispatch: Dispatch<ProductsActions>) => {
         dispatch({
             type: ProductsActionType.UPDATE_PRODUCT,

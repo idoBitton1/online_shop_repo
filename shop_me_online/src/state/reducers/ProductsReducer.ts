@@ -82,7 +82,8 @@ const reducer = (state:ProductsInfo = initial_state, action: ProductsActions) =>
                     ...prev_product_filtered,
                     price: action.payload.new_price,
                     quantity: action.payload.new_quantity,
-                    category: action.payload.new_categories
+                    category: action.payload.new_categories,
+                    img_uploaded: action.payload.is_image_uploaded
                 }
     
                 const temp_filtered = [...state.filtered_products];
@@ -97,7 +98,8 @@ const reducer = (state:ProductsInfo = initial_state, action: ProductsActions) =>
                     ...prev_product,
                     price: action.payload.new_price,
                     quantity: action.payload.new_quantity,
-                    category: action.payload.new_categories
+                    category: action.payload.new_categories,
+                    img_uploaded: action.payload.is_image_uploaded
                 }
     
                 const temp = [...state.products];

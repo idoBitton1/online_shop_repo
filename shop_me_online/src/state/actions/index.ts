@@ -22,7 +22,8 @@ export interface UpdateProductProps {
     id: string,
     new_price: number,
     new_quantity: number,
-    new_categories: string
+    new_categories: string,
+    is_image_uploaded: boolean
 }
 
 interface SetFilteredProductsAction {
