@@ -1,32 +1,55 @@
 import React, { useState } from "react";
 import "./Products.css";
 
+//redux
+import { useSelector } from 'react-redux';
+import { ReduxState } from "../../state";
+
 //components
 import { OrderProduct } from "./OrderProductDialog";
+import { ManageProductDialog } from "./ManageProductDialog";
 
 //interface
 import { Product } from "../../Pages/Home";
 
 //images
 import img from "../../Images/j1.png"
-import { ManageProductDialog } from "./ManageProductDialog";
 
 interface MyProps extends Product {
     to_manage_product: boolean
 }
 
-export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, category, img_location, to_manage_product }) => {
+export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, category, img_location, img_uploaded, to_manage_product }) => {
     //states
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
+
+    //redux states
+    const aws = useSelector((redux_state: ReduxState) => redux_state.aws_s3);
 
     const toggleDialog = () => {
         setOpenDialog((prev) => !prev);
     }
 
+    const [image, setImage] = React.useState<string>("");
+
+    React.useEffect(() => {
+        if(img_uploaded) {
+            setImage(aws.s3.getSignedUrl('getObject', {
+                Bucket: aws.bucket_name,
+                Key: img_location,
+                Expires: aws.signed_url_expire_seconds
+            }));
+        }
+        else {
+            setImage(img);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [img_uploaded]) // upadtes when changing 
+
     return (
         <>
             <div className="Product_container" onClick={toggleDialog}>
-                <img src={img} alt={name} className="img product_img" />
+                <img src={image} alt={name} className="img product_img" />
                 <div className="product_details">
                     <p className="product_name">{name}</p>
                     <p className="product_quantity">Left: {quantity}</p>
@@ -51,6 +74,8 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
                 price={price}
                 quantity={quantity}
                 category={category}
+                img_location={img_location}
+                img_uploaded={img_uploaded}
                 />
                 :
                 <OrderProduct 
@@ -62,6 +87,7 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
                 quantity={quantity}
                 category={category}
                 img_location={img_location}
+                img_uploaded={img_uploaded}
                 />
             }
         </>
