@@ -63,8 +63,17 @@
 .image_selection {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .error_text {
     color: red;
+}
+
+.checkbox_row {
+    display: flex;
+}
+
+.checkbox_text {
+    font-family: "Rubik";
 }
