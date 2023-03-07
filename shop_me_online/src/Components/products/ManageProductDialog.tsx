@@ -39,7 +39,9 @@ interface MyProps {
     name: string,
     quantity: number,
     price: number,
-    category: string
+    category: string,
+    img_location: string,
+    img_uploaded: boolean
 }
 
 interface MyFormValues {
@@ -75,17 +77,18 @@ const categories: string[] = [
     "winter"
 ];
 
-export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, id, name, quantity, price, category}) => {
+export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, id, name, quantity, price, category, img_location, img_uploaded}) => {
     //states
     const [category_array, setCategoryArray] = useState<string[]>(category.split("#"));
+    const [is_image_uploaded, setIsImageUploaded] = useState<boolean>(img_uploaded);
     const [err_text, setErrText] = useState<string>("");
 
     //redux actions
     const dispatch = useDispatch();
-    const { updatePrice } = bindActionCreators(actionsCreators, dispatch);
+    const { updateProductDetails } = bindActionCreators(actionsCreators, dispatch);
 
     //mutations
-    const [updateProductDetails] = useMutation(UPDATE_PRODUCT_DETAILS);
+    const [updateProductDetailsM] = useMutation(UPDATE_PRODUCT_DETAILS);
 
     const handleChange = (event: SelectChangeEvent<typeof category_array>) => {
         const { target: { value } } = event;
@@ -117,20 +120,22 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
         const full_category: string = formatCategories();
 
         //update price localy
-        updatePrice({
+        updateProductDetails({
             id: id,
             new_price: values.price,
             new_quantity: values.quantity,
-            new_categories: full_category
+            new_categories: full_category,
+            is_image_uploaded: is_image_uploaded
         });
 
         //update the db
-        updateProductDetails({
+        updateProductDetailsM({
             variables: {
                 id: id,
                 price: values.price,
                 quantity: values.quantity,
-                category: full_category           
+                category: full_category,
+                img_uploaded: is_image_uploaded        
             }
         });
 
@@ -169,7 +174,17 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
 
             <DialogContent>
             <div className="buying_container">
-                <img src={img} alt={name} className="buying_img" />
+                <div className="image_selection">
+                    <img src={img} alt={name} className="buying_img" />
+                    <div className="checkbox_row">
+                        <Checkbox
+                        checked={is_image_uploaded}
+                        onChange={(e) => setIsImageUploaded(e.target.checked)}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                        <p className="checkbox_text">is image uploaded?</p>
+                    </div>
+                </div>
                 <div className="buying_info">
                 <Formik 
                 initialValues={initial_values}
