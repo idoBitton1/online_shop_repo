@@ -24,7 +24,8 @@ export interface Product {
   price: number,
   quantity: number,
   category: string,
-  img_location: string
+  img_location: string,
+  img_uploaded: boolean
 }
 
 export interface Transaction { 
