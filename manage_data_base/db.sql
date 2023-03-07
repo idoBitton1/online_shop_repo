@@ -27,6 +27,7 @@ CREATE TABLE products (
     price REAL NOT NULL,
     category VARCHAR(100) NOT NULL,
     img_location VARCHAR(100) NOT NULL,
+    img_uploaded Boolean DEFAULT false,
     CONSTRAINT chk_quantity CHECK (quantity >= 0),
     CONSTRAINT chk_price CHECK (price > 0),
     PRIMARY KEY (id)
