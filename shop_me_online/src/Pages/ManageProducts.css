@@ -2,10 +2,10 @@
     text-align: center;
 }
 
-.add_button_container {
-    text-align: right;
-    margin-right: 14.8%;
-    margin-top: 18px;
+.display_img {
+    width: 290px;
+    height: 250px;
+    margin-right: 20px;
 }
 
 .add_button {
@@ -15,8 +15,6 @@
     padding: 10px;
     background-color: #fff;
     transition-duration: 0.4s;
-
-    position: absolute;
 }
 
 .add_button:hover {
