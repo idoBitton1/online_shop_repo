@@ -32,6 +32,11 @@ interface MyProps {
     toggleDialog: () => void
 }
 
+interface SavedImage {
+    image_location: string,
+    name: string
+}
+
 interface MyFormValues {
     name: string,
     price: number,
@@ -70,7 +75,7 @@ const categories: string[] = [
 export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => {
     //states
     const [category_array, setCategoryArray] = useState<string[]>([]);
-    const [image, setImage] = useState<string>("");
+    const [image, setImage] = useState<SavedImage>({image_location: "", name: ""});
     const [err_text, setErrText] = useState<string>("");
     
     //redux actions
@@ -116,13 +121,16 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
         }
 
         //displays the image on the side
-        const fileRef = event.target.files[0];
-        const fileType: string= fileRef.type || "";
+        const file_ref = event.target.files[0];
+        const file_type: string= file_ref.type || "";
         const reader = new FileReader();
-        reader.readAsBinaryString(fileRef)
+        reader.readAsBinaryString(file_ref)
         reader.onload=(ev: any) => {
             // convert it to base64
-            setImage(`data:${fileType};base64,${btoa(ev.target.result)}`);
+            setImage({
+                image_location: `data:${file_type};base64,${btoa(ev.target.result)}`,
+                name: file_ref.name
+            });
         };
     }
 
@@ -132,9 +140,15 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
             return;
         }
 
+        if(values.name !== image.name.split('.')[0]) {
+            setErrText("image name and product name needs to be the same");
+            return;
+        }
+
         const full_category: string = formatCategories();
 
-        const img_location = ""
+        //the key that is needed to get the image from s3
+        const img_location = image.name;
 
         //update the db
         addProductToProducts({
@@ -153,7 +167,8 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
                 price: res.data.addProductToProducts.price,
                 quantity: res.data.addProductToProducts.quantity,
                 category: res.data.addProductToProducts.category,
-                img_location: res.data.addProductToProducts.img_location
+                img_location: res.data.addProductToProducts.img_location,
+                img_uploaded: res.data.addProductToProducts.img_uploaded
             }
 
             //add the product to the products after the mutation succeeds
@@ -179,6 +194,9 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
         //clear the error text
         setErrText("");
 
+        //clear the image
+        setImage({image_location: "", name: ""});
+
         //close the dialog
         toggleDialog();
     }
@@ -198,8 +216,14 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
             <DialogContent>
                 <div className="add_product_contex">
                     <div className="image_selection">
-                        <img src={image} alt={"procducts img"} className="buying_img" />
+                        <img src={image.image_location} alt={"procducts img"} className="buying_img" />
                         <input type="file" name="file" onChange={handleImageChange} accept="image/png, image/jpg" />
+                        <p>*image will not be saved. to save the image upload it in aws s3, in the link:</p>
+                        <a target="_blank" 
+                        href="https://s3.console.aws.amazon.com/s3/upload/shop-me-online-bucket?region=eu-central-1"
+                        >
+                            here
+                        </a>
                     </div>
                     <div className="buying_info">
                     <Formik 
@@ -264,7 +288,7 @@ export const AddProductDialog: React.FC<MyProps> = ({is_open, toggleDialog}) => 
                         fullWidth
                         sx={{ textTransform: "none", fontWeight: "bold", marginTop: 1 }}
                         >
-                        Update
+                        Add
                         </Button>
                         <p className="error_text">{err_text ? err_text : ""}</p>
                     </Form>
