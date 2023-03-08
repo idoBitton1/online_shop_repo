@@ -74,6 +74,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
             id: product_id
         },
         onCompleted(data) {
+            //set the product's infornation
             setOrderedProduct((prev) => {
                 return { ...prev, 
                     name: data.getProduct.name,
