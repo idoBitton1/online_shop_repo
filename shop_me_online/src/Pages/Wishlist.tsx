@@ -3,7 +3,7 @@ import './Wishlist.css';
 
 //Apollo and graphql
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
-import { GET_USER_WISHLIST, GET_USER_CART_PRODUCTS, GET_TRANSACTION_ID, GET_USER, GET_ALL_PRODUCTS } from "../Queries/Queries";
+import { GET_USER_WISHLIST, GET_TRANSACTION_ID, GET_USER, GET_ALL_PRODUCTS } from "../Queries/Queries";
 
 //redux
 import { useDispatch } from 'react-redux';

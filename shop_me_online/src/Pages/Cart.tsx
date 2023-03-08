@@ -3,7 +3,7 @@ import './Cart.css';
 
 //Apollo and graphql
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
-import { GET_USER_CART_PRODUCTS, GET_USER_WISHLIST, CHECK_FOR_CREDIT_CARD, GET_TRANSACTION, GET_USER, GET_TRANSACTION_ID, GET_ALL_PRODUCTS } from "../Queries/Queries";
+import { GET_USER_CART_PRODUCTS, CHECK_FOR_CREDIT_CARD, GET_TRANSACTION, GET_USER, GET_TRANSACTION_ID, GET_ALL_PRODUCTS } from "../Queries/Queries";
 import { CREATE_TRANSACTION, SET_TRANSACTION_AS_PAID, UPDATE_PRODUCT_QUANTITY } from "../Queries/Mutations";
 
 //redux
