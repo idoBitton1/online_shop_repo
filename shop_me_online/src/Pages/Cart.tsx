@@ -3,7 +3,7 @@ import './Cart.css';
 
 //Apollo and graphql
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
-import { GET_USER_CART_PRODUCTS, GET_USER_WISHLIST, CHECK_FOR_CREDIT_CARD, GET_TRANSACTION, GET_USER, GET_TRANSACTION_ID } from "../Queries/Queries";
+import { GET_USER_CART_PRODUCTS, GET_USER_WISHLIST, CHECK_FOR_CREDIT_CARD, GET_TRANSACTION, GET_USER, GET_TRANSACTION_ID, GET_ALL_PRODUCTS } from "../Queries/Queries";
 import { CREATE_TRANSACTION, SET_TRANSACTION_AS_PAID, UPDATE_PRODUCT_QUANTITY } from "../Queries/Mutations";
 
 //redux
@@ -41,21 +41,20 @@ const Cart = () => {
     //redux states
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
     const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
-    const wishlist = useSelector((redux_state: ReduxState) => redux_state.wishlist);
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
     const transaction_id = useSelector((redux_state: ReduxState) => redux_state.transaction_id);
 
     //redux actions
     const dispatch = useDispatch();
-    const { setCart, dontFetch, setWishlist, updateSupply, setTransactionId } = bindActionCreators(actionsCreators, dispatch);
+    const { setCart, updateSupply, setTransactionId, setProducts, setFilterProducts } = bindActionCreators(actionsCreators, dispatch);
 
     //const value
-    const delivery_ground_price = 15;
+    const delivery_price = 30;
 
     //states
     const [payment_information, setPaymentInformation] = useState<PaymentProps>({
         sum_of_products: 0,
-        delivery: 0,
+        delivery: delivery_price,
         total: 0,
         payment_succeed: false
     });
@@ -67,34 +66,33 @@ const Cart = () => {
     //queries
     const [getTransactionId, { data: transaction_data }] = useLazyQuery(GET_TRANSACTION_ID);
     const [getAddress, { data: address_data }] = useLazyQuery(GET_USER);
+
+    useQuery(GET_ALL_PRODUCTS, {
+        fetchPolicy: "network-only",
+        onCompleted(data) {
+          setProducts(data.getAllProducts);
+          setFilterProducts(data.getAllProducts);
+        },
+    });
+
     //when the info comes back, set the information in the cart redux state
     const [getCartProducts] = useLazyQuery(GET_USER_CART_PRODUCTS, {
+        fetchPolicy: "network-only",
         onCompleted(data) {
-            if(cart.length === 0) { //if the cart is empty when entering the cart page
-                setCart(data.getUserCartProducts);
-            }
-            else {
-                window.location.reload(); //refresh the page, in case the fetch will not bring all the info at the first time
-            }
+            setCart(data.getUserCartProducts);
         }
     });
-    //when the info comes back, set the information in the wishlist redux state
-    const [getWishlistProducts] = useLazyQuery(GET_USER_WISHLIST, {
-        onCompleted(data) {
-            if(wishlist.length === 0) {
-                setWishlist(data.getUserWishlist);
-            }
-            else {
-                window.location.reload();
-            }
-        }
-    });
+
     //checks if the user has a credit card set
-    const { data: credit_data } = useQuery(CHECK_FOR_CREDIT_CARD, {
+    useQuery(CHECK_FOR_CREDIT_CARD, {
         variables: {
             id: user.token?.user_id
-        }
+        },
+        onCompleted(data) {
+            setHasCreditCard(data.checkForCreditCard);
+        },
     });
+
     //check if the transaction was paid
     const [getTransaction] = useLazyQuery(GET_TRANSACTION, {
         onCompleted(data) {
@@ -103,10 +101,12 @@ const Cart = () => {
     });
 
     //mutations
+    //update the quantity of an item  
+    const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY);
+
     //sets the transaction as paid
     const [setTransactionAsPaid] = useMutation(SET_TRANSACTION_AS_PAID);
-    //update the quantity of an item
-    const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY);
+ 
     const [createTransaction] = useMutation(CREATE_TRANSACTION, {
         onCompleted(data) { 
           //if created a new one, set the new transaction id to the redux state
@@ -118,17 +118,11 @@ const Cart = () => {
 
     //when the user is connecting, fetch his cart information
     useEffect(() => {
-        if (user.fetch_info && user.token && transaction_id) {
-            dontFetch();
+        if (user.token && transaction_id) {
             getCartProducts({
                 variables: {
                     user_id: user.token.user_id,
                     transaction_id: transaction_id
-                }
-            });
-            getWishlistProducts({
-                variables: {
-                    userId: user.token.user_id
                 }
             });
         }
@@ -191,13 +185,7 @@ const Cart = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [transaction_data, address_data]);
 
-    //sets the delivery price
-    useEffect(() => {
-        //add delivery price by distance later
-        setPaymentInformation((prev) => ({...prev, delivery: delivery_ground_price}));
-    }, [])
-
-    //change the total with every change in one of the fields
+    //change the total with every change in the amount of one of the fields 
     useEffect(() => {
         setPaymentInformation((prev) => ({...prev, total: payment_information.sum_of_products + payment_information.delivery}));
     }, [payment_information.sum_of_products, payment_information.delivery]);
@@ -205,7 +193,6 @@ const Cart = () => {
     //the function of the pay button click
     const handlePayment = async() => {
         //check that the selected products are in stock
-
         for(let i = 0; i < cart.length; i++) {
             let index_of_product = products.products.findIndex((product) => product.id === cart[i].product_id);
             if (products.products[index_of_product].quantity < cart[i].amount) {
@@ -215,13 +202,13 @@ const Cart = () => {
         }
 
         //type declare
-        type type = {
+        type temp_cart_type = {
             product_id: string,
             amount: number
         }
 
         //sums for each product in the cart his amount
-        let temp_cart: type[] = [];
+        let temp_cart: temp_cart_type[] = [];
         for(let i = 0; i < cart.length; i++) {
             //if already sumed his amount, skip him
             if(temp_cart.findIndex((item) => item.product_id === cart[i].product_id) !== -1)
@@ -259,10 +246,9 @@ const Cart = () => {
         });
 
         toggleConfirmDialog();
-        window.location.reload(); //refresh
     }
 
-    //updates the products arrays quantities
+    //updates the products arrays quantities (all the products that are bought)
     const orderProduct = async(amount: number, product_id: string) => {
         //finds the quantity of the product
         const product_index = products.products.findIndex((product) => product.id === product_id);
@@ -286,13 +272,6 @@ const Cart = () => {
             console.error(err.message);
         }
     }
-
-    //checks if the user has a credit card
-    useEffect(() => {
-        if(credit_data) {
-            setHasCreditCard(credit_data.checkForCreditCard);
-        }
-    }, [credit_data]);
 
     const toggleCreditCardDialog = () => {
         setOpenCreditCard((prev) => !prev);

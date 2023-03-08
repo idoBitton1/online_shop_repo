@@ -67,10 +67,16 @@ function Home() {
   
   //redux actions
   const dispatch = useDispatch();
-  const { setFilterProducts, setProducts, dontFetchProducts, setTransactionId } = bindActionCreators(actionsCreators, dispatch);
+  const { setFilterProducts, setProducts, setTransactionId } = bindActionCreators(actionsCreators, dispatch);
 
   //queries
-  const { data: products_data } = useQuery(GET_ALL_PRODUCTS);
+  useQuery(GET_ALL_PRODUCTS, {
+    fetchPolicy: "network-only",
+    onCompleted(data) {
+      setProducts(data.getAllProducts);
+      setFilterProducts(data.getAllProducts);
+    },
+  });
   const [getTransactionId, { data: transaction_data }] = useLazyQuery(GET_TRANSACTION_ID);
   const [getAddress, { data: address_data }] = useLazyQuery(GET_USER);
 
@@ -81,15 +87,6 @@ function Home() {
       setTransactionId(data.createTransaction.id);
     }
   });
-
-  useEffect(() => {
-    if(products_data && products.fetch_info) {
-      dontFetchProducts();
-      setProducts(products_data.getAllProducts);
-      setFilterProducts(products_data.getAllProducts);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [products_data]);
 
   //wait for the user to connect
   useEffect(() => {

@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import './Wishlist.css';
 
 //Apollo and graphql
-import { useLazyQuery, useMutation } from "@apollo/client"
-import { GET_USER_WISHLIST, GET_USER_CART_PRODUCTS, GET_TRANSACTION_ID, GET_USER } from "../Queries/Queries";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
+import { GET_USER_WISHLIST, GET_USER_CART_PRODUCTS, GET_TRANSACTION_ID, GET_USER, GET_ALL_PRODUCTS } from "../Queries/Queries";
 
 //redux
 import { useDispatch } from 'react-redux';
@@ -24,37 +24,29 @@ const Wishlist = () => {
     //redux states
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
     const wishlist = useSelector((redux_state: ReduxState) => redux_state.wishlist);
-    const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
     const transaction_id = useSelector((redux_state: ReduxState) => redux_state.transaction_id);
 
     //redux actions
     const dispatch = useDispatch();
-    const { dontFetch, setWishlist, setCart, setTransactionId } = bindActionCreators(actionsCreators, dispatch);
+    const { setWishlist, setTransactionId, setProducts, setFilterProducts } = bindActionCreators(actionsCreators, dispatch);
 
     //queries
+    useQuery(GET_ALL_PRODUCTS, {
+        fetchPolicy: "network-only",
+        onCompleted(data) {
+          setProducts(data.getAllProducts);
+          setFilterProducts(data.getAllProducts);
+        },
+    });
     const [getTransactionId, { data: transaction_data }] = useLazyQuery(GET_TRANSACTION_ID);
     const [getAddress, { data: address_data }] = useLazyQuery(GET_USER);
-    //when the info comes back, set the information in the cart redux state
-    const [getCartProducts] = useLazyQuery(GET_USER_CART_PRODUCTS, {
-        onCompleted(data) {
-            if(cart.length === 0) { //if the cart is empty when entering the cart page
-                setCart(data.getUserCartProducts);
-            }
-            else {
-                window.location.reload(); //refresh the page, in case the fetch will not bring all the info at the first time
-            }
-        }
-    });
+
     //when the info comes back, set the information in the wishlist redux state
     const [getWishlistProducts] = useLazyQuery(GET_USER_WISHLIST, {
+        fetchPolicy: "network-only",
         onCompleted(data) {
-            if(wishlist.length === 0) {
-                setWishlist(data.getUserWishlist);
-            }
-            else {
-                window.location.reload();
-            }
+            setWishlist(data.getUserWishlist);
         }
     });
 
@@ -66,15 +58,10 @@ const Wishlist = () => {
         }
     });
 
+
     //when the user is connecting, fetch his cart information
     useEffect(() => {
-        if (user.fetch_info && user.token) {
-            dontFetch();
-            getCartProducts({
-                variables: {
-                    userId: user.token.user_id
-                }
-            });
+        if (user.token) {
             getWishlistProducts({
                 variables: {
                     userId: user.token.user_id
@@ -139,8 +126,8 @@ const Wishlist = () => {
                 {
                     wishlist.map((wishlist_product, i) => {
                         const product_index = products.products.findIndex((product) => product.id === wishlist_product.product_id);
-                        const img_location = products.products[product_index].img_location;
-                        const img_uploaded = products.products[product_index].img_uploaded;
+                        let img_location = products.products[product_index].img_location;
+                        let img_uploaded = products.products[product_index].img_uploaded;
 
                         
                         return(

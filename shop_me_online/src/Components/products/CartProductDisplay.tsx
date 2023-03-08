@@ -2,17 +2,15 @@ import React, { useEffect, useState } from "react";
 import '../../Pages/Cart.css';
 
 //Apollo and graphql
-import { useLazyQuery, useMutation } from "@apollo/client"
-import { GET_PRODUCT, GET_ALL_PRODUCTS } from "../../Queries/Queries";
+import { useMutation, useQuery } from "@apollo/client"
+import { GET_PRODUCT } from "../../Queries/Queries";
 import { REMOVE_PRODUCT_FROM_CART, UPDATE_CART_PRODUCT_AMOUNT,
          UPDATE_CART_PRODUCT_SIZE } from "../../Queries/Mutations";
 
 //redux
-import { useDispatch } from 'react-redux';
-import { actionsCreators } from "../../state";
+import { useDispatch, useSelector } from 'react-redux';
+import { actionsCreators, ReduxState } from "../../state";
 import { bindActionCreators } from 'redux';
-import { useSelector } from 'react-redux';
-import { ReduxState } from "../../state";
 
 //material-ui
 import { Select, FormControl, MenuItem, SelectChangeEvent } from "@mui/material";
@@ -50,7 +48,7 @@ interface ChangeProperties {
 
 export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amount, size, img_location, img_uploaded, setPaymentInformation}) => {
     //states
-    const [image, setImage] = React.useState<string>("");
+    const [image, setImage] = React.useState<string>(img);
     const [err_text, setErrText] = useState<string>("");
     const [order_amount, setOrderAmount] = useState<number>(amount);
     const [order_size, setOrderSize] = useState<string>(size);
@@ -68,11 +66,27 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
 
     //redux actions
     const dispatch = useDispatch();
-    const { removeFromCart, changeQuantity, changeSize, setFilterProducts, setProducts, dontFetchProducts } = bindActionCreators(actionsCreators, dispatch);    
+    const { removeFromCart, changeQuantity, changeSize } = bindActionCreators(actionsCreators, dispatch);    
 
     //queries
-    const [ getProducts, { data: products_data }] = useLazyQuery(GET_ALL_PRODUCTS);
-    const [ getProduct, { data: product_data }]  = useLazyQuery(GET_PRODUCT);
+    useQuery(GET_PRODUCT, {
+        variables: {
+            id: product_id
+        },
+        onCompleted(data) {
+            setOrderedProduct((prev) => {
+                return { ...prev, 
+                    name: data.getProduct.name,
+                    price: data.getProduct.price,
+                    category: data.getProduct.category,
+                    quantity: data.getProduct.quantity
+                }
+            });
+
+            //add the price of this item to the total amount
+            setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_amount * data.getProduct.price}));
+        },
+    });
 
     //mutations
     const [removeProductFromCart] = useMutation(REMOVE_PRODUCT_FROM_CART);
@@ -89,81 +103,16 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
                 Expires: aws.signed_url_expire_seconds
             }));
         }
-        else {
-            setImage(img);
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [img_uploaded]) // upadtes when changing 
-
-    //fetch if the product_id is not null
-    useEffect(() => {
-        if(product_id){
-            getProduct({
-                variables: {
-                    id: product_id
-                }
-            })
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [product_id]);
-
-    //set the information in the variables to display it
-    useEffect(() => {
-        if(product_data){
-            setOrderedProduct((prev) => {
-                return { ...prev, name: product_data.getProduct.name }
-            });
-
-            setOrderedProduct((prev) => {
-                return { ...prev, price: product_data.getProduct.price }
-            });
-
-            //add the price of this item to the total amount
-            setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_amount * product_data.getProduct.price}));
-
-            if(products.products.length !== 0) {
-                let index = products.products.findIndex((product) => product.id === product_id);
-                setOrderedProduct((prev) => {
-                    return { ...prev, quantity: products.products[index].quantity }
-                });
-            }
-            else {
-                setOrderedProduct((prev) => {
-                    return { ...prev, quantity: product_data.getProduct.quantity } //plan B
-                });
-            }
-
-            setOrderedProduct((prev) => {
-                return { ...prev, category: product_data.getProduct.category }
-            });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [product_data]);
 
     //update the total amount, if changed
     useEffect(() => {
         //add the price of this item to the total amount
         setPaymentInformation((prev) => ({...prev, sum_of_products:  prev.sum_of_products + order_amount * product_info.price}));
+        
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [order_amount]);
-
-    //if the products array is empty, fetch it
-    useEffect(() => {
-        if(products.products.length === 0) {
-            getProducts();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [products.products])
-
-    //fetch the products, to get the exact quantity of a product, in case of a refresh
-    useEffect(() => {
-        if(products_data && products.fetch_info) {
-          dontFetchProducts();
-          setProducts(products_data.getAllProducts);
-          setFilterProducts(products_data.getAllProducts);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [products_data]);
 
     //remove the item from the cart
     const handleDeleteClick = () => {       

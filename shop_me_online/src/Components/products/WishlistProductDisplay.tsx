@@ -7,11 +7,9 @@ import { GET_PRODUCT } from "../../Queries/Queries";
 import { DELETE_PRODUCT_FROM_WISHLIST } from "../../Queries/Mutations";
 
 //redux
-import { useDispatch } from 'react-redux';
-import { actionsCreators } from "../../state";
+import { useDispatch, useSelector } from 'react-redux';
+import { actionsCreators, ReduxState } from "../../state";
 import { bindActionCreators } from 'redux';
-import { useSelector } from 'react-redux';
-import { ReduxState } from "../../state";
 
 //icons
 import CloseIcon from '@mui/icons-material/Close';
@@ -41,7 +39,7 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id, 
     const { removeFromWishlist } = bindActionCreators(actionsCreators, dispatch);
 
     //states
-    const [image, setImage] = React.useState<string>("");
+    const [image, setImage] = React.useState<string>(img);
     const [open_dialog, SetOpenDialog] = useState<boolean>(false);
     const [product_info, setProductInfo] = useState<Product>({
         id: product_id,
@@ -68,9 +66,6 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id, 
                 Key: img_location,
                 Expires: aws.signed_url_expire_seconds
             }));
-        }
-        else {
-            setImage(img);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [img_uploaded]) // upadtes when changing 
