@@ -30,7 +30,7 @@ import Button from "@mui/material/Button/Button";
 import TextField from '@mui/material/TextField';
 
 //images
-import img from "../../Images/j1.png";
+import img from "../../Images/default.png";
 
 interface MyProps {
     is_open: boolean,

@@ -15,7 +15,7 @@ import { bindActionCreators } from 'redux';
 import CloseIcon from '@mui/icons-material/Close';
 
 //images
-import img from "../../Images/j1.png";
+import img from "../../Images/default.png";
 import { OrderProduct } from "./OrderProductDialog";
 
 //interface

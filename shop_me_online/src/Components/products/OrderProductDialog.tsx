@@ -21,7 +21,7 @@ import {Button, FormControl, InputLabel, MenuItem, Select, Typography, SelectCha
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 //images
-import img from "../../Images/j1.png";
+import img from "../../Images/default.png";
 
 interface MyProps {
     is_open: boolean,

@@ -13,7 +13,7 @@ import { ManageProductDialog } from "./ManageProductDialog";
 import { Product } from "../../Pages/Home";
 
 //images
-import img from "../../Images/j1.png"
+import img from "../../Images/default.png"
 
 interface MyProps extends Product {
     to_manage_product: boolean
@@ -21,7 +21,7 @@ interface MyProps extends Product {
 
 export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, category, img_location, img_uploaded, to_manage_product }) => {
     //states
-    const [image, setImage] = React.useState<string>("");
+    const [image, setImage] = React.useState<string>(img);
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
 
     //redux states
@@ -35,9 +35,6 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
                 Key: img_location,
                 Expires: aws.signed_url_expire_seconds
             }));
-        }
-        else {
-            setImage(img);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [img_uploaded]) // upadtes when changing 

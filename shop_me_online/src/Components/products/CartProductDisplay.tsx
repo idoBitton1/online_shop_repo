@@ -22,7 +22,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { PaymentProps } from "../../Pages/Cart";
  
 //images
-import img from "../../Images/j1.png";
+import img from "../../Images/default.png";
 
 interface MyProps {
     item_id: string,
