@@ -25,6 +25,7 @@ const Wishlist = () => {
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
     const wishlist = useSelector((redux_state: ReduxState) => redux_state.wishlist);
     const cart = useSelector((redux_state: ReduxState) => redux_state.cart);
+    const products = useSelector((redux_state: ReduxState) => redux_state.products);
     const transaction_id = useSelector((redux_state: ReduxState) => redux_state.transaction_id);
 
     //redux actions
@@ -136,11 +137,18 @@ const Wishlist = () => {
 
             <div className="wishlist_context">
                 {
-                    wishlist.map((product, i) => {
+                    wishlist.map((wishlist_product, i) => {
+                        const product_index = products.products.findIndex((product) => product.id === wishlist_product.product_id);
+                        const img_location = products.products[product_index].img_location;
+                        const img_uploaded = products.products[product_index].img_uploaded;
+
+                        
                         return(
                             <WishlistProductDisplay 
-                                user_id={product.user_id}
-                                product_id={product.product_id}
+                                user_id={wishlist_product.user_id}
+                                product_id={wishlist_product.product_id}
+                                img_location={img_location}
+                                img_uploaded={img_uploaded}
                                 key={i}
                             />
                         );

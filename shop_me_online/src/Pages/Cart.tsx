@@ -357,13 +357,19 @@ const Cart = () => {
                         <></>
                         :
                         //render all the products in the cart
-                        cart.map((product, i) => {
+                        cart.map((cart_product, i) => {
+                            const product_index = products.products.findIndex((product) => product.id === cart_product.product_id);
+                            const img_location = products.products[product_index].img_location;
+                            const img_uploaded = products.products[product_index].img_uploaded;
+
                             return (
                                 <CartProductDisplay
-                                    item_id={product.item_id}
-                                    product_id={product.product_id}
-                                    amount={product.amount}
-                                    size={product.size}
+                                    item_id={cart_product.item_id}
+                                    product_id={cart_product.product_id}
+                                    amount={cart_product.amount}
+                                    size={cart_product.size}
+                                    img_location={img_location}
+                                    img_uploaded={img_uploaded}
                                     setPaymentInformation={setPaymentInformation}
                                     key={i}
                                 />
