@@ -4,14 +4,12 @@ import { ProductsActionType } from "../action_types";
 
 interface ProductsInfo {
     products: Product[],
-    filtered_products: Product[],
-    fetch_info: boolean
+    filtered_products: Product[]
 }
 
 let initial_state: ProductsInfo = {
     products: [],
-    filtered_products: [],
-    fetch_info: true
+    filtered_products: []
 };
 
 const reducer = (state:ProductsInfo = initial_state, action: ProductsActions) => {
@@ -116,11 +114,6 @@ const reducer = (state:ProductsInfo = initial_state, action: ProductsActions) =>
                 ...state,
                 products: [...state.products, action.payload],
                 filtered_products: [...state.filtered_products, action.payload]
-            }
-        case ProductsActionType.DONT_FETCH_PRODUCTS:
-            return {
-                ...state,
-                fetch_info: false
             }
         default:
             return state;

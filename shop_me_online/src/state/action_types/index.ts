@@ -4,8 +4,7 @@ export enum ProductsActionType {
     FILTER = "filter",
     UPDATE_SUPPLY = "update_supply",
     UPDATE_PRODUCT = "update_product",
-    ADD_TO_PRODUCTS = "add_to_products",
-    DONT_FETCH_PRODUCTS = "dont_fetch_products"
+    ADD_TO_PRODUCTS = "add_to_products"
 }
 
 export enum CartActionType {

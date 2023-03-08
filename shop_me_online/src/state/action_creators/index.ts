@@ -79,14 +79,6 @@ export const addToProducts = (product: Product) => {
     }
 }
 
-export const dontFetchProducts = () => {
-    return (dispatch: Dispatch<ProductsActions>) => {
-        dispatch({
-            type: ProductsActionType.DONT_FETCH_PRODUCTS
-        });
-    }
-}
-
 //cart functions
 export const setCart = (products: CartProduct[]) => {
     return (dispatch: Dispatch<CartActions>) => {
