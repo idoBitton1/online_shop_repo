@@ -21,17 +21,13 @@ interface MyProps extends Product {
 
 export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, category, img_location, img_uploaded, to_manage_product }) => {
     //states
+    const [image, setImage] = React.useState<string>("");
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
 
     //redux states
     const aws = useSelector((redux_state: ReduxState) => redux_state.aws_s3);
 
-    const toggleDialog = () => {
-        setOpenDialog((prev) => !prev);
-    }
-
-    const [image, setImage] = React.useState<string>("");
-
+    //fetch the product image from the s3
     React.useEffect(() => {
         if(img_uploaded) {
             setImage(aws.s3.getSignedUrl('getObject', {
@@ -45,6 +41,10 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [img_uploaded]) // upadtes when changing 
+
+    const toggleDialog = () => {
+        setOpenDialog((prev) => !prev);
+    }
 
     return (
         <>

@@ -36,25 +36,41 @@ interface MyProps {
 }
 
 export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name, quantity, price, category, img_location, img_uploaded}) => {
+    //states
+    const [size, setSize] = useState<string>("");
+    const [amount, setAmount] = useState<number>(1);
+    const [err_text, setErrText] = useState<string>("");
+    const [image, setImage] = React.useState<string>("");
+    
     //redux states
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
     const user = useSelector((redux_state: ReduxState) => redux_state.user);
     const transaction_id = useSelector((redux_state: ReduxState) => redux_state.transaction_id);
+    const aws = useSelector((redux_state: ReduxState) => redux_state.aws_s3);
 
     //redux actions
     const dispatch = useDispatch();
     const { addProductToCart, addToWishlist } = bindActionCreators(actionsCreators, dispatch);
-
-    //states
-    //const [user_address, setUserAddress] = useState<string>("");
-    const [size, setSize] = useState<string>("");
-    const [amount, setAmount] = useState<number>(1);
-    const [err_text, setErrText] = useState<string>("");
     
     //mutations
     const [addProductToCartMutation] = useMutation(ADD_PRODUCT_TO_CART);
     const [addProductToWishlist, { error }] = useMutation(ADD_TO_WISHLIST);
 
+
+    //fetch the product image from the s3
+    React.useEffect(() => {
+        if(img_uploaded) {
+            setImage(aws.s3.getSignedUrl('getObject', {
+                Bucket: aws.bucket_name,
+                Key: img_location,
+                Expires: aws.signed_url_expire_seconds
+            }));
+        }
+        else {
+            setImage(img);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [img_uploaded]) // upadtes when changing 
 
     //the function of the amount select
     const handleAmountSelect = (event: SelectChangeEvent<number>) => {
@@ -171,7 +187,7 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
 
             <DialogContent>
                 <div className="buying_container">
-                    <img src={img} alt={name} className="buying_img" />
+                    <img src={image} alt={name} className="buying_img" />
                     <div className="buying_info">
                         <p>Left: {quantity}</p>
 

@@ -31,6 +31,8 @@ interface MyProps {
     product_id: string,
     amount: number,
     size: string,
+    img_location: string,
+    img_uploaded: boolean,
     setPaymentInformation: React.Dispatch<React.SetStateAction<PaymentProps>>
 }
 
@@ -46,25 +48,27 @@ interface ChangeProperties {
     quantity: boolean
 }
 
-export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amount, size, setPaymentInformation}) => {
-    //redux states
-    const products = useSelector((redux_state: ReduxState) => redux_state.products);
-
-    //redux actions
-    const dispatch = useDispatch();
-    const { removeFromCart, changeQuantity, changeSize, setFilterProducts, setProducts, dontFetchProducts } = bindActionCreators(actionsCreators, dispatch);
-
+export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amount, size, img_location, img_uploaded, setPaymentInformation}) => {
     //states
+    const [image, setImage] = React.useState<string>("");
+    const [err_text, setErrText] = useState<string>("");
+    const [order_amount, setOrderAmount] = useState<number>(amount);
+    const [order_size, setOrderSize] = useState<string>(size);
+    const [change_properties, setChange] = useState<ChangeProperties>({ size: false, quantity: false });  
     const [product_info, setOrderedProduct] = useState<ProductProperties>({
         name: "",
         price: 0,
         quantity: 0,
         category: ""
     });
-    const [order_amount, setOrderAmount] = useState<number>(amount);
-    const [order_size, setOrderSize] = useState<string>(size);
-    const [change_properties, setChange] = useState<ChangeProperties>({ size: false, quantity: false });
-    const [err_text, setErrText] = useState<string>("");
+
+    //redux states
+    const products = useSelector((redux_state: ReduxState) => redux_state.products);
+    const aws = useSelector((redux_state: ReduxState) => redux_state.aws_s3);
+
+    //redux actions
+    const dispatch = useDispatch();
+    const { removeFromCart, changeQuantity, changeSize, setFilterProducts, setProducts, dontFetchProducts } = bindActionCreators(actionsCreators, dispatch);    
 
     //queries
     const [ getProducts, { data: products_data }] = useLazyQuery(GET_ALL_PRODUCTS);
@@ -76,6 +80,20 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
     const [updateCartProductSize] = useMutation(UPDATE_CART_PRODUCT_SIZE);
     
 
+    //fetch the product image from the s3
+    React.useEffect(() => {
+        if(img_uploaded) {
+            setImage(aws.s3.getSignedUrl('getObject', {
+                Bucket: aws.bucket_name,
+                Key: img_location,
+                Expires: aws.signed_url_expire_seconds
+            }));
+        }
+        else {
+            setImage(img);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [img_uploaded]) // upadtes when changing 
 
     //fetch if the product_id is not null
     useEffect(() => {
@@ -244,7 +262,7 @@ export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amou
     return (
         <div className="cart_product_display">
             <div className="product_info">
-                <img src={img} alt="product" className="cart_product_img" />
+                <img src={image} alt="product" className="cart_product_img" />
                 <div style={{ display: "flex", flexDirection: "column" }}>
                     <p className="cart_product_name">{product_info.name}</p>
                     <p>price for each: {product_info.price}$</p>

@@ -10,9 +10,9 @@ import { useMutation } from "@apollo/client";
 import { UPDATE_PRODUCT_DETAILS } from "../../Queries/Mutations";
 
 //redux
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { actionsCreators } from '../../state';
+import { actionsCreators, ReduxState } from '../../state';
 
 //material ui
 import Dialog from '@mui/material/Dialog';
@@ -81,7 +81,11 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
     //states
     const [category_array, setCategoryArray] = useState<string[]>(category.split("#"));
     const [is_image_uploaded, setIsImageUploaded] = useState<boolean>(img_uploaded);
+    const [image, setImage] = React.useState<string>("");
     const [err_text, setErrText] = useState<string>("");
+
+    //redux states
+    const aws = useSelector((redux_state: ReduxState) => redux_state.aws_s3);
 
     //redux actions
     const dispatch = useDispatch();
@@ -110,6 +114,21 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
         price: Yup.number().min(0, "Must be bigger than 0").required("Required"),
         quantity: Yup.number().min(0, "Must be bigger than 0").required("Required")
     });
+
+    //fetch the product image from the s3
+    React.useEffect(() => {
+        if(img_uploaded) {
+            setImage(aws.s3.getSignedUrl('getObject', {
+                Bucket: aws.bucket_name,
+                Key: img_location,
+                Expires: aws.signed_url_expire_seconds
+            }));
+        }
+        else {
+            setImage(img);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [img_uploaded]) // upadtes when changing 
 
     const onSubmit = (values: MyFormValues) => {
         if(category_array.length === 0) { //if no categories has been chosen
@@ -175,7 +194,7 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
             <DialogContent>
             <div className="buying_container">
                 <div className="image_selection">
-                    <img src={img} alt={name} className="buying_img" />
+                    <img src={image} alt={name} className="buying_img" />
                     <div className="checkbox_row">
                         <Checkbox
                         checked={is_image_uploaded}
