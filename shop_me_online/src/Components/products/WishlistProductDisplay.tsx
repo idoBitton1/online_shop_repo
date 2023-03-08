@@ -26,18 +26,22 @@ import { Button } from "@mui/material";
 
 interface MyProps {
     user_id: string,
-    product_id: string
+    product_id: string,
+    img_location: string,
+    img_uploaded: boolean
 }
 
-export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id}) => {
+export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id, img_location, img_uploaded}) => {
     //redux states
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
+    const aws = useSelector((redux_state: ReduxState) => redux_state.aws_s3);
 
     //redux actions
     const dispatch = useDispatch();
     const { removeFromWishlist } = bindActionCreators(actionsCreators, dispatch);
 
     //states
+    const [image, setImage] = React.useState<string>("");
     const [open_dialog, SetOpenDialog] = useState<boolean>(false);
     const [product_info, setProductInfo] = useState<Product>({
         id: product_id,
@@ -56,6 +60,20 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id})
     const [deleteProductFromWishlist] = useMutation(DELETE_PRODUCT_FROM_WISHLIST);
 
 
+    //fetch the product image from the s3
+    React.useEffect(() => {
+        if(img_uploaded) {
+            setImage(aws.s3.getSignedUrl('getObject', {
+                Bucket: aws.bucket_name,
+                Key: img_location,
+                Expires: aws.signed_url_expire_seconds
+            }));
+        }
+        else {
+            setImage(img);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [img_uploaded]) // upadtes when changing 
 
     //fetch if the product_id is not null
     useEffect(() => {
@@ -116,7 +134,7 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id})
         <>
         <div className="wishlist_product_display">
             <div className="product_info">
-                <img src={img} alt="product" className="cart_product_img" />
+                <img src={image} alt="product" className="cart_product_img" />
                 <div style={{ display: "flex", flexDirection: "column",  }}>
                     <p className="cart_product_name">{product_info.name}</p>
                     <p>price for each: {product_info.price}$</p>
