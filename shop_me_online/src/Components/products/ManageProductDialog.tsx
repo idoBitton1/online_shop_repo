@@ -30,7 +30,7 @@ import Button from "@mui/material/Button/Button";
 import TextField from '@mui/material/TextField';
 
 //images
-import img from "../../Images/default.png";
+import default_image from "../../Images/default.png";
 
 interface MyProps {
     is_open: boolean,
@@ -81,7 +81,7 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
     //states
     const [category_array, setCategoryArray] = useState<string[]>(category.split("#"));
     const [is_image_uploaded, setIsImageUploaded] = useState<boolean>(img_uploaded);
-    const [image, setImage] = React.useState<string>("");
+    const [image, setImage] = React.useState<string>(default_image);
     const [err_text, setErrText] = useState<string>("");
 
     //redux states
@@ -123,9 +123,6 @@ export const ManageProductDialog: React.FC<MyProps> = ({is_open, toggleDialog, i
                 Key: img_location,
                 Expires: aws.signed_url_expire_seconds
             }));
-        }
-        else {
-            setImage(img);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [img_uploaded]) // upadtes when changing 

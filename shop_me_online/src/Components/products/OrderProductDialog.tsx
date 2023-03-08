@@ -21,7 +21,7 @@ import {Button, FormControl, InputLabel, MenuItem, Select, Typography, SelectCha
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 //images
-import img from "../../Images/default.png";
+import default_image from "../../Images/default.png";
 
 interface MyProps {
     is_open: boolean,
@@ -40,7 +40,7 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
     const [size, setSize] = useState<string>("");
     const [amount, setAmount] = useState<number>(1);
     const [err_text, setErrText] = useState<string>("");
-    const [image, setImage] = React.useState<string>("");
+    const [image, setImage] = React.useState<string>(default_image);
     
     //redux states
     const products = useSelector((redux_state: ReduxState) => redux_state.products);
@@ -65,9 +65,6 @@ export const OrderProduct: React.FC<MyProps> = ({is_open, toggleDialog, id, name
                 Key: img_location,
                 Expires: aws.signed_url_expire_seconds
             }));
-        }
-        else {
-            setImage(img);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [img_uploaded]) // upadtes when changing 

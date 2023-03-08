@@ -22,7 +22,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { PaymentProps } from "../../Pages/Cart";
  
 //images
-import img from "../../Images/default.png";
+import default_image from "../../Images/default.png";
 
 interface MyProps {
     item_id: string,
@@ -48,7 +48,7 @@ interface ChangeProperties {
 
 export const CartProductDisplay: React.FC<MyProps> = ({item_id, product_id, amount, size, img_location, img_uploaded, setPaymentInformation}) => {
     //states
-    const [image, setImage] = React.useState<string>(img);
+    const [image, setImage] = React.useState<string>(default_image);
     const [err_text, setErrText] = useState<string>("");
     const [order_amount, setOrderAmount] = useState<number>(amount);
     const [order_size, setOrderSize] = useState<string>(size);

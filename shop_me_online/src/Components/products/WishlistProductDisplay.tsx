@@ -11,16 +11,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { actionsCreators, ReduxState } from "../../state";
 import { bindActionCreators } from 'redux';
 
+//components
+import { OrderProduct } from "./OrderProductDialog";
+
+//material ui
+import { Button } from "@mui/material";
+
 //icons
 import CloseIcon from '@mui/icons-material/Close';
 
 //images
-import img from "../../Images/default.png";
-import { OrderProduct } from "./OrderProductDialog";
+import default_image from "../../Images/default.png";
 
 //interface
 import { Product } from "../../Pages/Home";
-import { Button } from "@mui/material";
 
 interface MyProps {
     user_id: string,
@@ -39,7 +43,7 @@ export const WishlistProductDisplay: React.FC<MyProps> = ({user_id, product_id, 
     const { removeFromWishlist } = bindActionCreators(actionsCreators, dispatch);
 
     //states
-    const [image, setImage] = React.useState<string>(img);
+    const [image, setImage] = React.useState<string>(default_image);
     const [open_dialog, SetOpenDialog] = useState<boolean>(false);
     const [product_info, setProductInfo] = useState<Product>({
         id: product_id,

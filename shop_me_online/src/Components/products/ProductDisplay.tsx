@@ -13,7 +13,7 @@ import { ManageProductDialog } from "./ManageProductDialog";
 import { Product } from "../../Pages/Home";
 
 //images
-import img from "../../Images/default.png"
+import default_image from "../../Images/default.png"
 
 interface MyProps extends Product {
     to_manage_product: boolean
@@ -21,7 +21,7 @@ interface MyProps extends Product {
 
 export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, category, img_location, img_uploaded, to_manage_product }) => {
     //states
-    const [image, setImage] = React.useState<string>(img);
+    const [image, setImage] = React.useState<string>(default_image);
     const [open_dialog, setOpenDialog] = useState<boolean>(false);
 
     //redux states
