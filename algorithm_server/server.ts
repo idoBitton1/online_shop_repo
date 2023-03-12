@@ -230,6 +230,9 @@ const resolvers = {
         getMinimumCost: (_: any, args: any) => {
             const {all_supply, all_demand, costs_mat} = args;
 
+            //reset
+            totalCosts = 0;
+
             //fix imbalance
             let total_src = 0;
             all_supply.forEach((item: number) => {
