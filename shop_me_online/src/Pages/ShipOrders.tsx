@@ -1,5 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './ShipOrders.css';
+
+//Apollo and graphql
+//only in this component, the query will be sent to the algorithm server
+import { useLazyQuery } from "@apollo/client";
+import { GET_MINIMUM_SHIPMENT_COST } from "../Queries/Queries";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 //components
 import { Header } from "../Components/Header/Header";
@@ -11,10 +17,16 @@ import { Button } from "@mui/material"
 
 //interface
 import { TransactionSecondType } from "./Home";
+import { DisplayResults } from "../Components/Tables/DisplayResults";
 
 export interface Warehouse {
     name: string,
     address: string
+}
+
+export interface Result {
+    result_matrix: number[][],
+    total_cost: number
 }
 
 //type declare
@@ -23,10 +35,28 @@ type reduced = {
     sum: number
 }
 
+const manage_db_client = new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: "http://localhost:4000/graphql"
+  });
+
 const ShipOrders = () => {
     //states
     const [selected_transactions, setSelectedTransactions] = useState<TransactionSecondType[]>([]);
     const [selected_warehouses, setSelectedWarehouses] = useState<Warehouse[]>([]);
+    const [result, setResult] = useState<Result | null>(null);
+    const [selected_transactions_addresses, setSelectedTransactionsAddresses] = useState<string[]>([]);
+
+    //queries
+    const [getMinimumShipmentCost] = useLazyQuery(GET_MINIMUM_SHIPMENT_COST, {
+        fetchPolicy: "network-only",
+        onCompleted(data) {
+            setResult({
+                result_matrix: data.getMinimumCost.resMat,
+                total_cost: data.getMinimumCost.totalCost
+            });
+        },
+    });
 
     const handleShowResultsClick = async() => {
         //get all the demands
@@ -40,15 +70,22 @@ const ShipOrders = () => {
             //if not found, create a new place in the array for that address
             if(found_index === -1) {
                 reduced_transactions.push({address: selected_transactions[i].address, sum: selected_transactions[i].sum});
-                continue;
             }
-            reduced_transactions[found_index].sum += selected_transactions[i].sum;
+            else { //if found, add it to the sum
+                reduced_transactions[found_index].sum += selected_transactions[i].sum;
+            }
         }
 
         //push into the array
         reduced_transactions.map((transaction) => {
             all_demand.push(transaction.sum);
+            setSelectedTransactionsAddresses((prev) => [...prev, transaction.address]);
         });
+
+        //remove dulpications
+        setSelectedTransactionsAddresses((prev) => {
+            return prev.filter((item, i) => prev.indexOf(item) === i);
+        })
 
         //get all the right amount to supply
         let all_supply: number[] = [];
@@ -62,6 +99,10 @@ const ShipOrders = () => {
             all_supply.push(Math.floor(sum / selected_warehouses.length));
         }
 
+        //if sum is odd number
+        if(sum % selected_warehouses.length !== 0)
+            all_supply[0] += sum % selected_warehouses.length;
+
         //allocate the costs matrix
         let costs: number[][] = Array.from(Array(all_supply.length), () => new Array(all_demand.length));     
 
@@ -73,12 +114,19 @@ const ShipOrders = () => {
             }   
         }     
 
-        console.log(costs)
+        //get the answer from the server
+        getMinimumShipmentCost({
+            variables: {
+                all_supply: all_supply,
+                all_demand: all_demand,
+                costs_mat: costs
+            }
+        });
     }
 
     const checkDistance = async(origin_address: string, destination_address: string) => {
         //setup
-        const key: string = "";
+        const key: string = "gWROMgSB5r701uDW5UgDvE3aUQepw";
         let http_address = `https://api.distancematrix.ai/maps/api/distancematrix/json?origins=${origin_address}&destinations=${destination_address}&key=${key}`;
 
         let delivery_fee: number = 0;
@@ -108,7 +156,13 @@ const ShipOrders = () => {
         return delivery_fee;
     }
 
+    const handleConfirm = () => {
+        console.log("hi")
+    }
+
     return (
+        <>
+        <ApolloProvider client={manage_db_client}>
         <div className="ship_orders_container" style={{textAlign: "center"}}>
             <Header />
 
@@ -133,6 +187,30 @@ const ShipOrders = () => {
                 </Button>
             </div>
         </div>
+        </ApolloProvider>
+
+        {
+            result !== null 
+            ? 
+            <>
+            <DisplayResults
+            result_matrix={result.result_matrix}
+            total_cost={result.total_cost}
+            selected_warehouses={selected_warehouses}
+            selected_transactions_addresses={selected_transactions_addresses}
+            /> 
+            <div className="confirm_button">
+                <Button
+                variant="contained"
+                onClick={handleConfirm}>
+                    Confirm
+                </Button>
+            </div>
+            </>
+            : 
+            <></>
+        }
+        </>
     );
 }
 
