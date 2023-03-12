@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
 
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 //Material-ui
@@ -15,6 +17,11 @@ import Wishlist from './Pages/Wishlist';
 import Profile from './Pages/Profile';
 import ShipOrders from './Pages/ShipOrders';
 import ManageProducts from './Pages/ManageProducts';
+
+const algorithm_client = new ApolloClient({
+  cache: new InMemoryCache(),
+  uri: "http://localhost:8080/graphql"
+});
 
 function App() {
 
@@ -39,7 +46,11 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/shipOrders" element={<ShipOrders />} />
+            <Route path="/shipOrders" element={
+              <ApolloProvider client={algorithm_client}>
+                <ShipOrders />
+              </ApolloProvider>
+            } />
             <Route path="/manageProducts" element={<ManageProducts />} />
           </Routes>
         </Router>
