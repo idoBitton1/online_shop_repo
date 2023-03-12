@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client"
+import { gql } from "@apollo/client";
 
 export const GET_ALL_PRODUCTS = gql`
 query Query {
@@ -94,5 +94,15 @@ query Query {
 export const howManyProductsOrdered = gql`
 query Query($id: String!) {
   howManyProductsOrdered(id: $id)
+}
+`;
+
+//query to the algorithm server on port 8080
+export const GET_MINIMUM_SHIPMENT_COST = gql`
+query GetMinimumCost($all_supply: [Int!]!, $all_demand: [Int!]!, $costs_mat: [[Float!]]!) {
+  getMinimumCost(all_supply: $all_supply, all_demand: $all_demand, costs_mat: $costs_mat) {
+    resMat
+    totalCost
+  }
 }
 `;
