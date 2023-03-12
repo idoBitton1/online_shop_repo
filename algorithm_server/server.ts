@@ -221,17 +221,14 @@ const typeDefs = gql`
     type Query {
         getMinimumCost(all_supply: [Int!]!,
                        all_demand: [Int!]!,
-                       costs_mat: [[Float!]]!,
-                       search_key: String!): Result
+                       costs_mat: [[Float!]]!): Result
     }
 `;
 
 const resolvers = {
     Query: {
         getMinimumCost: (_: any, args: any) => {
-            const {all_supply, all_demand, costs_mat, search_key} = args;
-
-            console.log(search_key)
+            const {all_supply, all_demand, costs_mat} = args;
 
             //fix imbalance
             let total_src = 0;
