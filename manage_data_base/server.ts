@@ -327,6 +327,16 @@ const resolvers = {
         deleteTransaction: async(_: any, args: any) => {
             const { transaction_id } = args;
 
+            //delete the items of that transaction first
+            try {
+                const delete_transaction_items = await pool.query(
+                "DELETE FROM cart WHERE transaction_id=$1",
+                [transaction_id]);
+            } catch (err: any) {
+                console.error(err.message);
+            }
+
+            //then delete the transaction
             try {
                 const delete_transaction = await pool.query(
                 "DELETE FROM transactions WHERE id=$1",
