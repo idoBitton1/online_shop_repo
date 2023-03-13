@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import './ShipOrders.css';
 
 //Apollo and graphql
@@ -45,7 +45,6 @@ const ShipOrders = () => {
     const [selected_transactions, setSelectedTransactions] = useState<TransactionSecondType[]>([]);
     const [selected_warehouses, setSelectedWarehouses] = useState<Warehouse[]>([]);
     const [result, setResult] = useState<Result | null>(null);
-    const [selected_transactions_addresses, setSelectedTransactionsAddresses] = useState<string[]>([]);
 
     //queries
     const [getMinimumShipmentCost] = useLazyQuery(GET_MINIMUM_SHIPMENT_COST, {
@@ -57,6 +56,7 @@ const ShipOrders = () => {
             });
         },
     });
+
 
     const handleShowResultsClick = async() => {
         //get all the demands
@@ -79,13 +79,9 @@ const ShipOrders = () => {
         //push into the array
         reduced_transactions.map((transaction) => {
             all_demand.push(transaction.sum);
-            setSelectedTransactionsAddresses((prev) => [...prev, transaction.address]);
-        });
 
-        //remove dulpications
-        setSelectedTransactionsAddresses((prev) => {
-            return prev.filter((item, i) => prev.indexOf(item) === i);
-        })
+            return transaction;
+        });
 
         //get all the right amount to supply
         let all_supply: number[] = [];
@@ -156,10 +152,6 @@ const ShipOrders = () => {
         return delivery_fee;
     }
 
-    const handleConfirm = () => {
-        console.log("hi")
-    }
-
     return (
         <>
         <ApolloProvider client={manage_db_client}>
@@ -187,29 +179,20 @@ const ShipOrders = () => {
                 </Button>
             </div>
         </div>
-        </ApolloProvider>
 
         {
             result !== null 
             ? 
-            <>
             <DisplayResults
             result_matrix={result.result_matrix}
             total_cost={result.total_cost}
             selected_warehouses={selected_warehouses}
-            selected_transactions_addresses={selected_transactions_addresses}
+            selected_transactions={selected_transactions}
             /> 
-            <div className="confirm_button">
-                <Button
-                variant="contained"
-                onClick={handleConfirm}>
-                    Confirm
-                </Button>
-            </div>
-            </>
             : 
             <></>
         }
+        </ApolloProvider>
         </>
     );
 }

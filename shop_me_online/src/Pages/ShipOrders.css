@@ -36,6 +36,11 @@
     display: flex;
 }
 
+.display_flex_column {
+    display: flex;
+    flex-direction: column;
+}
+
 .results_container {
     display: flex;
     justify-content: center;
@@ -49,4 +54,5 @@
 
 .confirm_button {
     text-align: center;
+    margin-bottom: 50px;
 }
