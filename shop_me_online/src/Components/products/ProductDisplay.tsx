@@ -29,7 +29,7 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
 
     //fetch the product image from the s3
     React.useEffect(() => {
-        if(img_uploaded) {
+        if(img_location && img_uploaded) {
             setImage(aws.s3.getSignedUrl('getObject', {
                 Bucket: aws.bucket_name,
                 Key: img_location,
@@ -37,7 +37,7 @@ export const ProductDisplay: React.FC<MyProps> = ({ id, name, price, quantity, c
             }));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [img_uploaded]) // upadtes when changing 
+    }, [img_location, img_uploaded]) // upadtes when changing 
 
     const toggleDialog = () => {
         setOpenDialog((prev) => !prev);
