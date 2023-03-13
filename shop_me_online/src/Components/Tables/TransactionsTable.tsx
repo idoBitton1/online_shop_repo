@@ -36,6 +36,7 @@ export const TransactionsTable: React.FC<MyProps> = ({setSelectedTransactions}) 
     
     //queries
     useQuery(GET_TRANSACTIONS, {
+        fetchPolicy: "network-only",
         onCompleted(data) {
             let temp: TransactionSecondType[] = data.getTransactions;
             temp = temp.map((item) => {
