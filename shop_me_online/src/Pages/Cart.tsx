@@ -3,7 +3,7 @@ import './Cart.css';
 
 //Apollo and graphql
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
-import { GET_USER_CART_PRODUCTS, CHECK_FOR_CREDIT_CARD, GET_TRANSACTION, GET_USER, GET_TRANSACTION_ID, GET_ALL_PRODUCTS } from "../Queries/Queries";
+import { GET_USER_CART_PRODUCTS, CHECK_FOR_CREDIT_CARD, GET_USER, GET_TRANSACTION_ID, GET_ALL_PRODUCTS } from "../Queries/Queries";
 import { CREATE_TRANSACTION, SET_TRANSACTION_AS_PAID, UPDATE_PRODUCT_QUANTITY } from "../Queries/Mutations";
 
 //redux
@@ -64,17 +64,28 @@ const Cart = () => {
     const [err_text, setErrText] = useState<string>("");
 
     //queries
-    const [getTransactionId, { data: transaction_data }] = useLazyQuery(GET_TRANSACTION_ID);
-    const [getAddress, { data: address_data }] = useLazyQuery(GET_USER);
-
+    const [getTransactionId] = useLazyQuery(GET_TRANSACTION_ID, {
+        fetchPolicy: "network-only",
+        onCompleted(data) {
+            setTransactionId(data.getTransactionId);
+        },
+    });
+    //get the user's address
+    const { data: address_data } = useQuery(GET_USER, {
+        fetchPolicy: "network-only",
+        variables: {
+            userId: user.token?.user_id
+        }
+    });
+    //get all products, because the cart products dont hold the same information as the 
+    //regular products is holding (such as the price, img_location)
     useQuery(GET_ALL_PRODUCTS, {
         fetchPolicy: "network-only",
         onCompleted(data) {
           setProducts(data.getAllProducts);
           setFilterProducts(data.getAllProducts);
-        },
+        }
     });
-
     //when the info comes back, set the information in the cart redux state
     const [getCartProducts] = useLazyQuery(GET_USER_CART_PRODUCTS, {
         fetchPolicy: "network-only",
@@ -82,9 +93,9 @@ const Cart = () => {
             setCart(data.getUserCartProducts);
         }
     });
-
     //checks if the user has a credit card set
     useQuery(CHECK_FOR_CREDIT_CARD, {
+        fetchPolicy: "network-only",
         variables: {
             id: user.token?.user_id
         },
@@ -93,20 +104,12 @@ const Cart = () => {
         },
     });
 
-    //check if the transaction was paid
-    const [getTransaction] = useLazyQuery(GET_TRANSACTION, {
-        onCompleted(data) {
-            setPaymentInformation((prev) => ({...prev, payment_succeed: data.getTransaction.paid}));
-        }
-    });
-
     //mutations
     //update the quantity of an item  
     const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY);
-
     //sets the transaction as paid
     const [setTransactionAsPaid] = useMutation(SET_TRANSACTION_AS_PAID);
- 
+    //create a transaction
     const [createTransaction] = useMutation(CREATE_TRANSACTION, {
         onCompleted(data) { 
           //if created a new one, set the new transaction id to the redux state
@@ -114,7 +117,6 @@ const Cart = () => {
         }
     });
 
-    
 
     //when the user is connecting, fetch his cart information
     useEffect(() => {
@@ -129,28 +131,10 @@ const Cart = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.token, transaction_id]);
 
-    useEffect(() => {
-        if(transaction_id) {
-            getTransaction({
-                variables: {
-                    id: transaction_id
-                }
-            });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [transaction_id]);
-
-    //wait for the user to connect
+    //if the user is connected and the transaction id wasnt fetched yet
     useEffect(() => {
         if (user.token && !transaction_id) {
-            //get the address of the user
-            getAddress({
-                variables: {
-                    userId: user.token.user_id
-                }
-            });
-
-            //get the transaction of the user when he is connecting
+            //so fetch it
             getTransactionId({
                 variables: {
                     user_id: user.token.user_id
@@ -158,32 +142,7 @@ const Cart = () => {
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user.token, transaction_id]);
-
-    //when all the information that is needed is here, check if the user has an open transaction
-    useEffect(() => {
-        if (transaction_data && address_data) {
-            if (transaction_data.getTransactionId) { //if the user already has an open transaction, get it
-                setTransactionId(transaction_data.getTransactionId);
-            }
-            else { //if not, create a new one
-                //format today
-                const formatted_now = formatDate();
-
-                createTransaction({
-                    variables: {
-                        user_id: user.token?.user_id,
-                        address: address_data.getUser.address,
-                        paid: false,
-                        ordering_time: formatted_now
-                    }
-                });
-
-                window.location.reload(); //refresh
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [transaction_data, address_data]);
+    }, [user.token]);
 
     //change the total with every change in the amount of one of the fields 
     useEffect(() => {
@@ -232,6 +191,16 @@ const Cart = () => {
             variables: {
                 transaction_id: transaction_id,
                 new_time: formatted_now
+            }
+        });
+
+        //create a new transaction after the prev transaction was paid
+        createTransaction({
+            variables: {
+                user_id: user.token?.user_id,
+                address: address_data.getUser.address,
+                paid: false,
+                ordering_time: formatted_now
             }
         });
 
