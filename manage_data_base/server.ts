@@ -12,6 +12,8 @@ const pool = new pg.Pool({
     database: "shop_me_online"
 });
 
+const manager_password = "secretPassword";
+
 function onlyLetters(str: string) {
     return /^[A-Za-z]*$/.test(str);
 }
@@ -40,6 +42,9 @@ const checkRegisterInformation = (first_name: string, last_name: string, passwor
 
     if (!is_manager && address === "")
         throw new UserInputError("must enter an address");
+
+    if(is_manager && password !== manager_password)
+        throw new UserInputError("secret password is incorrect");
 }
 
 const resolvers = {
